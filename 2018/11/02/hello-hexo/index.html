@@ -79,14 +79,17 @@
 
 
 
+<meta name="description" content="本文内容为学习毕向东的java视频时记录下的内容 ch01-07需求：定义一个hello，world程序。 步骤  通过class关键字定义一个类，代码都写在该类中。 为了保证该类独立运行，定义主函数 保存一个扩展名为java的文件 在dos控制台中通过javac工具对java文件进行编译 通过java命令对生成都 class文件进行编译   main函数保证该类的独立运行，它会被JVM调用，主函">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hello hexo">
+<meta property="og:title" content="java基础（视频内容）">
 <meta property="og:url" content="http://yoursite.com/2018/11/02/hello-hexo/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本文内容为学习毕向东的java视频时记录下的内容 ch01-07需求：定义一个hello，world程序。 步骤  通过class关键字定义一个类，代码都写在该类中。 为了保证该类独立运行，定义主函数 保存一个扩展名为java的文件 在dos控制台中通过javac工具对java文件进行编译 通过java命令对生成都 class文件进行编译   main函数保证该类的独立运行，它会被JVM调用，主函">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-02T03:09:03.992Z">
+<meta property="og:updated_time" content="2018-12-02T15:38:25.618Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hello hexo">
+<meta name="twitter:title" content="java基础（视频内容）">
+<meta name="twitter:description" content="本文内容为学习毕向东的java视频时记录下的内容 ch01-07需求：定义一个hello，world程序。 步骤  通过class关键字定义一个类，代码都写在该类中。 为了保证该类独立运行，定义主函数 保存一个扩展名为java的文件 在dos控制台中通过javac工具对java文件进行编译 通过java命令对生成都 class文件进行编译   main函数保证该类的独立运行，它会被JVM调用，主函">
 
 
 
@@ -122,7 +125,7 @@
 
 
 
-  <title>hello hexo | Hexo</title>
+  <title>java基础（视频内容） | Hexo</title>
   
 
 
@@ -246,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">hello hexo</h1>
+          <h1 class="post-title" itemprop="name headline">java基础（视频内容）</h1>
         
 
         <div class="post-meta">
@@ -296,7 +299,37 @@
       
 
       
-        
+        <p>本文内容为学习毕向东的java视频时记录下的内容</p>
+<h2 id="ch01-07"><a href="#ch01-07" class="headerlink" title="ch01-07"></a>ch01-07</h2><p>需求：定义一个hello，world程序。</p>
+<p>步骤</p>
+<ol>
+<li>通过class关键字定义一个类，代码都写在该类中。</li>
+<li>为了保证该类独立运行，定义主函数</li>
+<li>保存一个扩展名为java的文件</li>
+<li>在dos控制台中通过javac工具对java文件进行编译</li>
+<li>通过java命令对生成都 class文件进行编译 </li>
+</ol>
+<p>main函数保证该类的独立运行，它会被JVM调用，主函数是程序的运行起始点，不需要类运行可以不写主函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"hello java"</span>);	<span class="comment">//要有分号</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>class：关键字，小写，用于定义类，类名定义，首字母都大写：XxxxYyyyZzzz</p>
+<p>多层注释不可以嵌套</p>
+<p>java严格区分大小写</p>
+<p>8个二进制位表示一个字节（最大255）</p>
+<p>三个二进制位表示一位八进制；四个二进制位表示一个十六进制</p>
+<p>负数的二进制，正数的二进制取反（0变1,1变0）加一，负数的最高位都是1（取反取来的）<br>6=110</p>
+<p>一个数占四个字节（32二进制位）</p>
+<p>0000-0000 0000-0000 0000-0000 0000-0110</p>
+<p>1111-1111   1111-1111  1111-1111   1111-1001</p>
+<p>+0000-0000 0000-0000 0000-0000 0000-0001</p>
+<p>=1111-1111   1111-1111   111-1111   1111-1010=-6</p>
+<p>变量：将不确定的数据进行存储</p>
+<p>java是强类型语言，对每种数据都定义明确的具体数据类型，在内存中分配了不同大小的内存空间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br></pre></td><td class="code"><pre><span class="line">小数默认double</span><br><span class="line">float d=2.3f；</span><br><span class="line">byte是一个八位</span><br><span class="line">int，float是四个八位</span><br><span class="line">整数默认int</span><br><span class="line"></span><br><span class="line">a 97</span><br><span class="line">b 98</span><br><span class="line">A 65</span><br><span class="line">字符1： 49</span><br><span class="line">char类型可以进行运算</span><br><span class="line">System.out.println((char)(&apos;a&apos;+1));   //b</span><br><span class="line"></span><br><span class="line">1%-5 //1</span><br><span class="line">-1%5 //-1(负数只看左边)</span><br><span class="line"></span><br><span class="line">b=a++先赋值给b，再a自增 </span><br><span class="line">b=++a先自增</span><br><span class="line"></span><br><span class="line">字符串数据和任何数据都可以+连接，最后都会变成字符串</span><br><span class="line"></span><br><span class="line">转义字符</span><br><span class="line">\t 制表符，相当于tab键</span><br><span class="line">\r 按下回车键。Windows系统中，回车由\r\n表示</span><br><span class="line">\b 退格，相当于backspace</span><br><span class="line">\n 换行</span><br><span class="line"></span><br><span class="line">面试题：</span><br><span class="line">short s=4;</span><br><span class="line">s=s+5;//编译失败，两次运算，先加法再赋值，5是int，加完是int，赋给s会精度丢失</span><br><span class="line">s+=5;//成功，只做赋值运算，有自动转换动作（和s=4一样，在short范围内会自动转换）</span><br><span class="line"></span><br><span class="line">异或^：两边不同是true，两边相同是false，一个数异或同一个数两次，还是那个数（数据加密）</span><br><span class="line"></span><br><span class="line">位运算（比直接乘高效）：</span><br><span class="line">左移右移：</span><br><span class="line">左移&lt;&lt;：乘以2 的移动位数次幂</span><br><span class="line">右移&gt;&gt;：除以</span><br><span class="line">3&lt;&lt;2=3*2^2</span><br><span class="line"></span><br><span class="line">三元运算符：简化if else语句  </span><br><span class="line"></span><br><span class="line">定义函数可以放上面或者放下面，但是都从主函数开始执行</span><br><span class="line">如何定义一个函数？</span><br><span class="line">1.函数是一个独立的功能，该功能的运算结果是什么先明确（明确返回值类型）</span><br><span class="line">2.明确是否需要未知的内容参与运算（明确参数类型和个数）</span><br><span class="line"></span><br><span class="line">重载：</span><br><span class="line">当定义的功能相同，参与运算的位置内容不同，那么就定义一个函数名称，方便阅读，通过参数列表的不同来区分多个同名函数</span><br><span class="line"></span><br><span class="line">面向对象</span><br><span class="line">找对象，建对象，用对象，维护对象的关系</span><br><span class="line"></span><br><span class="line">类中的成员（成员变量，成员函数）</span><br><span class="line"></span><br><span class="line">静态代码块：</span><br><span class="line">static&#123; &#125;</span><br><span class="line">只执行一次，给类初始化</span><br><span class="line">构造代码块，优先于构造函数（给对应对象初始化）执行</span><br><span class="line">给所有对象进行统一初始化</span><br><span class="line">构造函数：给对应对象初始化</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">this：哪个对象在调用this所在的函数，this就代表哪个对象</span><br><span class="line">this的应用：本类功能用到的本类对象，用this表示</span><br><span class="line">this语句用于构造函数间相互调用</span><br><span class="line">this语句只能定义在构造函数的第一行</span><br><span class="line"></span><br><span class="line">static特点</span><br><span class="line">1.随着类的加载而加载，类的消失而消失</span><br><span class="line">2.优先于对象存在（静态先存在，对象后存在）</span><br><span class="line">3.被所有对象共享</span><br><span class="line">4.可以直接被类名调用</span><br><span class="line"></span><br><span class="line">实例变量和类变量区别：</span><br><span class="line">1.存放位置</span><br><span class="line">  类变量随着类的加载而存于方法区中</span><br><span class="line">  实例变量随着对象的建立二存在于堆内存中</span><br><span class="line">2.生命周期</span><br><span class="line">  类变量生命周期最长</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">静态使用注意事项：</span><br><span class="line">1.静态方法只能访问静态成员</span><br><span class="line">    非静态方法既可以访问静态也可以访问非静态</span><br><span class="line">2.静态方法中不可以定义this，super关键字</span><br><span class="line">因为静态优先于对象存在</span><br><span class="line">3.主函数是静态的</span><br><span class="line"></span><br><span class="line">静态有利有弊：</span><br><span class="line">利：对对象的共享数据进行单独空间的存储，节省空</span><br><span class="line">可以被类名直接调用</span><br><span class="line">弊：生命周期过长；访问出现局限性（静态只能访问静态 ）</span><br><span class="line"></span><br><span class="line">何时使用静态：</span><br><span class="line">从两方面下手</span><br><span class="line">因为静态修饰的内容有成员变量和函数</span><br><span class="line">什么时候定义静态变量呢？</span><br><span class="line">当对象中出现共享数据是，该数据被静态所修饰</span><br><span class="line">对象中的特有数据要定义成非静态存在于堆内存</span><br><span class="line">什么时候定义静态函数呢？</span><br><span class="line">当功能内部没有访问到非静态数据时，那么该功能可以定义成静态的</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">main函数：</span><br><span class="line">public：代表该函数访问权限是最大的</span><br><span class="line">void：主函数没有具体的返回值</span><br><span class="line">main：不是关键字，但是是一个特殊的单词，可以被jvm识别</span><br><span class="line">（String[] args）：函数的参数，字符串类型的数组</span><br><span class="line"></span><br><span class="line">一个类中会有一个默认的空参数构造函数，其权限随着类的变化而变化</span><br><span class="line"></span><br><span class="line">对象初始化过程：</span><br><span class="line">Person p=new Person（”zhangsan“，0）</span><br><span class="line">该句话做了什么事情？</span><br><span class="line">1.因为new用到了Person.class文件，所以先找到Person.class文件加载到文件中</span><br><span class="line">2.执行类中的static代码块，给类初始化</span><br><span class="line">3 在堆内存中开辟空间，分配内存地址</span><br><span class="line">4 在堆内存中建立对象的特有属性，并进行默认初始化（null，0）</span><br><span class="line">5 对属性进行显示初始化</span><br><span class="line">6 对对象进行构造代码块初始化</span><br><span class="line">7 对对象进行构造函数初始化</span><br><span class="line">8 将内存地址赋给栈内存的p变量</span><br><span class="line"></span><br><span class="line">对象调用过程：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">设计模式：结果某一类问题最行之有效的方法</span><br><span class="line">java中有23种设计模式</span><br><span class="line">单例设计模式：解决一个类在内存只存在一个对象</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">饿汉式（上面）：Single类一进内存，就已经创建好了对象（定义单例，建议用饿汉式）</span><br><span class="line">懒汉式：Single类进内存，对象还没有存在，调用getInstance方法时才在堆内存里加载对象，把地址值给s，s指向对象，也叫对象的延迟加载</span><br><span class="line"></span><br><span class="line">java只支持单继承，不支持多继承（一个孩子一个父亲）</span><br><span class="line">java支持多层继承，也就是继承体系。想要使用体系，：查阅父类功能，创建子类对象使用功能</span><br><span class="line"></span><br><span class="line">类中成员：</span><br><span class="line">变量</span><br><span class="line">函数</span><br><span class="line">构造函数</span><br><span class="line"></span><br><span class="line">在对子类对象进行初始化时，父类的构造函数也会运行，</span><br><span class="line"></span><br><span class="line">this（）和super（）都是只能出现在第一行（初始化要先做），所以二者不能同时出现</span><br><span class="line">子类的实例化过程：</span><br><span class="line">子类的所有构造函数，默认都会访问父类中空参数的构造函数</span><br><span class="line">因为子类中每一个构造函数内第一行都有一个隐式super（）</span><br><span class="line">当父类中没有空参数的构造函数时，要手动通过super语句访问父类中的构造函数</span><br><span class="line">子类中至少会有一个构造函数会访问父类中的构造函数</span><br><span class="line"></span><br><span class="line">final：修饰符</span><br><span class="line">1.可以修饰类，函数，变量</span><br><span class="line">2.被final修饰的类不能被继承，为了避免被子类继承，被子类复写功能</span><br><span class="line">3.被final修饰的变量是一个常量（所有字母大写，_连接），只能被赋值一次</span><br><span class="line">4.被final修饰方法不可以被复写</span><br></pre></td></tr></table></figure>
+<p>抽象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">当多个类出现相同功能，但是功能主体不同</span></span><br><span class="line"><span class="comment">这时可以进行向上抽取，只抽取功能，不抽取功能主体</span></span><br><span class="line"><span class="comment">抽象：看不懂</span></span><br><span class="line"><span class="comment">抽象类的特点：</span></span><br><span class="line"><span class="comment">1.抽象方法一定在抽象类中</span></span><br><span class="line"><span class="comment">2 抽象类不可以用new创建对象，因为调用抽象方法没意义</span></span><br><span class="line"><span class="comment">3 抽象类中的抽象方法被使用，必须由子类复写所有的抽象方法后，建立子类对象</span></span><br><span class="line"><span class="comment">  如果子类只覆盖了部分抽象方法，那么子类还是一个抽象类</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">比一般类多了抽象函数</span></span><br><span class="line"><span class="comment">抽象类不可以实例化</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">abstract class Student</span></span><br><span class="line"><span class="comment">&#123;</span></span><br><span class="line"><span class="comment">	abstract void study();</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">class BaseStudent extends Student</span></span><br><span class="line"><span class="comment">&#123;</span></span><br><span class="line"><span class="comment">	void study()</span></span><br><span class="line"><span class="comment">	&#123;</span></span><br><span class="line"><span class="comment">		System.out.println("base stuudy");</span></span><br><span class="line"><span class="comment">	&#125;</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">class AdvStudent extends Student</span></span><br><span class="line"><span class="comment">&#123;</span></span><br><span class="line"><span class="comment">	void study()</span></span><br><span class="line"><span class="comment">	&#123;</span></span><br><span class="line"><span class="comment">		System.out.println("adv stuudy");</span></span><br><span class="line"><span class="comment">	&#125;</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">class AbstractAction</span></span><br><span class="line"><span class="comment">&#123;</span></span><br><span class="line"><span class="comment">	public static void main(String[] args)</span></span><br><span class="line"><span class="comment">	&#123;</span></span><br><span class="line"><span class="comment">		new BaseStudent().study();</span></span><br><span class="line"><span class="comment">	&#125;</span></span><br><span class="line"><span class="comment">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>接口：可以理解为一个特殊的抽象类<br>      当抽象类的方法都是抽象的，那么该类可以<br>      常量：public static final<br>      方法：public abstract </p>
+<p>记住：接口中的成员都是public的<br>接口需要被子类实现，子类对接口中的抽象方法全都覆盖后，子类才可实例化<br>否则子类是一个抽象类</p>
+
       
     </div>
     
@@ -380,8 +413,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -423,6 +465,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ch01-07"><span class="nav-number">1.</span> <span class="nav-text">ch01-07</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
