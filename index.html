@@ -229,6 +229,204 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/28/mybatis学习整理/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/28/mybatis学习整理/" itemprop="url">mybatis学习整理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-28T15:51:09+08:00">
+                2018-12-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="配置及增删改查"><a href="#配置及增删改查" class="headerlink" title="配置及增删改查"></a>配置及增删改查</h2><ul>
+<li>pojo：不按mvc分层，只是java bean有一些属性，get和set方法</li>
+<li>domain：不按mvc分层，只是java bean有一些属性，get和set方法</li>
+<li>po：[persistant object]持久层对象.用在持久层，还可以在增加或者修改时从页面直接传入action中，它里面的java bean类名=表名，属性名=表的字段名，还有对应的get set方法</li>
+<li>vo：[view object] 表现层对象，主要用于在高级查询中从页面传过来的各种参数，好处是扩展性强</li>
+<li>bo：用在service层，现在基本不用</li>
+</ul>
+<p>映射文件 UserMapper.xml</p>
+<p>UserMapper.java（接口）</p>
+<p>接口和映射文件在同一目录下<br>mapper接口代理规则：</p>
+<ol>
+<li>映射文件中namespace等于接口的全路径名</li>
+<li>映射文件中sql的id等于<strong>接口中方法名</strong></li>
+<li>映射文件中传入参数类型和返回结果集类型等于接口方法里的传入和返回类型</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--namespace:命名空间，做spl隔离&gt;</span><br><span class="line">&lt;mapper namespace=&quot; &quot;&gt;</span><br><span class="line">&lt;!--parameterType:指定传入参数类型</span><br><span class="line">resultType：返回结果集类型</span><br><span class="line">#&#123;&#125;占位符：如果传入基本类型，&#123;&#125;内容可以随意写&gt;</span><br><span class="line">&lt;select id=&quot;findUserById&quot;  parameterType=&quot;java.lang.Integer&quot; resultType=&quot;cn.pojo.User&quot;&gt;</span><br><span class="line">    select * from user</span><br><span class="line">    where id = #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//查询</span><br><span class="line">&lt;!--$&#123;&#125;拼接符，如果传入基本类型，变量必须是value，用like是时会用&gt;</span><br><span class="line">&lt;select id=&quot;findUserById&quot;  parameterType=&quot;java.lang.Integer&quot; resultType=&quot;cn.pojo.User&quot;&gt;</span><br><span class="line">    select * from user</span><br><span class="line">    where username like &apos;%$&#123;value&#125;%&apos;</span><br><span class="line">  &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//增加</span><br><span class="line">&lt;!--如果传入pojo类型，那么#&#123;&#125;变量名必须是pojo中对应的属性&gt;</span><br><span class="line">&lt;insert id=&quot;insertUser&quot; parameterType=&quot;cn.pojo.User&quot; &gt;</span><br><span class="line">    insert into user (username,sex)</span><br><span class="line">    values (#&#123;username&#125;,#&#123;sex&#125;) </span><br><span class="line">  &lt;/insert&gt;</span><br><span class="line"></span><br><span class="line">//删除</span><br><span class="line">&lt;delete id=&quot;delUserById&quot; parameterType=&quot;cn.pojo.User&quot; &gt;</span><br><span class="line">    delete from user where id = #&#123;id&#125;</span><br><span class="line">  &lt;/delete&gt;</span><br><span class="line">  </span><br><span class="line">//更新</span><br><span class="line">&lt;update id=&quot;delUserById&quot; parameterType=&quot;cn.pojo.User&quot; &gt;</span><br><span class="line">    update user set username=#&#123;username&#125; whrere id = #&#123;id&#125;</span><br><span class="line">&lt;/update&gt;</span><br></pre></td></tr></table></figure>
+<p>核心配置文件SqlMapconfig，<br>其中重要的有</p>
+<ul>
+<li>properties（jdbc 用户名 密码等）</li>
+<li><p>typeAliases 类型别名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;typeAliases type=&quot;&quot; alias=&quot;&quot;/&gt;</span><br><span class="line">或者使用包扫描</span><br><span class="line">&lt;package name=&quot;包&quot;/&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mapper<br>使用包扫描批量引入mapper接口</p>
+</li>
+</ul>
+<h2 id="输入映射和输出映射"><a href="#输入映射和输出映射" class="headerlink" title="输入映射和输出映射"></a>输入映射和输出映射</h2><p>使用resultType进行输出映射，只有查询出来的++列名和实体类中的属性名++一致，该列才可以映射成功。</p>
+<p>返回：对象或者基本类型（只有返回结果是一行一列时）</p>
+<p>不管是输出的pojo单个对象还是一个列表（list中包括pojo），在mapper.xml中resultType指定的类型是一样的。</p>
+<h2 id="动态sql"><a href="#动态sql" class="headerlink" title="动态sql"></a>动态sql</h2><ul>
+<li>if</li>
+</ul>
+<p>动态 SQL 通常要做的事情是根据条件包含 where 子句的一部分。比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;findActiveBlogWithTitleLike&quot;</span><br><span class="line">     resultType=&quot;Blog&quot;&gt;</span><br><span class="line">  SELECT * FROM BLOG </span><br><span class="line">  WHERE state = ‘ACTIVE’ </span><br><span class="line">  &lt;if test=&quot;title != null&quot;&gt;</span><br><span class="line">    AND title like #&#123;title&#125;</span><br><span class="line">  &lt;/if&gt;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>where</li>
+</ul>
+<p>where 元素只会在至少有一个子元素的条件返回 SQL 子句的情况下才去插入“WHERE”子句。而且，<strong>若语句的开头为“AND”或“OR”，where 元素也会将它们去除</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;findActiveBlogLike&quot;</span><br><span class="line">     resultType=&quot;Blog&quot;&gt;</span><br><span class="line">  SELECT * FROM BLOG </span><br><span class="line">  &lt;where&gt; </span><br><span class="line">    &lt;if test=&quot;state != null&quot;&gt;</span><br><span class="line">         state = #&#123;state&#125;</span><br><span class="line">    &lt;/if&gt; </span><br><span class="line">    &lt;if test=&quot;title != null&quot;&gt;</span><br><span class="line">        AND title like #&#123;title&#125;</span><br><span class="line">    &lt;/if&gt;</span><br><span class="line">    &lt;if test=&quot;author != null and author.name != null&quot;&gt;</span><br><span class="line">        AND author_name like #&#123;author.name&#125;</span><br><span class="line">    &lt;/if&gt;</span><br><span class="line">  &lt;/where&gt;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>foreach</li>
+</ul>
+<p>动态 SQL 的另外一个常用的操作需求是对一个集合进行遍历，通常是在构建 ++IN 条件语句++的时候。比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//item:每次循环出的数据放到这个变量里，collection：传入集合的变量名</span><br><span class="line">&lt;select id=&quot;selectPostIn&quot; resultType=&quot;domain.blog.Post&quot;&gt;</span><br><span class="line">  SELECT *</span><br><span class="line">  FROM POST P</span><br><span class="line">  WHERE ID in</span><br><span class="line">  &lt;foreach item=&quot;id&quot;  collection=&quot;ids&quot;</span><br><span class="line">      open=&quot;id in (&quot; separator=&quot;,&quot; close=&quot;)&quot;&gt;</span><br><span class="line">        #&#123;id&#125;</span><br><span class="line">  &lt;/foreach&gt;</span><br><span class="line">&lt;/select&gt;</span><br><span class="line"> ```    </span><br><span class="line">foreach 元素的功能非常强大，它允许你指定一个集合，声明可以在元素体内使用的集合项（item）和索引（index）变量。它也允许你指定开头与结尾的字符串以及在迭代结果之间放置分隔符。这个元素是很智能的，因此它不会偶然地附加多余的分隔符。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 关联查询</span><br><span class="line">### 一对一</span><br><span class="line"></span><br><span class="line">由订单查用户(order为主),一个订单对应一个用户</span><br><span class="line"></span><br><span class="line">- 手动映射</span><br></pre></td></tr></table></figure></p>
+<p>/<em><br>id：ResultMap的唯一标识<br>type：将查询出的数据放入这里的指定对象中<br>注意：手动映射需要指定表的字段名column和类的属性名property的对应关系
+</em>/</p>
+<resultmap type="" id="oderResultMap"><br>    //id标签指定主键字段的对应关系<br>    <id column="id" property="id"><br>    //result标签指定非主键字段的对应关系<br>    <result column="user_id" property="userId"><br>    <result column="number" property="number"><br>    <result column="createtime" property="createtime"><br>    <result column="note" property="note"><br><br>    //上面是order表里的，接下来写user里的<br>    //association:指定单个对象的对应关系(order对象里有一个user对象)<br>    //property：指定将数据放入Order里的user属性中<br>    //javaType：user属性的类型<br>    <association property="user" javatype="cn.ithema.pojo.User"><br>        <id column="uid" property="id"><br>        <result column="username" property="username"><br>        <result column="sex" property="sex"><br>    </result></result></id></association><br><br></result></result></result></result></id></resultmap>
+
+<select id="findOrdersAndUser1" resultmap="oderResultMap"><br>  SELECT a.*,b.id uid,username,sex<br>  FROM orders a,user b<br>  WHERE a.user_id = b.id<br></select>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 一对多</span><br><span class="line">从用户看订单，一个用户对应多个订单</span><br></pre></td></tr></table></figure>
+<resultmap type="cn.ithema.pojo.User" id="userResultMap"><br>    //id标签指定主键字段的对应关系<br>    <id column="id" property="id"><br>    <result column="username" property="username"><br>    <result column="sex" property="sex"><br><br>    //上面是user表里的，接下来写order里的<br>    //collection:指定集合对象关系映射(user对象里有List<orders>)<br>    //property：将数据放入User对象里的orderlist属性中<br>    //ofType：指定orderlist属性的泛型类型<br>    <collection property="orderlist" oftype="cn.ithema.pojo.Orders"><br>        <id column="oid" property="id"><br>        <result column="number" property="number"><br>        <result column="createtime" property="createtime"><br>    </result></result></id></collection><br></orders></result></result></id></resultmap>
+
+
+<p><select id="findUserAndOrders" resultmap="userResultMap"><br>  SELECT a.*,b.id oid,user_id,number,createtime<br>  FROM user a，orders b<br>  WHERE a.id=b.user_id<br></select><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## for面试</span><br><span class="line"></span><br><span class="line">与spring整合后，会话工厂归spring管理</span><br><span class="line">&lt;bean id=&quot;splSessionFactory&quot;,class=...</span><br><span class="line"></span><br><span class="line">&gt; 占位符#&#123;&#125;和$&#123;&#125;的区别是什么？</span><br><span class="line"></span><br><span class="line">在Mybatis中，有两种占位符</span><br><span class="line"></span><br><span class="line"> #&#123;&#125;解析传递进来的参数数据</span><br><span class="line"> </span><br><span class="line"> $&#123;&#125;对传递进来的参数原样拼接在SQL中</span><br><span class="line"></span><br><span class="line"> #&#123;&#125;是预编译处理，$&#123;&#125;是字符串替换。</span><br><span class="line"></span><br><span class="line"> 使用#&#123;&#125;可以有效的防止SQL注入，提高系统安全性。</span><br><span class="line"></span><br><span class="line">&gt; 通常一个Xml映射文件，都会写一个Dao接口与之对应，请问，这个Dao接口的工作原理是什么？Dao接口里的方法，参数不同时，方法能重载吗？</span><br><span class="line"></span><br><span class="line">Dao接口，就是人们常说的Mapper接口，</span><br><span class="line">接口的全限名，就是映射文件中的namespace的值，</span><br><span class="line"></span><br><span class="line">接口的方法名，就是映射文件中MappedStatement的id值，</span><br><span class="line"></span><br><span class="line">接口方法内的参数，就是传递给sql的参数。</span><br><span class="line"></span><br><span class="line">Mapper接口是没有实现类的，当调用接口方法时，接口全限名+方法名拼接字符串作为key值，可唯一定位一个MappedStatement。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Dao接口里的方法，是++不能重载的++，因为是全限名+方法名的保存和寻找策略。</span><br><span class="line"></span><br><span class="line">Dao接口的工作原理是JDK++动态代理++，Mybatis运行时会使用JDK动态代理为Dao接口生成代理proxy对象，++代理对象proxy会拦截接口方法++，转而执行MappedStatement所代表的sql，然后将sql执行结果返回。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt; Mybatis是如何将sql执行结果封装为目标对象并返回的？都有哪些映射形式？</span><br><span class="line"></span><br><span class="line">第一种是使用&lt;resultMap&gt;标签，逐一定义列名和对象属性名之间的映射关系。</span><br><span class="line"></span><br><span class="line">第二种是使用sql列的别名功能，将列别名书写为对象属性名，比如T_NAME AS NAME，对象属性名一般是name，小写，但是列名不区分大小写，Mybatis会忽略列名大小写，智能找到与之对应对象属性名，你甚至可以写成T_NAME AS NaMe，Mybatis一样可以正常工作。</span><br><span class="line"></span><br><span class="line">有了列名与属性名的映射关系后，Mybatis++通过反射创建对象，同时使用反射给对象的属性逐一赋值并返回++，那些找不到映射关系的属性，是无法完成赋值的。</span><br><span class="line"></span><br><span class="line">&gt; 在mapper中如何传递多个参数?</span><br><span class="line"></span><br><span class="line">使用 @param 注解:</span><br></pre></td></tr></table></figure></p>
+<pre><code>import org.apache.ibatis.annotations.param; 
+    public interface usermapper { 
+     user selectuser(@param(“username”) string username, 
+     @param(“hashedpassword”) string hashedpassword); 
+    }
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">然后,就可以在xml像下面这样使用(推荐封装为一个map,作为单个参数传递给mapper):</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;select id=”selectuser” resulttype=”user”&gt; 
+     select id, username, hashedpassword 
+     from some_table 
+     where username = #{username} 
+     and hashedpassword = #{hashedpassword} 
+&lt;/select&gt;
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; Mybatis的Xml映射文件中，不同的Xml映射文件，id是否可以重复？</span><br><span class="line"></span><br><span class="line">不同的Xml映射文件，如果配置了namespace，那么id可以重复；如果没有配置namespace，那么id不能重复；毕竟namespace不是必须的，只是最佳实践而已。</span><br><span class="line"></span><br><span class="line">原因就是namespace+id是作为Map&lt;String, MappedStatement&gt;的key使用的，如果没有namespace，就剩下id，那么，id重复会导致数据互相覆盖。有了namespace，自然id就可以重复，namespace不同，namespace+id自然也就不同。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt; 为什么说Mybatis是半自动ORM映射工具？它与全自动的区别在哪里？</span><br><span class="line"></span><br><span class="line">Hibernate属于全自动ORM映射工具，使用Hibernate查询关联对象或者关联集合对象时，可以根据对象关系模型直接获取，所以它是全自动的。而Mybatis在查询关联对象或关联集合对象时，需要手动编写sql来完成，所以，称之为半自动ORM映射工具。</span><br><span class="line"></span><br><span class="line">&gt; 批量操作</span><br><span class="line"></span><br><span class="line">主要使用&lt;foreach&gt;</span><br></pre></td></tr></table></figure>
+<p><foreach collection="list" item="item" open="(" close=")" separator="," index="index"></foreach></p>
+<p>   #{item.xx}, #{item.xx}<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>collection=”list”    其中list是固定的，如果是数组就是array<br>item=”item”         循环中每一项的别名<br>open=””             开始标识，比如删除in (id1,id2)， open=”(“ close=”)”<br>close=””            结束标识<br>separator=”,”       分隔符号<br>index=”index”       下标值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<!-- 批量保存用户,并返回每个用户插入的ID -->
+<insert id="batchSave" parametertype="java.util.List" usegeneratedkeys="true" keyproperty="id"><br>    INSERT INTO <code>test</code>.<code>tb_user</code>(<code>username</code>, age)<br>    VALUES<br>    <foreach collection="list" item="item" separator=","><br>        (#{item.username}, #{item.age})<br>    </foreach><br></insert>
+
+<!-- 批量删除用户 -->
+<p><delete id="batchDelete" parametertype="java.util.List"><br>    DELETE FROM <code>test</code>.<code>tb_user</code> WHERE id IN<br>    <foreach collection="list" item="item" open="(" close=")" separator=","></foreach></delete></p>
+<pre><code>    #{id}
+&lt;/foreach&gt;
+</code></pre><p><br><code>`</code></p>
+<p>resultType和resultMap功能类似  ，都是返回对象信息  ，但是resultMap要更强大一些 ，可自定义。因为resultMap要配置一下，表和类的一一对应关系，所以说就算你的字段名和你的实体类的属性名不一样也没关系，都会给你映射出来，但是，resultType就比较鸡肋了，必须字段名一样。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/28/理解JVM/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1058,7 +1256,7 @@ String(byte[],int offset,int count)
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1071,7 +1269,7 @@ String(byte[],int offset,int count)
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
