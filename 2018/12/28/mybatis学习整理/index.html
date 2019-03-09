@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="配置及增删改查 pojo：不按mvc分层，只是java bean有一些属性，get和set方法 domain：不按mvc分层，只是java bean有一些属性，get和set方法 po：[persistant object]持久层对象.用在持久层，还可以在增加或者修改时从页面直接传入action中，它里面的java bean类名=表名，属性名=表的字段名，还有对应的get set方法 vo：[vi">
+<meta name="description" content="持久层框架。MyBatis使用简单的 XML或注解用于配置和原始映射，将接口和 Java 的POJOs 映射成数据库中的记录。 配置及增删改查 pojo：不按mvc分层，只是java bean有一些属性，get和set方法 domain：不按mvc分层，只是java bean有一些属性，get和set方法 po：[persistant object]持久层对象。最形象的理解就是一个PO就是数据库中">
 <meta name="keywords" content="后端开发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mybatis学习整理">
 <meta property="og:url" content="http://yoursite.com/2018/12/28/mybatis学习整理/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="配置及增删改查 pojo：不按mvc分层，只是java bean有一些属性，get和set方法 domain：不按mvc分层，只是java bean有一些属性，get和set方法 po：[persistant object]持久层对象.用在持久层，还可以在增加或者修改时从页面直接传入action中，它里面的java bean类名=表名，属性名=表的字段名，还有对应的get set方法 vo：[vi">
+<meta property="og:description" content="持久层框架。MyBatis使用简单的 XML或注解用于配置和原始映射，将接口和 Java 的POJOs 映射成数据库中的记录。 配置及增删改查 pojo：不按mvc分层，只是java bean有一些属性，get和set方法 domain：不按mvc分层，只是java bean有一些属性，get和set方法 po：[persistant object]持久层对象。最形象的理解就是一个PO就是数据库中">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-28T08:20:48.574Z">
+<meta property="og:updated_time" content="2019-01-17T13:32:05.119Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mybatis学习整理">
-<meta name="twitter:description" content="配置及增删改查 pojo：不按mvc分层，只是java bean有一些属性，get和set方法 domain：不按mvc分层，只是java bean有一些属性，get和set方法 po：[persistant object]持久层对象.用在持久层，还可以在增加或者修改时从页面直接传入action中，它里面的java bean类名=表名，属性名=表的字段名，还有对应的get set方法 vo：[vi">
+<meta name="twitter:description" content="持久层框架。MyBatis使用简单的 XML或注解用于配置和原始映射，将接口和 Java 的POJOs 映射成数据库中的记录。 配置及增删改查 pojo：不按mvc分层，只是java bean有一些属性，get和set方法 domain：不按mvc分层，只是java bean有一些属性，get和set方法 po：[persistant object]持久层对象。最形象的理解就是一个PO就是数据库中">
 
 
 
@@ -300,11 +300,12 @@
       
 
       
-        <h2 id="配置及增删改查"><a href="#配置及增删改查" class="headerlink" title="配置及增删改查"></a>配置及增删改查</h2><ul>
+        <p>持久层框架。MyBatis使用简单的 XML或注解用于配置和原始映射，将接口和 Java 的POJOs 映射成数据库中的记录。</p>
+<h2 id="配置及增删改查"><a href="#配置及增删改查" class="headerlink" title="配置及增删改查"></a>配置及增删改查</h2><ul>
 <li>pojo：不按mvc分层，只是java bean有一些属性，get和set方法</li>
 <li>domain：不按mvc分层，只是java bean有一些属性，get和set方法</li>
-<li>po：[persistant object]持久层对象.用在持久层，还可以在增加或者修改时从页面直接传入action中，它里面的java bean类名=表名，属性名=表的字段名，还有对应的get set方法</li>
-<li>vo：[view object] 表现层对象，主要用于在高级查询中从页面传过来的各种参数，好处是扩展性强</li>
+<li>po：[persistant object]持久层对象。最形象的理解就是一个PO就是数据库中的一条记录。<br>好处是可以把一条记录作为一个对象处理，可以方便的转为其它对象。<br>它里面的java bean类名=表名，属性名=表的字段名，还有对应的get set方法</li>
+<li>vo：[Value Object] 值对象，[ViewObject]表现层对象。主要用于在高级查询中从页面传过来的各种参数，好处是扩展性强</li>
 <li>bo：用在service层，现在基本不用</li>
 </ul>
 <p>映射文件 UserMapper.xml</p>
@@ -441,6 +442,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/03/09/IO流/" rel="prev" title="IO流">
+                IO流 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -516,7 +521,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="本文内容为学习毕向东的java视频时记录下的内容 ch11 多线程进程：是一个正在执行中的程序每一个进程执行都有一个执行顺序，该顺序是一个控制单元 线程：进程中的一个独立的控制单元。        线程在控制着进程的执行一个进程至少有一个线程 如何自定义一个线程呢？java提供了thread类，对线程这类事物描述 创建线程的第一种方式：继承Thread类步骤：  定义类继承Thread 复写Thr">
+<meta name="description" content="本文内容为学习毕向东的java视频时记录下的内容 ch11 多线程123456进程：是一个正在执行中的程序每一个进程执行都有一个执行顺序，该顺序是一个控制单元线程：进程中的一个独立的控制单元。		线程在控制着进程的执行一个进程至少有一个线程 如何自定义一个线程呢？java提供了thread类，对线程这类事物描述  创建线程的第一种方式：继承Thread类  步骤：  定义类继承Thread 复写T">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java基础（视频内容）（二）">
 <meta property="og:url" content="http://yoursite.com/2018/11/02/java基础（视频）二/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="本文内容为学习毕向东的java视频时记录下的内容 ch11 多线程进程：是一个正在执行中的程序每一个进程执行都有一个执行顺序，该顺序是一个控制单元 线程：进程中的一个独立的控制单元。        线程在控制着进程的执行一个进程至少有一个线程 如何自定义一个线程呢？java提供了thread类，对线程这类事物描述 创建线程的第一种方式：继承Thread类步骤：  定义类继承Thread 复写Thr">
+<meta property="og:description" content="本文内容为学习毕向东的java视频时记录下的内容 ch11 多线程123456进程：是一个正在执行中的程序每一个进程执行都有一个执行顺序，该顺序是一个控制单元线程：进程中的一个独立的控制单元。		线程在控制着进程的执行一个进程至少有一个线程 如何自定义一个线程呢？java提供了thread类，对线程这类事物描述  创建线程的第一种方式：继承Thread类  步骤：  定义类继承Thread 复写T">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-02T16:24:19.631Z">
+<meta property="og:updated_time" content="2019-01-26T07:08:02.655Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java基础（视频内容）（二）">
-<meta name="twitter:description" content="本文内容为学习毕向东的java视频时记录下的内容 ch11 多线程进程：是一个正在执行中的程序每一个进程执行都有一个执行顺序，该顺序是一个控制单元 线程：进程中的一个独立的控制单元。        线程在控制着进程的执行一个进程至少有一个线程 如何自定义一个线程呢？java提供了thread类，对线程这类事物描述 创建线程的第一种方式：继承Thread类步骤：  定义类继承Thread 复写Thr">
+<meta name="twitter:description" content="本文内容为学习毕向东的java视频时记录下的内容 ch11 多线程123456进程：是一个正在执行中的程序每一个进程执行都有一个执行顺序，该顺序是一个控制单元线程：进程中的一个独立的控制单元。		线程在控制着进程的执行一个进程至少有一个线程 如何自定义一个线程呢？java提供了thread类，对线程这类事物描述  创建线程的第一种方式：继承Thread类  步骤：  定义类继承Thread 复写T">
 
 
 
@@ -300,10 +300,12 @@
 
       
         <p>本文内容为学习毕向东的java视频时记录下的内容</p>
-<h2 id="ch11-多线程"><a href="#ch11-多线程" class="headerlink" title="ch11 多线程"></a>ch11 多线程</h2><p>进程：是一个正在执行中的程序<br>每一个进程执行都有一个执行顺序，该顺序是一个控制单元</p>
-<p>线程：进程中的一个独立的控制单元。<br>        线程在控制着进程的执行<br>一个进程至少有一个线程</p>
+<h2 id="ch11-多线程"><a href="#ch11-多线程" class="headerlink" title="ch11 多线程"></a>ch11 多线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">进程：是一个正在执行中的程序</span><br><span class="line">每一个进程执行都有一个执行顺序，该顺序是一个控制单元</span><br><span class="line"></span><br><span class="line">线程：进程中的一个独立的控制单元。</span><br><span class="line">		线程在控制着进程的执行</span><br><span class="line">一个进程至少有一个线程</span><br></pre></td></tr></table></figure>
 <h3 id="如何自定义一个线程呢？"><a href="#如何自定义一个线程呢？" class="headerlink" title="如何自定义一个线程呢？"></a>如何自定义一个线程呢？</h3><p>java提供了thread类，对线程这类事物描述</p>
-<h4 id="创建线程的第一种方式：继承Thread类"><a href="#创建线程的第一种方式：继承Thread类" class="headerlink" title="创建线程的第一种方式：继承Thread类"></a>创建线程的第一种方式：继承Thread类</h4><p>步骤：</p>
+<blockquote>
+<p>创建线程的第一种方式：继承Thread类</p>
+</blockquote>
+<p>步骤：</p>
 <ol>
 <li>定义类继承Thread</li>
 <li>复写Thread类中的run方法（run方法用于存储线程要运行的代码）</li>
@@ -502,7 +504,7 @@ String(byte[],int offset,int count)
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -548,7 +550,7 @@ String(byte[],int offset,int count)
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ch11-多线程"><span class="nav-number">1.</span> <span class="nav-text">ch11 多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何自定义一个线程呢？"><span class="nav-number">1.1.</span> <span class="nav-text">如何自定义一个线程呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建线程的第一种方式：继承Thread类"><span class="nav-number">1.1.1.</span> <span class="nav-text">创建线程的第一种方式：继承Thread类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建线程的第二种方式：实现Runable接口"><span class="nav-number">1.1.2.</span> <span class="nav-text">创建线程的第二种方式：实现Runable接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两种方式的区别："><span class="nav-number">1.1.3.</span> <span class="nav-text">两种方式的区别：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步代码块"><span class="nav-number">1.2.</span> <span class="nav-text">同步代码块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ch13-String"><span class="nav-number">2.</span> <span class="nav-text">ch13 String</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见操作"><span class="nav-number">2.1.</span> <span class="nav-text">常见操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CURD"><span class="nav-number">2.2.</span> <span class="nav-text">CURD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本数据对象包装类"><span class="nav-number">2.3.</span> <span class="nav-text">基本数据对象包装类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本数据对象包装类最常见的应用："><span class="nav-number">2.3.1.</span> <span class="nav-text">基本数据对象包装类最常见的应用：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合类"><span class="nav-number">3.</span> <span class="nav-text">集合类</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ch11-多线程"><span class="nav-number">1.</span> <span class="nav-text">ch11 多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何自定义一个线程呢？"><span class="nav-number">1.1.</span> <span class="nav-text">如何自定义一个线程呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建线程的第二种方式：实现Runable接口"><span class="nav-number">1.1.1.</span> <span class="nav-text">创建线程的第二种方式：实现Runable接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两种方式的区别："><span class="nav-number">1.1.2.</span> <span class="nav-text">两种方式的区别：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步代码块"><span class="nav-number">1.2.</span> <span class="nav-text">同步代码块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ch13-String"><span class="nav-number">2.</span> <span class="nav-text">ch13 String</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见操作"><span class="nav-number">2.1.</span> <span class="nav-text">常见操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CURD"><span class="nav-number">2.2.</span> <span class="nav-text">CURD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本数据对象包装类"><span class="nav-number">2.3.</span> <span class="nav-text">基本数据对象包装类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本数据对象包装类最常见的应用："><span class="nav-number">2.3.1.</span> <span class="nav-text">基本数据对象包装类最常见的应用：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合类"><span class="nav-number">3.</span> <span class="nav-text">集合类</span></a></li></ol></div>
             
 
           </div>
