@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="String对象不可变String使用private final char value[]来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中不提供修改数据的方法就可以。 然而，String类对象确实有编辑字符串">
+<meta name="keywords" content="java基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈一谈令人疑惑的String类">
+<meta property="og:url" content="http://yoursite.com/2019/03/11/谈一谈令人疑惑的String类/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="String对象不可变String使用private final char value[]来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中不提供修改数据的方法就可以。 然而，String类对象确实有编辑字符串">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-20T13:58:02.875Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谈一谈令人疑惑的String类">
+<meta name="twitter:description" content="String对象不可变String使用private final char value[]来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中不提供修改数据的方法就可以。 然而，String类对象确实有编辑字符串">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/11/谈一谈令人疑惑的String类/">
+
+
+
+
+
+  <title>谈一谈令人疑惑的String类 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/11/谈一谈令人疑惑的String类/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">谈一谈令人疑惑的String类</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-11T21:54:22+08:00">
+                2019-03-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="String对象不可变"><a href="#String对象不可变" class="headerlink" title="String对象不可变"></a>String对象不可变</h3><p>String使用<code>private final char value[]</code>来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中<code>不提供修改数据的方法</code>就可以。</p>
+<p>然而，String类对象确实有编辑字符串的功能，比如replace()。这些编辑功能是通过<code>创建一个新的对象</code>来实现的，而不是对原有对象进行修改。比如:<br><code>s = s.replace(&quot;World&quot;, &quot;Universe&quot;);</code><br>上面对s.replace()的调用将创建一个新的字符串”Hello Universe!”，并返回该对象的引用。引用s将指向该新的字符串。如果没有其他引用指向原有字符串”Hello World!”，原字符串对象将被垃圾回收。</p>
+<blockquote>
+<p>String对象一旦被创建就是固定不变的了，对String对象的任何改变都不影响到原对象，相关的任何change操作都会生成新的对象</p>
+</blockquote>
+<ul>
+<li>一个问题：<br>String s = new String(“abc”) 涉及到几个对象？</li>
+</ul>
+<p>常量池中没有“abc”字面量，则创建两个对象（字符串池中一个，堆中一个），否则创建一个对象.</p>
+<h3 id="关于equals和"><a href="#关于equals和" class="headerlink" title="关于equals和=="></a>关于equals和==</h3><p>（1）对于==，如果作用于基本数据类型的变量（byte,short,char,int,long,float,double,boolean ），则直接比较其存储的”值”是否相等；如果作用于引用类型的变量（String），则比较的是所指向的对象的地址（即是否指向同一个对象）。</p>
+<p>（2）equals方法是基类Object中的方法。在Object类中，equals方法是用来比较两个对象的引用是否相等（即是否指向同一个对象）。</p>
+<p>（3）对于equals方法，注意：equals方法不能作用于基本数据类型的变量。如果没有对equals方法进行重写，则比较的是引用类型的变量所指向的对象的地址；而String类，还有Double，Date，Integer等都对equals方法进行了重写，用来比较指向的对象对象所存储的内容串是否相等。</p>
+<h3 id="几个例子"><a href="#几个例子" class="headerlink" title="几个例子"></a>几个例子</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 编译期确定</span><br><span class="line"> */</span><br><span class="line">public void test3()&#123;</span><br><span class="line">    String s0=&quot;helloworld&quot;;</span><br><span class="line">    String s1=&quot;helloworld&quot;;</span><br><span class="line">    String s2=&quot;hello&quot;+&quot;world&quot;;</span><br><span class="line">    System.out.println(s0==s1); //true 可以看出s0跟s1是指向同一个对象 </span><br><span class="line">    System.out.println(s0==s2); //true 可以看出s0跟s2是指向同一个对象 </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分析：因为例子中的s0和s1中的”helloworld”都是字符串常量，它们在编译期就被确定了，所以s0==s1为true；</p>
+<p>当一个字符串由多个字符串常量连接而成时，它自己肯定也是字符串常量，所以s2也同样在编译期就被解析为一个字符串常量，所以s2也是常量池中”helloworld”的一个引用。所以我们得出<code>s0==s1==s2</code></p>
+<hr>
+<p>字符串拼接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 比较字符串常量的“+”和字符串引用的“+”的区别</span><br><span class="line"> */</span><br><span class="line">以下代码：</span><br><span class="line">    String s1 = &quot;Hollis&quot;;</span><br><span class="line">    String s2 = &quot;Chuang&quot;;</span><br><span class="line">    String s3 = s1 + s2;</span><br><span class="line">    String s4 = &quot;Hollis&quot; + &quot;Chuang&quot;;</span><br><span class="line">    System.out.println(s3==&quot;HollisChuang&quot;); //false</span><br><span class="line">    System.out.println(s4==&quot;HollisChuang&quot;); //true</span><br><span class="line">    </span><br><span class="line">在经过反编译后，得到代码如下：</span><br><span class="line">    String s1 = &quot;Hollis&quot;;</span><br><span class="line">    String s2 = &quot;Chuang&quot;;</span><br><span class="line">    String s3 = (new StringBuilder()).append(s1).append(s2).toString();</span><br><span class="line">    String s4 = &quot;HollisChuang&quot;;</span><br></pre></td></tr></table></figure>
+<p>可以发现，同样是字符串拼接，s3和s4在经过编译器编译后的实现方式并不一样。s3被转化成StringBuilder及append，而s4被直接拼接成新的字符串。</p>
+<p>其实，String s4 = s1 + s2; 经过编译之后，常量池中是有两个字符串常量的分别是 Hollis、Chuang，拼接结果HollisChuang并不在常量池中。</p>
+<p>如果代码只有String s4 = “Hollis” + “Chuang”;，那么常量池中将只有HollisChuang而没有Hollis和 Chuang。<br><code>String s4 = &quot;Hollis&quot; + &quot;Chuang&quot;</code>等价于<code>String s4 = &quot;HollisChuang&quot;</code>。<br><code>字符串字面量拼接操作是在Java编译器编译期间就执行了</code>，并且直接将这个常量放入字符串池中，这样做实际上是一种优化，将多个字面量合成一个，避免了创建多余的字符串对象。</p>
+<p>如果在字符串拼接中，有一个参数是非字面量，而是一个变量的话，整个拼接操作会被编译成StringBuilder.append，这种情况编译器是无法知道其确定值的。只有在运行期才能确定。</p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 编译期无法确定</span><br><span class="line"> */</span><br><span class="line">public void test4()&#123;</span><br><span class="line">    String s0=&quot;helloworld&quot;; </span><br><span class="line">    String s1=new String(&quot;helloworld&quot;); </span><br><span class="line">    String s2=&quot;hello&quot; + new String(&quot;world&quot;); </span><br><span class="line">    System.out.println(&quot;===========test4============&quot;);</span><br><span class="line">    System.out.println( s0==s1 ); //false  </span><br><span class="line">    System.out.println( s0==s2 ); //false </span><br><span class="line">    System.out.println( s1==s2 ); //false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行上述代码，结果为：false、false、false。</p>
+<p>分析：用new String() 创建的字符串不是常量，不能在编译期就确定，所以new String() 创建的字符串不放入常量池中，<code>它们有自己的地址空间</code>。</p>
+<p>s0还是常量池中”helloworld”的引用，s1因为无法在编译期确定，所以是运行时创建的新对象”helloworld”的引用，s2因为有后半部分new String(”world”)所以也无法在编译期确定，所以也是一个新创建对象”helloworld”的引用。</p>
+<h3 id="String、StringBuffer、StringBuilder的区别"><a href="#String、StringBuffer、StringBuilder的区别" class="headerlink" title="String、StringBuffer、StringBuilder的区别"></a>String、StringBuffer、StringBuilder的区别</h3><p>（1）可变与不可变：String是不可变字符串对象，StringBuilder和StringBuffer是可变字符串对象（其内部的字符数组长度可变）。</p>
+<p>StringBuffer、StringBuilder的区别（线程安全和效率）</p>
+<p>（2）是否多线程安全：String中的对象是不可变的，也就可以理解为常量，显然线程安全。StringBuffer 与 StringBuilder 中的方法和功能完全是等价的，只是StringBuffer 中的方法大都采用了synchronized 关键字进行修饰，因此是线程安全的，而 StringBuilder 没有这个修饰，可以被认为是非线程安全的。</p>
+<p>（3）String、StringBuilder、StringBuffer三者的执行效率：<br>StringBuilder &gt; StringBuffer &gt; String （相对而言）<br>当字符串相加操作或者改动较少的情况下，建议使用 String；<br>当字符串相加操作较多的情况下，建议使用StringBuilder，如果采用了多线程，则使用StringBuffer。</p>
+<h4 id="为什么StringBuilder更快？"><a href="#为什么StringBuilder更快？" class="headerlink" title="为什么StringBuilder更快？"></a>为什么StringBuilder更快？</h4><ul>
+<li>为什么StringBuilder比String快？</li>
+</ul>
+<p>StringBuilder对字符串的操作只在一个实例上进行修改，达到节约系统开销的目的，而String具有不可变性，一切对string类型的操作都会申请一块新的内存产生新的字符串。可能一般影响不大，但大量的字符串操作，如在循环体中，造成的系统开销是不能忽视的。</p>
+<ul>
+<li>为什么StringBuilder比StringBuffer快？</li>
+</ul>
+<p>看一下源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//java.lang.StringBuilder</span><br><span class="line">public StringBuilder append(String str) &#123;</span><br><span class="line">        super.append(str);</span><br><span class="line">        return this;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">//java.lang.StringBuffer</span><br><span class="line">public synchronized StringBuffer append(String str) &#123;</span><br><span class="line">        super.append(str);</span><br><span class="line">        return this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>StringBuffer类的append()方法，被synchronized所修饰。有加锁开销，效率略低</p>
+<p>参考：</p>
+<p><a href="https://note.youdao.com/" target="_blank" rel="noopener">深入理解Java中的String</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java基础/" rel="tag"># java基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/09/IO流/" rel="next" title="IO流">
+                <i class="fa fa-chevron-left"></i> IO流
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/15/上传文件到OSS/" rel="prev" title="上传文件到OSS">
+                上传文件到OSS <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#String对象不可变"><span class="nav-number">1.</span> <span class="nav-text">String对象不可变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于equals和"><span class="nav-number">2.</span> <span class="nav-text">关于equals和==</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几个例子"><span class="nav-number">3.</span> <span class="nav-text">几个例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String、StringBuffer、StringBuilder的区别"><span class="nav-number">4.</span> <span class="nav-text">String、StringBuffer、StringBuilder的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么StringBuilder更快？"><span class="nav-number">4.1.</span> <span class="nav-text">为什么StringBuilder更快？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
