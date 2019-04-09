@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是：  程序计数器程序计数器是一块较小的内存空间，可以把它看作当前线程正在执行的字节码的行号指示器。 Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，++为了线程切换后能恢复到正确的位置++，每条线程都需要一个独立的程序计数器，互不影响，该区域为“++线程私有++”。 注">
+<meta name="description" content="JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是：  程序计数器程序计数器是一块较小的内存空间，记录正在执行的虚拟机字节码指令的地址（如果正在执行的是本地方法则为空）。 Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，为了线程切换后能恢复到正确的位置，每条线程都需要一个独立的程序计数器，互不影响，该区域为“线程私有”">
 <meta name="keywords" content="java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="理解JVM">
 <meta property="og:url" content="http://yoursite.com/2018/12/28/理解JVM/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是：  程序计数器程序计数器是一块较小的内存空间，可以把它看作当前线程正在执行的字节码的行号指示器。 Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，++为了线程切换后能恢复到正确的位置++，每条线程都需要一个独立的程序计数器，互不影响，该区域为“++线程私有++”。 注">
+<meta property="og:description" content="JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是：  程序计数器程序计数器是一块较小的内存空间，记录正在执行的虚拟机字节码指令的地址（如果正在执行的是本地方法则为空）。 Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，为了线程切换后能恢复到正确的位置，每条线程都需要一个独立的程序计数器，互不影响，该区域为“线程私有”">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-01-16T11:43:37.104Z">
+<meta property="og:updated_time" content="2019-04-09T15:29:09.451Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解JVM">
-<meta name="twitter:description" content="JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是：  程序计数器程序计数器是一块较小的内存空间，可以把它看作当前线程正在执行的字节码的行号指示器。 Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，++为了线程切换后能恢复到正确的位置++，每条线程都需要一个独立的程序计数器，互不影响，该区域为“++线程私有++”。 注">
+<meta name="twitter:description" content="JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是：  程序计数器程序计数器是一块较小的内存空间，记录正在执行的虚拟机字节码指令的地址（如果正在执行的是本地方法则为空）。 Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，为了线程切换后能恢复到正确的位置，每条线程都需要一个独立的程序计数器，互不影响，该区域为“线程私有”">
 
 
 
@@ -301,15 +301,13 @@
 
       
         <h2 id="JVM内存模型"><a href="#JVM内存模型" class="headerlink" title="JVM内存模型"></a>JVM内存模型</h2><p>Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是： </p>
-<h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>程序计数器是一块较小的内存空间，可以把它看作当前线程正在执行的字节码的行号指示器。</p>
-<p>Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，++为了线程切换后能恢复到正确的位置++，每条线程都需要一个独立的程序计数器，互不影响，该区域为“++线程私有++”。</p>
-<p>注：但是，如果当前线程正在执行的是一个本地方法，那么此时程序计数器为空。 </p>
+<h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>程序计数器是一块较小的内存空间，记录<strong>正在执行的虚拟机字节码指令的地址</strong>（如果正在执行的是本地方法则为空）。</p>
+<p>Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，为了线程切换后能恢复到正确的位置，每条线程都需要一个独立的程序计数器，互不影响，该区域为“线程私有”。</p>
 <h3 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h3><p>线程私有的，与线程生命周期相同。</p>
-<p>Java虚拟机栈是描述++Java方法运行过程++的内存模型。 </p>
+<p>Java虚拟机栈是描述<code>Java方法运行过程</code>的内存模型。 </p>
 <p>Java虚拟机栈会为每一个即将运行的Java方法创建一块叫做“栈帧”的区域，这块区域用于存储该方法在运行过程中所需要的一些信息，这些信息包括：</p>
 <ul>
 <li>局部变量表 </li>
-<li>存放基本数据类型变量、引用类型的变量、returnAddress类型的变量。</li>
 <li>操作数栈</li>
 <li>动态链接</li>
 <li>方法出口信息<br>等</li>
@@ -317,69 +315,128 @@
 <p>当一个方法即将被运行时，Java虚拟机栈首先会在Java虚拟机栈中为该方法创建一块“栈帧”，栈帧中包含局部变量表、操作数栈、动态链接、方法出口信息等。当方法在运行过程中需要创建局部变量时，就将局部变量的值存入栈帧的局部变量表中。<br>当这个方法执行完毕后，这个方法所对应的栈帧将会出栈，并释放内存空间。</p>
 <p>注意：人们常说，Java的内存空间分为“栈”和“堆”，栈中存放局部变量，堆中存放对象。<br>这句话不完全正确！这里的“堆”可以这么理解，但这里的“栈”只代表了Java虚拟机栈中的局部变量表部分。</p>
 <h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>跟虚拟机栈很像，不过它是为虚拟机使用到的本地方法服务。</p>
-<h3 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h3><p>堆是用来存放对象的内存空间。<br>几乎所有的对象都存储在堆中。 </p>
-<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>Java虚拟机规范中定义方法区是堆的一个逻辑部分。<br>方法区中存放已经被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等。 </p>
+<p>本地方法一般是用其它语言（C、C++ 或汇编语言等）编写的，并且被编译为基于本机硬件和操作系统的程序，对待这些方法需要特别处理。</p>
+<h3 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h3><p>所有对象都在这里分配内存，是垃圾收集的主要区域（”GC 堆”）。</p>
+<p>现代的垃圾收集器基本都是采用分代收集算法，其主要的思想是针对不同类型的对象采取不同的垃圾回收算法。可以将堆分成两块：</p>
+<ul>
+<li>新生代（Young Generation）</li>
+<li>老年代（Old Generation）</li>
+</ul>
+<p>堆不需要连续内存，并且可以动态增加其内存，增加失败会抛出 OutOfMemoryError 异常。 </p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>用于存放已被加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。</p>
+<p>和堆一样不需要连续的内存，并且可以动态扩展，动态扩展失败一样会抛出 OutOfMemoryError 异常。</p>
+<p>对这块区域进行垃圾回收的主要目标是对常量池的回收和对类的卸载，但是一般比较难实现。</p>
+<p>HotSpot 虚拟机把它当成永久代来进行垃圾回收。但很难确定永久代的大小，因为它受到很多因素影响，并且每次 Full GC 之后永久代的大小都会改变，所以经常会抛出 OutOfMemoryError 异常。<strong>为了更容易管理方法区，从 JDK 1.8 开始，移除永久代，并把方法区移至元空间，它位于本地内存中，而不是虚拟机内存中。</strong></p>
+<p>（运行时常量池是方法区的一部分。</p>
+<p>Class 文件中的常量池（编译器生成的字面量和符号引用）会在类加载后被放入这个区域。</p>
+<p>除了在编译期生成的常量，还允许动态生成，例如 String 类的 intern()。</p>
+<p>）</p>
 <ul>
 <li>Java虚拟机的内存模型中一共有两个“栈”，分别是：Java虚拟机栈和本地方法栈。<br>两个“栈”的功能类似，都是方法运行过程的内存模型。并且两个“栈”内部构造相同，都是线程私有。<br>只不过Java虚拟机栈描述的是Java方法运行过程的内存模型，而本地方法栈是描述Java本地方法运行过程的内存模型。</li>
 <li>Java虚拟机的内存模型中一共有两个“堆”，一个是原本的堆，一个是方法区。方法区本质上是属于堆的一个逻辑部分。堆中存放对象，方法区中存放类信息、常量、静态变量、即时编译器编译的代码。</li>
 <li>堆是Java虚拟机中最大的一块内存区域，也是垃圾收集器主要的工作区域。</li>
-<li>++程序计数器、Java虚拟机栈、本地方法栈++（计数器和两个栈）是线程私有的，即每个线程都拥有各自的程序计数器、Java虚拟机栈、本地方法区。并且他们的生命周期和所属的线程一样。<br>而堆、方法区是线程共享的，在Java虚拟机中只有一个堆、一个方法区。并在JVM启动的时候就创建，JVM停止才销毁。</li>
+<li><strong>程序计数器、Java虚拟机栈、本地方法栈</strong>（计数器和两个栈）是线程私有的，即每个线程都拥有各自的程序计数器、Java虚拟机栈、本地方法区。并且他们的生命周期和所属的线程一样。<br>而堆、方法区是线程共享的，在Java虚拟机中只有一个堆、一个方法区。并在JVM启动的时候就创建，JVM停止才销毁。</li>
 </ul>
 <h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><p>为了避免Java虚拟机在运行期间内存存满的情况，就必须得有一个垃圾收集者的角色，不定期地回收一些无效内存，以保障Java虚拟机能够健康地持续运行。</p>
+<p>垃圾收集主要是针对<strong>堆和方法区</strong>进行。程序计数器、虚拟机栈和本地方法栈这三个区域属于线程私有的，只存在于线程的生命周期内，线程结束之后就会消失，因此不需要对这三个区域进行垃圾回收。</p>
 <h3 id="如何判定哪些对象需要回收（判断一个对象是否存活）？"><a href="#如何判定哪些对象需要回收（判断一个对象是否存活）？" class="headerlink" title="如何判定哪些对象需要回收（判断一个对象是否存活）？"></a>如何判定哪些对象需要回收（判断一个对象是否存活）？</h3><p>在对堆进行对象回收之前，首先要判断哪些是无效对象。我们知道，一个对象不被任何对象或变量引用，那么就是无效对象，需要被回收。一般有两种判别方式：</p>
 <ol>
 <li><p>引用计数法 </p>
-<pre><code>每个对象都有一个计数器，当这个对象被一个变量或另一个对象引用一次，该计数器加一；若该引用失效则计数器减一。当计数器为0时，就认为该对象是无效对象。
+<pre><code>每个对象都有一个引用计数器，当对象增加一个引用时计数器加 1，引用失效时计数器减 1。引用计数为 0 的对象可被回收。
+
+在两个对象出现循环引用的情况下，此时引用计数器永远不为 0，导致无法对它们进行回收。正是因为循环引用的存在，因此 Java 虚拟机不使用引用计数算法。
 </code></pre></li>
+</ol>
+<ol start="2">
 <li><p>可达性分析法 </p>
 <pre><code>所有和GC Roots直接或间接关联的对象都是有效对象，和GC Roots没有关联的对象就是无效对象。 
 </code></pre></li>
 </ol>
 <p>GC Roots是指：</p>
-<p>Java虚拟机栈所引用的对象(栈帧中局部变量表中引用类型的变量所引用的对象)<br>方法区中静态属性引用的对象<br>方法区中常量所引用的对象<br>本地方法栈所引用的对象 </p>
-<p>PS：注意！GC Roots并不包括堆中对象所引用的对象！这样就不会出现循环引用。<br>两者对比：<br>引用计数法虽然简单，但存在一个严重的问题，它无法解决循环引用的问题。<br>因此，目前主流语言均使用可达性分析方法来判断对象是否有效。</p>
-<h3 id="回收无效对象的过程"><a href="#回收无效对象的过程" class="headerlink" title="回收无效对象的过程"></a>回收无效对象的过程</h3><p>当JVM筛选出失效的对象之后，并不是立即清除，而是再给对象一次重生的机会，具体过程如下：</p>
+<ul>
+<li>Java虚拟机栈所引用的对象(栈帧中局部变量表中引用类型的变量所引用的对象)</li>
+<li>方法区中静态属性引用的对象</li>
+<li>方法区中常量所引用的对象</li>
+<li>本地方法栈所引用的对象 </li>
+</ul>
+<p>PS：注意！GC Roots并不包括堆中对象所引用的对象！这样就不会出现循环引用。</p>
+<p>两者对比：<br>引用计数法虽然简单，但存在一个严重的问题，它无法解决循环引用的问题。<br>因此，目前主流语言均使用可达性分析方法来判断对象是否有效。</p>
+<h4 id="finalize"><a href="#finalize" class="headerlink" title="finalize()"></a>finalize()</h4><p>finalize()，类似 C++ 的析构函数，用于关闭外部资源。但是 try-finally 等方式可以做得更好，并且该方法运行代价很高，不确定性大，无法保证各个对象的调用顺序，因此最好不要使用。</p>
+<p>当一个对象可被回收时，如果需要执行该对象的 finalize() 方法，那么就<code>有可能在该方法中让对象重新被引用</code>，从而实现自救。自救只能进行一次，如果回收的对象之前调用了 finalize() 方法自救，后面回收时不会再调用该方法。</p>
+<hr>
+<p>当JVM筛选出失效的对象之后，并不是立即清除，而是再给对象一次重生的机会，具体过程如下：</p>
 <p>判断该对象是否覆盖了finalize()方法</p>
-<p>若已覆盖该方法，并该对象的finalize()方法还没有被执行过，那么就会将finalize()扔到F-Queue队列中；</p>
+<p>若已覆盖该方法，并未被执行过，那么就会将finalize()扔到F-Queue队列中；</p>
 <p>若未覆盖该方法，则直接释放对象内存。</p>
 <p>执行F-Queue队列中的finalize()方法。<br>虚拟机会以较低的优先级执行这些finalize()方法们，也不会确保所有的finalize()方法都会执行结束。如果finalize()方法中出现耗时操作，虚拟机就直接停止执行，将该对象清除。</p>
-<p>对象重生或死亡<br>如果在执行finalize()方法时，将this赋给了某一个引用，那么该对象就重生了。如果没有，那么就会被垃圾收集器清除。</p>
-<p>注意：<br>强烈不建议使用finalize()函数进行任何操作！如果需要释放资源，请使用try-finally。<br>因为finalize()不确定性大，开销大，无法保证顺利执行。</p>
+<p>如果在执行finalize()方法时，将this赋给了某一个引用，那么该对象就重生了。如果没有，那么就会被垃圾收集器清除。</p>
+<h3 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h3><p>无论是通过引用计数算法判断对象的引用数量，还是通过可达性分析算法判断对象是否可达，判定对象是否可被回收都与引用有关。</p>
+<p>Java 提供了四种强度不同的引用类型。</p>
+<ol>
+<li>强引用</li>
+</ol>
+<p>被强引用关联的对象不会被回收。</p>
+<p>使用 new 一个新对象的方式来创建强引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object obj = new Object();</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>软引用</li>
+</ol>
+<p>被软引用关联的对象只有在<strong>内存不够</strong>的情况下才会被回收。</p>
+<p>使用 SoftReference 类来创建软引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object obj = new Object();</span><br><span class="line">SoftReference&lt;Object&gt; sf = new SoftReference&lt;Object&gt;(obj);</span><br><span class="line">obj = null;  // 使对象只被软引用关联</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>弱引用</li>
+</ol>
+<p>被弱引用关联的对象<strong>一定会被回收</strong>，也就是说它只能存活到下一次垃圾回收发生之前。</p>
+<p>使用 WeakReference 类来创建弱引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object obj = new Object();</span><br><span class="line">WeakReference&lt;Object&gt; wf = new WeakReference&lt;Object&gt;(obj);</span><br><span class="line">obj = null;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>虚引用</li>
+</ol>
+<p>又称为幽灵引用或者幻影引用，一个对象是否有虚引用的存在，不会对其生存时间造成影响，也无法通过虚引用得到一个对象。</p>
+<p>为一个对象设置虚引用的唯一目的是能<strong>在这个对象被回收时收到一个系统通知</strong>。</p>
+<p>使用 PhantomReference 来创建虚引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object obj = new Object();</span><br><span class="line">PhantomReference&lt;Object&gt; pf = new PhantomReference&lt;Object&gt;(obj, null);</span><br><span class="line">obj = null;</span><br></pre></td></tr></table></figure>
 <h3 id="垃圾收集的方法有哪些"><a href="#垃圾收集的方法有哪些" class="headerlink" title="垃圾收集的方法有哪些"></a>垃圾收集的方法有哪些</h3><p>1、标记-清除</p>
-<p>这是垃圾收集算法中最基础的，它的思想就是标记哪些要被回收的对象，然后统一回收。</p>
-<p>这种方法很简单，但是会有两个主要问题：1.效率不高，标记和清除的效率都很低；2.会产生大量不连续的内存碎片，导致以后程序在分配较大的对象时，由于没有充足的连续内存而提前触发一次GC动作。</p>
-<p>2、复制算法</p>
-<p>为了解决效率问题，复制算法将可用内存按容量划分为++相等的两部分++，然后每次只使用其中的一块，当一块内存用完时，就将++还存活的对象++复制到第二块内存上，然后一次性清楚完第一块内存，再将第二块上的对象复制到第一块。但是这种方式，内存的代价太高，每次基本上都要浪费一般的内存。</p>
-<p>于是将该算法进行了改进，内存区域不再是按照1：1去划分，而是将内存划分为8:1:1三部分，较大那份内存交Eden区，其余是两块较小的内存区叫Survior区。每次都会优先使用Eden区，若Eden区满，就将对象复制到第二块内存区上，然后清除Eden区，如果此时存活的对象太多，以至于Survivor不够时，会将这些对象通过分配担保机制复制到老年代中。(java堆又分为新生代和老年代)</p>
-<p>3、标记-整理</p>
-<p>该算法主要是为了解决标记-清除，产生大量内存碎片的问题；当对象存活率较高时，也解决了复制算法的效率问题。它的不同之处就是在清除对象的时候现++将可回收对象移动到一端，然后清除掉端边界以外的对象++，这样就不会产生内存碎片了。</p>
+<p>标记要回收的对象，然后清除。</p>
+<p>不足：</p>
+<ul>
+<li>标记和清除过程效率都不高；</li>
+<li>会产生大量不连续的内存碎片，导致无法给大对象分配内存。</li>
+</ul>
+<p>2、标记-整理</p>
+<p>让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</p>
+<p>优点:</p>
+<p>不会产生内存碎片</p>
+<p>不足:</p>
+<p>需要移动大量对象，处理效率比较低。</p>
+<p>3、复制算法</p>
+<p>将内存划分为大小相等的两块，每次只使用其中一块，当这一块内存用完了就将还存活的对象复制到另一块上面，然后再把使用过的内存空间进行一次清理。</p>
+<p>主要不足是只使用了内存的一半。</p>
+<p>现在的商业虚拟机都采用这种收集算法回收新生代，但是并不是划分为大小相等的两块，而是一块较大的 Eden 空间和两块较小的 Survivor 空间，每次使用 Eden 和其中一块 Survivor。在回收时，将 Eden 和 Survivor 中还存活着的对象全部复制到另一块 Survivor 上，最后清理 Eden 和使用过的那一块 Survivor。</p>
+<p>HotSpot 虚拟机的 Eden 和 Survivor 大小比例默认为 8:1，保证了内存的利用率达到 90%。如果每次回收有多于 10% 的对象存活，那么一块 Survivor 就不够用了，此时需要依赖于老年代进行空间分配担保，也就是借用老年代的空间存储放不下的对象。</p>
 <p>4、分代收集</p>
-<p>现在的虚拟机垃圾收集大多采用这种方式，它++根据对象的生存周期，将堆分为新生代和老年代。++</p>
-<p>在新生代中，由于对象生存期短，每次回收都会有大量对象死去，那么这时就采用复制算法。老年代里的对象存活率较高，没有额外的空间进行分配担保，所以可以使用标记-整理 或者 标记-清除。</p>
-<h2 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h2><h3 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h3><p>一个类从加载进内存到卸载出内存为止，一共经历7个阶段： </p>
+<p>现在的商业虚拟机采用分代收集算法，它根据对象存活周期将内存划分为几块，不同块采用适当的收集算法。</p>
+<p>一般将堆分为新生代和老年代。</p>
+<ul>
+<li>新生代使用：复制算法</li>
+<li>老年代使用：标记 - 清除 或者 标记 - 整理 算法</li>
+</ul>
+<h2 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h2><h3 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h3><p>一个类从加载进内存到卸载出内存为止，一共经历7个阶段： </p>
 <p>加载——&gt;验证——&gt;准备——&gt;解析——&gt;初始化——&gt;<em>使用——&gt;卸载</em></p>
-<p>其中，类加载包括5个阶段：<br>加载——&gt;验证——&gt;准备——&gt;解析——&gt;初始化</p>
+<p>其中，类加载包括5个阶段：<br>加载——&gt;[验证——&gt;准备——&gt;解析]——&gt;初始化</p>
 <p>在类加载的过程中，以下3个过程称为连接：<br>验证——&gt;准备——&gt;解析</p>
 <p>因此，JVM的类加载过程也可以概括为3个过程：<br>加载——&gt;连接——&gt;初始化</p>
 <p>我们已经知道，类加载的过程包括：加载、连接、初始化，连接又分为：验证、准备、解析，所以说类加载一共分为5步：++加载、验证、准备、解析、初始化++。</p>
 <p>其中加载、验证、准备、初始化的开始顺序是依次进行的，这些步骤开始之后的过程可能会有重叠。<br>而解析过程会发生在初始化过程中。</p>
-<h3 id="类加载过程中“初始化”开始的时机"><a href="#类加载过程中“初始化”开始的时机" class="headerlink" title="类加载过程中“初始化”开始的时机"></a>类加载过程中“初始化”开始的时机</h3><ol>
-<li>在运行过程中遇到如下字节码指令时，如果类尚未初始化，那就要进行初始化：new、getstatic、putstatic、invokestatic。这四个指令对应的Java代码场景是：<br>通过new创建对象；<br>读取、设置一个类的静态成员变量(不包括final修饰的静态变量)；<br>调用一个类的静态成员函数。</li>
-<li>使用java.lang.reflect进行反射调用的时候，如果类没有初始化，那就需要初始化；</li>
-<li>当初始化一个类的时候，若其父类尚未初始化，那就先要让其父类初始化，然后再初始化本类；<br>当虚拟机启动时，虚拟机会首先初始化带有main方法的类，即主类； </li>
-</ol>
-<p>JVM规范中要求在程序运行过程中，“当且仅当”出现上述4个条件之一的情况才会初始化一个类。如果间接满足上述初始化条件是不会初始化类的。</p>
-<p>其中，直接满足上述初始化条件的情况叫做++主动引用++；间接满足上述初始化过程的情况叫做++被动引用++。<br>那么，只有当程序在运行过程中满足主动引用的时候才会初始化一个类，若满足被动引用就不会初始化一个类。 </p>
-<p>接口的初始化：</p>
-<p>接口和类都需要初始化，接口和类的初始化过程基本一样，不同点在于：类初始化时，如果发现父类尚未被初始化，则先要初始化父类，然后再初始化自己；但接口初始化时，并不要求父接口已经全部初始化，只有程序在运行过程中用到当父接口中的东西时才初始化父接口。</p>
 <h2 id="类加载的过程"><a href="#类加载的过程" class="headerlink" title="类加载的过程"></a>类加载的过程</h2><p>注意：“加载”是“类加载”过程的第一步，千万不要混淆。</p>
 <h4 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h4><p>在加载过程中，JVM主要做3件事情：</p>
 <ol>
-<li><p>通过一个类的全限定名来获取这个类的二进制字节流，即class文件： </p>
+<li><p>通过类的完全限定名称获取定义该类的二进制字节流,即class文件</p>
 <p> 在程序运行过程中，当要访问一个类时，若发现这个类尚未被加载，并满足类初始化时机的条件时，就根据要被初始化的这个类的全限定名找到该类的二进制字节流，开始加载过程。</p>
 </li>
 <li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构；</li>
-<li><p>在内存中创建一个java.lang.Class类型的对象：</p>
+<li><p>在内存中生成一个代表该类的 Class 对象，作为方法区中该类各种数据的访问入口。</p>
 <p> 接下来程序在运行过程中所有对该类的访问都通过这个类对象，也就是这个Class类型的类对象是提供给外界访问该类的接口。</p>
 </li>
 </ol>
@@ -387,7 +444,7 @@
 <ul>
 <li>验证的目的是什么？</li>
 </ul>
-<p>验证是为了保证二进制字节流中的信息符合虚拟机规范，并没有安全问题。</p>
+<p>确保 Class 文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。</p>
 <ul>
 <li>验证的过程</li>
 </ul>
@@ -408,28 +465,50 @@
 <p> 本阶段验证发生在++解析阶段++，确保解析能正常执行。 </p>
 </li>
 </ol>
-<h4 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h4><p>准备阶段完成两件事情：</p>
-<ol>
-<li><p>为已经在方法区中的类中的静态成员变量分配内存</p>
-<pre><code>类的静态成员变量也存储在方法区中。 
-</code></pre></li>
-<li><p>为静态成员变量设置初始值</p>
-<pre><code>初始值为0、false、null等。
-</code></pre></li>
-</ol>
+<h4 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h4><p>类变量是被 static 修饰的变量，<code>准备阶段为类变量分配内存并设置初始值</code>，存储在方法区中。</p>
+<p>实例变量不会在这阶段分配内存，它会在对象实例化时随着对象一起被分配在堆中。应该注意到，实例化不是类加载的一个过程，类加载发生在所有实例化操作之前，并且类加载只进行一次，实例化可以进行多次。</p>
+<p>初始值一般为 0,null,false，例如下面的类变量 value 被初始化为 0 而不是 123。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static int value = 123;</span><br></pre></td></tr></table></figure>
+<p>如果类变量是常量，那么它将初始化为表达式所定义的值而不是 0。例如下面的常量 value 被初始化为 123 而不是 0。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static final int value = 123;</span><br></pre></td></tr></table></figure>
 <h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><p>解析阶段是虚拟机将常量池中的符号引用替换为直接引用的过程。 </p>
-<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><p>初始化阶段就是执行类构造器clinit()的过程。 </p>
-<p>clinit()方法由编译器自动产生，收集类中static{}代码块中的类变量赋值语句和类中静态成员变量的赋值语句。在准备阶段，类中静态成员变量已经完成了默认初始化，而在初始化阶段，clinit()方法对静态成员变量进行显示初始化。</p>
+<p>其中解析过程在某些情况下可以在初始化阶段之后再开始，这是为了支持 Java 的动态绑定。</p>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><p>初始化阶段才真正开始执行类中定义的 Java 程序代码。</p>
+<p>初始化阶段就是执行类构造器clinit()的过程。 </p>
+<p>clinit()方法由编译器自动产生，收集类中所有<strong>类变量的赋值动作</strong>和<strong>静态语句块中的语句</strong>合并产生。在准备阶段，类中静态成员变量已经完成了默认初始化，而在初始化阶段，clinit()方法对静态成员变量进行显示初始化。</p>
 <p>初始化过程的注意点</p>
 <ul>
-<li>clinit()方法中静态成员变量的赋值顺序是根据Java代码中成员变量的出现的顺序决定的。</li>
-<li>构造函数init()需要显示调用父类构造函数，而类的构造函数clinit()不需要调用父类的类构造函数，因为虚拟机会确保子类的clinit()方法执行前已经执行了父类的clinit()方法。</li>
 <li>如果一个类/接口中没有静态代码块，也没有静态成员变量的赋值操作，那么编译器就不会生成clinit()方法。</li>
-<li>接口也需要通过clinit()方法为接口中定义的静态成员变量显示初始化。</li>
-<li>接口中不能使用静态代码块。</li>
-<li>接口在执行clinit()方法前，虚拟机不会确保其父接口的clinit()方法被执行，只有当父接口中的静态成员变量被使用到时才会执行父接口的clinit()方法。</li>
-<li>虚拟机会给clinit()方法加锁，因此当多条线程同时执行某一个类的clinit()方法时，只有一个方法会被执行，其它的方法都被阻塞。并且，只要有一个clinit()方法执行完，其它的clinit()方法就不会再被执行。因此，在同一个类加载器下，同一个类只会被初始化一次。</li>
+<li>clinit()方法中静态成员变量的赋值顺序是根据Java代码中成员变量的出现的顺序决定的。</li>
+<li>因为虚拟机会确保父类的 <clinit>() 方法先执行，也就意味着父类中定义的静态语句块的执行要优先于子类。</clinit></li>
+<li>接口中不可以使用静态语句块，但仍然有类变量初始化的赋值操作，因此接口与类一样都会生成 <clinit>() 方法。但接口与类不同的是，执行接口的 <clinit>() 方法不需要先执行父接口的 <clinit>() 方法。只有当父接口中定义的变量使用时，父接口才会初始化。</clinit></clinit></clinit></li>
+<li>虚拟机会加锁保证一个类的 <clinit>() 方法在多线程环境下被正确的加锁和同步，因此当多条线程同时执行某一个类的clinit()方法时，只有一个方法会被执行，其它的方法都被阻塞。并且，只要有一个clinit()方法执行完，其它的clinit()方法就不会再被执行。因此，在同一个类加载器下，同一个类只会被初始化一次。</clinit></li>
 </ul>
+<h3 id="类初始化的时机"><a href="#类初始化的时机" class="headerlink" title="类初始化的时机"></a>类初始化的时机</h3><h4 id="主动引用"><a href="#主动引用" class="headerlink" title="主动引用"></a>主动引用</h4><ol>
+<li><p>在运行过程中遇到如下字节码指令时，如果类尚未初始化，那就要进行初始化：new、getstatic、putstatic、invokestatic。这四个指令对应的Java代码场景是： </p>
+<pre><code>通过new创建对象；
+读取、设置一个类的静态成员变量(不包括final修饰的静态变量)；
+调用一个类的静态成员函数。
+</code></pre></li>
+<li>使用java.lang.reflect包的方法对类进行反射调用的时候，如果类没有初始化，那就需要初始化；</li>
+<li>当初始化一个类的时候，若其父类尚未初始化，那就先要让其父类初始化，然后再初始化本类；</li>
+<li>当虚拟机启动时，虚拟机会首先初始化带有main方法的类，即主类； </li>
+</ol>
+<p>接口的初始化：</p>
+<p>接口和类都需要初始化，接口和类的初始化过程基本一样，不同点在于：类初始化时，如果发现父类尚未被初始化，则先要初始化父类，然后再初始化自己；但接口初始化时，并不要求父接口已经全部初始化，只有程序在运行过程中用到当父接口中的东西时才初始化父接口。</p>
+<h4 id="被动引用"><a href="#被动引用" class="headerlink" title="被动引用"></a>被动引用</h4><p>以上 4 种场景中的行为称为对一个类进行主动引用。除此之外，所有引用类的方式都不会触发初始化，称为被动引用。被动引用的常见例子包括：</p>
+<ul>
+<li>通过子类引用父类的静态字段，不会导致子类初始化。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(SubClass.value);  // value 字段在 SuperClass 中定义</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过数组定义来引用类，不会触发此类的初始化。该过程会对数组类进行初始化，数组类是一个由虚拟机自动生成的、直接继承自 Object 的子类，其中包含了数组的属性和方法。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SuperClass[] sca = new SuperClass[10];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(ConstClass.HELLOWORLD);</span><br></pre></td></tr></table></figure>
 <h2 id="类与类加载器"><a href="#类与类加载器" class="headerlink" title="类与类加载器"></a>类与类加载器</h2><p>类加载器的作用：</p>
 <p>将class文件加载进JVM的方法区，并在方法区中创建一个java.lang.Class对象作为外界访问这个类的接口。</p>
 <p>类与类加载器的关系：</p>
@@ -599,7 +678,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM内存模型"><span class="nav-number">1.</span> <span class="nav-text">JVM内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序计数器"><span class="nav-number">1.1.</span> <span class="nav-text">程序计数器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">1.2.</span> <span class="nav-text">Java虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈"><span class="nav-number">1.3.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java堆"><span class="nav-number">1.4.</span> <span class="nav-text">Java堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法区"><span class="nav-number">1.5.</span> <span class="nav-text">方法区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾回收"><span class="nav-number">2.</span> <span class="nav-text">垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何判定哪些对象需要回收（判断一个对象是否存活）？"><span class="nav-number">2.1.</span> <span class="nav-text">如何判定哪些对象需要回收（判断一个对象是否存活）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#回收无效对象的过程"><span class="nav-number">2.2.</span> <span class="nav-text">回收无效对象的过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集的方法有哪些"><span class="nav-number">2.3.</span> <span class="nav-text">垃圾收集的方法有哪些</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载"><span class="nav-number">3.</span> <span class="nav-text">类加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类的生命周期"><span class="nav-number">3.1.</span> <span class="nav-text">类的生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载过程中“初始化”开始的时机"><span class="nav-number">3.2.</span> <span class="nav-text">类加载过程中“初始化”开始的时机</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载的过程"><span class="nav-number">4.</span> <span class="nav-text">类加载的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#加载"><span class="nav-number">4.0.1.</span> <span class="nav-text">加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#验证"><span class="nav-number">4.0.2.</span> <span class="nav-text">验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#准备"><span class="nav-number">4.0.3.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解析"><span class="nav-number">4.0.4.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化"><span class="nav-number">4.0.5.</span> <span class="nav-text">初始化</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#类与类加载器"><span class="nav-number">5.</span> <span class="nav-text">类与类加载器</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM内存模型"><span class="nav-number">1.</span> <span class="nav-text">JVM内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序计数器"><span class="nav-number">1.1.</span> <span class="nav-text">程序计数器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">1.2.</span> <span class="nav-text">Java虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈"><span class="nav-number">1.3.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java堆"><span class="nav-number">1.4.</span> <span class="nav-text">Java堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法区"><span class="nav-number">1.5.</span> <span class="nav-text">方法区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾回收"><span class="nav-number">2.</span> <span class="nav-text">垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何判定哪些对象需要回收（判断一个对象是否存活）？"><span class="nav-number">2.1.</span> <span class="nav-text">如何判定哪些对象需要回收（判断一个对象是否存活）？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#finalize"><span class="nav-number">2.1.1.</span> <span class="nav-text">finalize()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用类型"><span class="nav-number">2.2.</span> <span class="nav-text">引用类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集的方法有哪些"><span class="nav-number">2.3.</span> <span class="nav-text">垃圾收集的方法有哪些</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载机制"><span class="nav-number">3.</span> <span class="nav-text">类加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类的生命周期"><span class="nav-number">3.1.</span> <span class="nav-text">类的生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载的过程"><span class="nav-number">4.</span> <span class="nav-text">类加载的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#加载"><span class="nav-number">4.0.1.</span> <span class="nav-text">加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#验证"><span class="nav-number">4.0.2.</span> <span class="nav-text">验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#准备"><span class="nav-number">4.0.3.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解析"><span class="nav-number">4.0.4.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化"><span class="nav-number">4.0.5.</span> <span class="nav-text">初始化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类初始化的时机"><span class="nav-number">4.1.</span> <span class="nav-text">类初始化的时机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#主动引用"><span class="nav-number">4.1.1.</span> <span class="nav-text">主动引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#被动引用"><span class="nav-number">4.1.2.</span> <span class="nav-text">被动引用</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#类与类加载器"><span class="nav-number">5.</span> <span class="nav-text">类与类加载器</span></a></li></div>
             
 
           </div>
