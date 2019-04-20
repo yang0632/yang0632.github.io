@@ -97,7 +97,7 @@
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p1_05.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p2.jpg">
 <meta property="og:image" content="https://i.loli.net/2019/03/25/5c98f8dd22259.png">
-<meta property="og:updated_time" content="2019-04-20T02:09:12.438Z">
+<meta property="og:updated_time" content="2019-04-20T09:00:01.270Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="排序整理">
 <meta name="twitter:description" content="选择排序简单选择 一种简单且直观的排序算法。 不断在剩余元素中选择最小者，因此叫选择排序。  思想：  找到数组中最小的元素，和a[0]交换 在剩下的元素里找到最小的元素，和a[1]交换  两个鲜明特点；  和输入的初始状态无关。 哪怕原数组已排序完成，也是O(n²) 数据移动最少。选择排序用了N次交换  123456789101112131415public static void select">
@@ -402,7 +402,7 @@
 <td>O(nlogn)</td>
 <td>O(nlogn)</td>
 <td>O(logn)</td>
-<td>O(n)</td>
+<td>O(1)</td>
 <td>不稳定</td>
 </tr>
 </tbody>
@@ -498,7 +498,7 @@
 <td>快排</td>
 <td>O(nlogn)</td>
 <td>O(nlogn)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(logn)栈的深度</td>
 <td>不稳定</td>
 <td>基本有序或者逆序，效果最差</td>
@@ -569,9 +569,9 @@
 <tbody>
 <tr>
 <td>直插</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(n)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(1)</td>
 <td>是</td>
 </tr>
@@ -585,9 +585,9 @@
 </tr>
 <tr>
 <td>冒泡</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(n)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(1)</td>
 <td>是</td>
 </tr>
@@ -595,15 +595,15 @@
 <td>快排</td>
 <td>O(nlogn)</td>
 <td>O(nlogn)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(logn)，栈的深度</td>
 <td>不稳定</td>
 </tr>
 <tr>
 <td>简选</td>
-<td>O($n^2 $)</td>
-<td>O($n^2 $)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
+<td>O($n^2$)</td>
+<td>O($n^2$)</td>
 <td>O(1)</td>
 <td>不稳定</td>
 </tr>
@@ -612,7 +612,7 @@
 <td>O(nlog⁡n)</td>
 <td>O(nlogn)</td>
 <td>O(nlogn)</td>
-<td>O(n)</td>
+<td>O(1)</td>
 <td>不稳定</td>
 </tr>
 <tr>
@@ -634,7 +634,7 @@
 </tbody>
 </table>
 <p>稳定的：<strong>插、冒、归、基</strong></p>
-<p>比较次数与初始状态无关：<strong>选择O($n^2 $)、</strong>归并**O(nlogn)</p>
+<p>比较次数与初始状态无关：<strong>选择O($n^2$)、</strong>归并**O(nlogn)</p>
 <p>排序趟数与初始状态无关：选择、插入、基数</p>
 <p>冒、选、堆：每趟都有1个在最终的位置</p>
 <p><strong>时间复杂度</strong>：<strong>比较重要的三种：快归堆，都是</strong>O(nlogn)，基数排序O(d(n+r))， 其余O($n^2 $)，</p>

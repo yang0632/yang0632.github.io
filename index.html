@@ -316,11 +316,12 @@
 <p>如果两个线程按照上面的执行流程，那么i最后是1。如果最后的写回生效的慢，你再读取i的值，都可能是0，这就是缓存不一致问题。</p>
 <p>JMM主要就是围绕着如何在并发过程中如何处理原子性、可见性和有序性这3个特征来建立的，通过解决这三个问题，可以解除缓存不一致的问题。而volatile跟可见性和有序性都有关。</p>
 <h4 id="内存模型三大特性"><a href="#内存模型三大特性" class="headerlink" title="内存模型三大特性"></a>内存模型三大特性</h4><h5 id="1-原子性"><a href="#1-原子性" class="headerlink" title="1.原子性"></a>1.原子性</h5><p>Java中，对基本数据类型的读取和赋值操作是原子性操作，所谓原子性操作就是指这些操作是不可中断的，要做一定做完，要么就没有执行。 比如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i = 2;</span><br><span class="line">j = i;</span><br><span class="line">i++;</span><br><span class="line">i = i + 1；</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">i = 2;</span><br><span class="line">j = i;</span><br><span class="line">i++;</span><br><span class="line">i = i + 1;</span><br><span class="line">int n=6;</span><br></pre></td></tr></table></figure>
 <p>上面4个操作中，</p>
 <p><code>i=2</code>是读取操作，必定是原子性操作</p>
 <p><code>j=i</code>其实分为两步，一是读取i的值，然后再赋值给j,这就是2步操作了，称不上原子操作</p>
 <p><code>i++</code>和<code>i = i + 1</code>其实是等效的，读取、操作、赋值3个操作。所以上面的举例中，最后的值可能出现多种情况，就是因为满足不了原子性。</p>
+<p><code>int n=6</code>声明并赋值不是原子操作。①声明一个变量n ②给n赋值为6——这样就会有一个中间状态：变量n已经被声明了但是还没有被赋值的状态。</p>
 <p>这么说来，只有简单的读取，赋值是原子操作，还只能是用数字赋值，用变量的话还多了一步读取变量值的操作。有个例外是，虚拟机规范中允许对64位数据类型(long和double)，分为2次32为的操作来处理，但是最新JDK实现还是实现了原子操作的。</p>
 <p>JMM只实现了基本的原子性，像上面<code>i++</code>那样的操作，使用原子类或者<code>synchronized</code>来保证整块代码的原子性，线程在释放锁之前，必然会把<code>i</code>的值刷回到主存的。</p>
 <h5 id="2-可见性"><a href="#2-可见性" class="headerlink" title="2.可见性"></a>2.可见性</h5><p>可见性指当一个线程修改了共享变量的值，其它线程能够立即得知这个修改。Java 内存模型是通过在变量修改后将新值同步回主内存，在变量读取前从主内存刷新变量值来实现可见性的。</p>
@@ -401,8 +402,30 @@
 <p>多线程访问volatile关键字不会发生阻塞，而synchronized关键字可能会发生阻塞 </p>
 <p>volatile关键字能保证数据的可见性，但不能保证数据的原子性。synchronized关键字两者都能保证。 </p>
 <p>volatile关键字主要用于解决变量在多个线程之间的可见性，而 synchronized关键字解决的是多个线程之间访问资源的同步性。 </p>
+<h3 id="volatile应用举例"><a href="#volatile应用举例" class="headerlink" title="volatile应用举例"></a>volatile应用举例</h3><ol>
+<li>状态量标记：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;</span><br><span class="line">volatile bool flag = false;</span><br><span class="line"></span><br><span class="line">public void write() &#123;</span><br><span class="line">    a = 2;              //1</span><br><span class="line">    flag = true;        //2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void multiply() &#123;</span><br><span class="line">    if (flag) &#123;         //3</span><br><span class="line">        int ret = a * a;//4</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种对变量的读写操作，标记为volatile可以保证修改对线程立刻可见。比synchronized,Lock有一定的效率提升。</p>
+<p>2.单例模式的实现，典型的双重检查锁定（DCL）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance==<span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span>(instance==<span class="keyword">null</span>)</span><br><span class="line">                    instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有两次if(instance==null)的判断，这个叫做『双重检查 Double-Check』。</p>
+<ul>
+<li>第一个 if(instance==null)，其实是为了解决代码二中的效率问题，只有instance为null的时候，才进入synchronized的代码段大大减少了几率。</li>
+<li>第二个if(instance==null)，是为了防止可能出现多个实例的情况。</li>
+</ul>
+<p>这是一种懒汉的单例模式，使用时才创建对象，而且为了避免初始化操作的指令重排序，给instance加上了volatile。具体来说：</p>
+<p>首先要理解<code>instance=new Singleton()</code>做了什么。<strong>创建一个对象</strong>有几个步骤:(整理自《java并发编程的艺术》)</p>
+<p>1.检查类是否加载，如果没有先执行类加载过程（加载 验证 准备 解析 初始化）</p>
+<p>2.为对象在堆中分配内存空间</p>
+<p>3.成员变量进行默认初始化</p>
+<p>4.调用构造函数，即把对象按照程序员的意愿初始化</p>
+<p>5.返回地址给引用</p>
+<p>而cpu为了优化程序，可能会进行指令重排序，打乱4,5的步骤，导致实例引用不为null但是仍没有完成初始化。这时候如果切换到线程B执行，发现引用不等于<code>null</code>，就可能导致线程B使用了还没有被初始化的变量，报错。</p>
+<p>而instance加了volatile，则保证在写操作<code>instance = new Singleton();</code>完成之前，不会调用读操作<code>if(instance==null)</code></p>
 <hr>
 <p>参考：</p>
+<p>《java并发编程的艺术》</p>
 <p>《深入理解Java虚拟机》</p>
 <p><a href="https://juejin.im/post/5a2b53b7f265da432a7b821c" target="_blank" rel="noopener">https://juejin.im/post/5a2b53b7f265da432a7b821c</a></p>
 <p><a href="https://www.cnblogs.com/dolphin0520/p/3920373.html" target="_blank" rel="noopener">https://www.cnblogs.com/dolphin0520/p/3920373.html</a></p>
@@ -1572,7 +1595,7 @@ BufferedReader, BufferedWriter
 <td>O(nlogn)</td>
 <td>O(nlogn)</td>
 <td>O(logn)</td>
-<td>O(n)</td>
+<td>O(1)</td>
 <td>不稳定</td>
 </tr>
 </tbody>
@@ -1668,7 +1691,7 @@ BufferedReader, BufferedWriter
 <td>快排</td>
 <td>O(nlogn)</td>
 <td>O(nlogn)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(logn)栈的深度</td>
 <td>不稳定</td>
 <td>基本有序或者逆序，效果最差</td>
@@ -1739,9 +1762,9 @@ BufferedReader, BufferedWriter
 <tbody>
 <tr>
 <td>直插</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(n)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(1)</td>
 <td>是</td>
 </tr>
@@ -1755,9 +1778,9 @@ BufferedReader, BufferedWriter
 </tr>
 <tr>
 <td>冒泡</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(n)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(1)</td>
 <td>是</td>
 </tr>
@@ -1765,15 +1788,15 @@ BufferedReader, BufferedWriter
 <td>快排</td>
 <td>O(nlogn)</td>
 <td>O(nlogn)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
 <td>O(logn)，栈的深度</td>
 <td>不稳定</td>
 </tr>
 <tr>
 <td>简选</td>
-<td>O($n^2 $)</td>
-<td>O($n^2 $)</td>
-<td>O($n^2 $)</td>
+<td>O($n^2$)</td>
+<td>O($n^2$)</td>
+<td>O($n^2$)</td>
 <td>O(1)</td>
 <td>不稳定</td>
 </tr>
@@ -1782,7 +1805,7 @@ BufferedReader, BufferedWriter
 <td>O(nlog⁡n)</td>
 <td>O(nlogn)</td>
 <td>O(nlogn)</td>
-<td>O(n)</td>
+<td>O(1)</td>
 <td>不稳定</td>
 </tr>
 <tr>
@@ -1804,7 +1827,7 @@ BufferedReader, BufferedWriter
 </tbody>
 </table>
 <p>稳定的：<strong>插、冒、归、基</strong></p>
-<p>比较次数与初始状态无关：<strong>选择O($n^2 $)、</strong>归并**O(nlogn)</p>
+<p>比较次数与初始状态无关：<strong>选择O($n^2$)、</strong>归并**O(nlogn)</p>
 <p>排序趟数与初始状态无关：选择、插入、基数</p>
 <p>冒、选、堆：每趟都有1个在最终的位置</p>
 <p><strong>时间复杂度</strong>：<strong>比较重要的三种：快归堆，都是</strong>O(nlogn)，基数排序O(d(n+r))， 其余O($n^2 $)，</p>
