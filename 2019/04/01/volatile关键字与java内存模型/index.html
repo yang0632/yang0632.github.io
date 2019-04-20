@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java,并发,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="由volatile为切入点，串一串java并发的一些知识点 被volatile修饰的共享变量，具有了以下两点特性： 1 . 保证变量的内存可见性; 2 . 禁止指令重排序 涉及到的几个名词： 共享变量：代指实例域，静态域，数组元素；它们存储在堆内存里，堆内存在线程之间共享，会存在内存可见性问题 内存可见性、重排序：这个从Java内存模型（JMM）说起 Java内存模型（JMM）线程之间的共享变量存">
+<meta name="keywords" content="java,并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="volatile关键字与java内存模型">
+<meta property="og:url" content="http://yoursite.com/2019/04/01/volatile关键字与java内存模型/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="由volatile为切入点，串一串java并发的一些知识点 被volatile修饰的共享变量，具有了以下两点特性： 1 . 保证变量的内存可见性; 2 . 禁止指令重排序 涉及到的几个名词： 共享变量：代指实例域，静态域，数组元素；它们存储在堆内存里，堆内存在线程之间共享，会存在内存可见性问题 内存可见性、重排序：这个从Java内存模型（JMM）说起 Java内存模型（JMM）线程之间的共享变量存">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-20T01:59:15.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="volatile关键字与java内存模型">
+<meta name="twitter:description" content="由volatile为切入点，串一串java并发的一些知识点 被volatile修饰的共享变量，具有了以下两点特性： 1 . 保证变量的内存可见性; 2 . 禁止指令重排序 涉及到的几个名词： 共享变量：代指实例域，静态域，数组元素；它们存储在堆内存里，堆内存在线程之间共享，会存在内存可见性问题 内存可见性、重排序：这个从Java内存模型（JMM）说起 Java内存模型（JMM）线程之间的共享变量存">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/01/volatile关键字与java内存模型/">
+
+
+
+
+
+  <title>volatile关键字与java内存模型 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/01/volatile关键字与java内存模型/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">volatile关键字与java内存模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-01T09:56:34+08:00">
+                2019-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><em>由volatile为切入点，串一串java并发的一些知识点</em></p>
+<p>被volatile修饰的共享变量，具有了以下两点特性：</p>
+<p>1 . 保证变量的内存可见性;</p>
+<p>2 . 禁止指令重排序</p>
+<p>涉及到的几个名词：</p>
+<p>共享变量：代指实例域，静态域，数组元素；它们存储在堆内存里，堆内存在线程之间共享，会存在内存可见性问题</p>
+<p>内存可见性、重排序：这个从Java内存模型（JMM）说起</p>
+<h3 id="Java内存模型（JMM）"><a href="#Java内存模型（JMM）" class="headerlink" title="Java内存模型（JMM）"></a>Java内存模型（JMM）</h3><p>线程之间的共享变量存在主内存中，每个线程都有一个私有的本地内存，保存了该线程使用的变量的主内存副本。</p>
+<p>线程只能直接操作本地内存中的变量，不同线程之间的变量值传递需要通过主内存来完成。</p>
+<p>使用本地内存和主内存，虽然加快的速度，但是也带来了一些问题。例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i = i + 1;</span><br></pre></td></tr></table></figure>
+<p>假设i初值为0，当只有一个线程执行它时，结果肯定得到1，当两个线程执行时，不一定是2，可能会：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">线程1： load i from 主存    // i = 0</span><br><span class="line">        i + 1  // i = 1</span><br><span class="line">线程2： load i from主存  // 因为线程1还没将i的值写回主存，所以i还是0</span><br><span class="line">        i +  1 //i = 1</span><br><span class="line">线程1:  save i to 主存</span><br><span class="line">线程2： save i to 主存</span><br></pre></td></tr></table></figure>
+<p>如果两个线程按照上面的执行流程，那么i最后是1。如果最后的写回生效的慢，你再读取i的值，都可能是0，这就是缓存不一致问题。</p>
+<p>JMM主要就是围绕着如何在并发过程中如何处理原子性、可见性和有序性这3个特征来建立的，通过解决这三个问题，可以解除缓存不一致的问题。而volatile跟可见性和有序性都有关。</p>
+<h4 id="内存模型三大特性"><a href="#内存模型三大特性" class="headerlink" title="内存模型三大特性"></a>内存模型三大特性</h4><h5 id="1-原子性"><a href="#1-原子性" class="headerlink" title="1.原子性"></a>1.原子性</h5><p>Java中，对基本数据类型的读取和赋值操作是原子性操作，所谓原子性操作就是指这些操作是不可中断的，要做一定做完，要么就没有执行。 比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i = 2;</span><br><span class="line">j = i;</span><br><span class="line">i++;</span><br><span class="line">i = i + 1；</span><br></pre></td></tr></table></figure>
+<p>上面4个操作中，</p>
+<p><code>i=2</code>是读取操作，必定是原子性操作</p>
+<p><code>j=i</code>其实分为两步，一是读取i的值，然后再赋值给j,这就是2步操作了，称不上原子操作</p>
+<p><code>i++</code>和<code>i = i + 1</code>其实是等效的，读取、操作、赋值3个操作。所以上面的举例中，最后的值可能出现多种情况，就是因为满足不了原子性。</p>
+<p>这么说来，只有简单的读取，赋值是原子操作，还只能是用数字赋值，用变量的话还多了一步读取变量值的操作。有个例外是，虚拟机规范中允许对64位数据类型(long和double)，分为2次32为的操作来处理，但是最新JDK实现还是实现了原子操作的。</p>
+<p>JMM只实现了基本的原子性，像上面<code>i++</code>那样的操作，使用原子类或者<code>synchronized</code>来保证整块代码的原子性，线程在释放锁之前，必然会把<code>i</code>的值刷回到主存的。</p>
+<h5 id="2-可见性"><a href="#2-可见性" class="headerlink" title="2.可见性"></a>2.可见性</h5><p>可见性指当一个线程修改了共享变量的值，其它线程能够立即得知这个修改。Java 内存模型是通过在变量修改后将新值同步回主内存，在变量读取前从主内存刷新变量值来实现可见性的。</p>
+<p>主要有三种实现可见性的方式：</p>
+<ul>
+<li>volatile，当一个变量被volatile修饰时，那么对它的修改会立刻刷新到主存，当其它线程需要读取该变量时，会去内存中读取新值。而普通变量则不能保证这一点。</li>
+<li>synchronized，线程在释放锁之前，，必须把变量值刷新回主内存。</li>
+<li>final，被 final 关键字修饰的字段在构造器中一旦初始化完成，并且没有发生 this 逃逸（其它线程通过 this 引用访问到初始化了一半的对象），那么其它线程就能看见 final 字段的值。</li>
+</ul>
+<h5 id="3-有序性"><a href="#3-有序性" class="headerlink" title="3.有序性"></a>3.有序性</h5><p>JMM是允许编译器和处理器对指令重排序的，但是规定了as-if-serial语义，即不管怎么重排序，（单线程）程序的执行结果不能改变。比如下面的程序段：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">double pi = 3.14;    //A</span><br><span class="line">double r = 1;        //B</span><br><span class="line">double s= pi * r * r;//C</span><br></pre></td></tr></table></figure>
+<p>上面的语句，可以按照<code>A-&gt;B-&gt;C</code>执行，结果为3.14,但是也可以按照<code>B-&gt;A-&gt;C</code>的顺序执行，因为A、B是两句独立的语句，而C则依赖于A、B，所以A、B可以重排序，但是C却不能排到A、B的前面。JMM保证了重排序不会影响到单线程的执行，但是在多线程中却容易出问题。</p>
+<p>比如这样的代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;</span><br><span class="line">bool flag = false;</span><br><span class="line"></span><br><span class="line">public void write() &#123;</span><br><span class="line">    a = 2;              //1</span><br><span class="line">    flag = true;        //2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void multiply() &#123;</span><br><span class="line">    if (flag) &#123;         //3</span><br><span class="line">        int ret = a * a;//4</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如有两个线程执行上述代码段，线程1先执行write，随后线程2再执行multiply，最后ret的值一定是4吗？结果不一定：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">线程1            线程2</span><br><span class="line">flag = true；</span><br><span class="line">								</span><br><span class="line">								if(flag)</span><br><span class="line">								int ret = a*a;</span><br><span class="line">								</span><br><span class="line">a=2;</span><br></pre></td></tr></table></figure>
+<p> 如图所示，write方法里的1和2做了重排序，线程1先对flag赋值为true，随后执行到线程2，ret直接计算出结果，再到线程1，这时候a才赋值为2,很明显迟了一步。</p>
+<p>这时候可以为flag加上volatile关键字，禁止重排序，可以确保程序的“有序性”，也可以上重量级的synchronized来保证有序性,它们能保证那一块区域里的代码都是一次性执行完毕的。</p>
+<p>另外，JMM具备一些先天的<strong>有序性</strong>,即不需要通过任何手段就可以保证的有序性，通常称为<strong>happens-before</strong>原则。<code>&lt;&lt;JSR-133：Java Memory Model and Thread Specification&gt;&gt;</code>定义了如下happens-before规则：</p>
+<blockquote>
+<ol>
+<li><strong>单一线程规则(Single Thread rule)</strong>： 在一个线程内，在程序前面的操作先行发生于后面的操作</li>
+<li><strong>监视器锁规则(Monitor Lock Rule)</strong>：对一个线程的解锁，先行发生于随后对同一个锁的加锁</li>
+<li><strong>volatile变量规则（Volatile Variable Rule）</strong>： 对一个 volatile 变量的写操作先行发生于后面对这个变量的读操作</li>
+<li><strong>传递性</strong>：如果A happens-before B ,且 B happens-before C, 那么 A happens-before C</li>
+<li><strong>线程启动规则</strong>： 如果线程A执行操作<code>ThreadB_start()</code>(启动线程B) ,  那么A线程的<code>ThreadB_start()</code>happens-before 于B中的任意操作</li>
+<li><strong>线程加入原则</strong>： 如果A执行<code>ThreadB.join()</code>并且成功返回，那么线程B中的任意操作happens-before于线程A从<code>ThreadB.join()</code>操作成功返回。</li>
+<li><strong>线程中断原则</strong>： 对线程<code>interrupt()</code>方法的调用先行发生于被中断线程代码检测到中断事件的发生，可以通过<code>Thread.interrupted()</code>方法检测是否有中断发生</li>
+<li><strong>finalize()原则</strong>：一个对象的初始化完成先行发生于它的<code>finalize()</code>方法的开始</li>
+</ol>
+</blockquote>
+<p>第1条规则程序顺序规则是说在一个线程里，所有的操作都是按顺序的，但是在JMM里其实只要执行结果一样，是允许重排序的，这边的happens-before强调的重点也是单线程执行结果的正确性，但是无法保证多线程也是如此。</p>
+<p>第2条规则监视器规则其实也好理解，就是在加锁之前，确定这个锁之前已经被释放了，才能继续加锁。</p>
+<p>第3条规则，就适用到所讨论的volatile，如果一个线程先去写一个变量，另外一个线程再去读，那么写入操作一定在读操作之前。</p>
+<p>第4条规则，就是happens-before的传递性。</p>
+<p>后面几条就不再一一赘述了。</p>
+<h3 id="理解volatile关键字"><a href="#理解volatile关键字" class="headerlink" title="理解volatile关键字"></a>理解volatile关键字</h3><h4 id="1-volatile保证可见性"><a href="#1-volatile保证可见性" class="headerlink" title="1.volatile保证可见性"></a>1.volatile保证可见性</h4><p><strong>volatile写-读的内存语义：</strong></p>
+<p><strong>当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存</strong></p>
+<p><strong>当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，线程接下来将从主内存中读取共享变量。</strong></p>
+<p>再来看volatile建立的happens-before规则，也就是上面说的<strong>volatile变量规则</strong>：</p>
+<p>继续拿上面的一段代码举例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;</span><br><span class="line">bool flag = false;</span><br><span class="line"></span><br><span class="line">public void write() &#123;</span><br><span class="line">   a = 2;              //1</span><br><span class="line">   flag = true;        //2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void multiply() &#123;</span><br><span class="line">   if (flag) &#123;         //3</span><br><span class="line">       int ret = a * a;//4</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码不仅仅受到重排序的困扰，即使1、2没有重排序。3也不会那么顺利的执行的。假设还是线程1先执行<code>write</code>操作，线程2再执行<code>multiply</code>操作，由于线程1是在工作内存里把flag赋值为1，不一定立刻写回主存，所以线程2执行时，<code>multiply</code>再从主存读flag值，仍然可能为false，那么括号里的语句将不会执行。</p>
+<p>如果改成下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;</span><br><span class="line">volatile bool flag = false;</span><br><span class="line"></span><br><span class="line">public void write() &#123;</span><br><span class="line">   a = 2;              //1</span><br><span class="line">   flag = true;        //2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void multiply() &#123;</span><br><span class="line">   if (flag) &#123;         //3</span><br><span class="line">       int ret = a * a;//4</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么线程1先执行<code>write</code>,线程2再执行<code>multiply</code>。根据happens-before原则，这个过程会满足以下3类规则：</p>
+<ol>
+<li>程序顺序规则：1 happens-before 2; 3 happens-before 4; (volatile限制了指令重排序，所以1 在2 之前执行)</li>
+<li>volatile规则：2 happens-before 3</li>
+<li>传递性规则：1 happens-before 4</li>
+</ol>
+<h4 id="2-volatile保证原子性吗"><a href="#2-volatile保证原子性吗" class="headerlink" title="2.volatile保证原子性吗"></a>2.volatile保证原子性吗</h4><p>对单个volatile变量的读/写具有原子性，但是对于类似volatile++这样的复合操作不可以。</p>
+<p>比如下面的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public volatile int inc = 0;</span><br><span class="line"> </span><br><span class="line">    public void increase() &#123;</span><br><span class="line">        inc++;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        final Test test = new Test();</span><br><span class="line">        for(int i=0;i&lt;10;i++)&#123;</span><br><span class="line">            new Thread()&#123;</span><br><span class="line">                public void run() &#123;</span><br><span class="line">                    for(int j=0;j&lt;1000;j++)</span><br><span class="line">                        test.increase();</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;.start();</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完</span><br><span class="line">            Thread.yield();</span><br><span class="line">        System.out.println(test.inc);</span><br><span class="line">    &#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>按道理来说结果是10000，但是运行下很可能是个小于10000的值。有人可能会说volatile不是保证了可见性啊，一个线程对inc的修改，另外一个线程应该立刻看到啊！可是这里的操作inc++是个复合操作啊，包括读取inc的值，对其自增，然后再写回主存。</p>
+<p>假设线程A，读取了inc的值为10，这时候被阻塞了，因为没有对变量进行修改，触发不了volatile规则。</p>
+<p>线程B此时也读读inc的值，主存里inc的值依旧为10，做自增，然后立刻就被写回主存了，为11。</p>
+<p>此时又轮到线程A执行，由于工作内存里保存的是10，所以继续做自增，再写回主存，11又被写了一遍。所以虽然两个线程执行了两次increase()，结果却只加了一次。</p>
+<p>有人说，<strong>volatile不是会使缓存行无效的吗</strong>？但是这里线程A读取到线程B也进行操作之前，并没有修改inc值，所以线程B读取的时候，还是读的10。</p>
+<p>又有人说，线程B将11写回主存，<strong>不会把线程A的缓存行设为无效吗</strong>？但是线程A的读取操作已经做过了啊，只有在做读取操作时，发现自己缓存行无效，才会去读主存的值，所以这里线程A只能继续做自增了。</p>
+<p>综上所述，在这种复合操作的情景下，原子性的功能是维持不了了。但是volatile在上面那种设置flag值的例子里，由于对flag的读/写操作都是单步的，所以还是能保证原子性的。</p>
+<p>要想保证原子性，只能借助于synchronized,Lock以及并发包下的atomic的原子操作类了，即对基本数据类型的 自增（加1操作），自减（减1操作）、以及加法操作（加一个数），减法操作（减一个数）进行了封装，保证这些操作是原子性操作。atomic是利用CAS来实现原子性操作的（Compare And Swap），CAS实际上是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作。</p>
+<h4 id="3-volatile保证有序性吗"><a href="#3-volatile保证有序性吗" class="headerlink" title="3.volatile保证有序性吗"></a>3.volatile保证有序性吗</h4><blockquote>
+<p>若用volatile修饰共享变量，在编译时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序<br>volatile禁止指令重排序的一些规则：<br>　　1.当第二个操作是voaltile写时，无论第一个操作是什么，都不能进行重排序<br>　　2.当第一个操作是volatile读时，不管第二个操作是什么，都不能进行重排序<br>　　3.当第一个操作是volatile写时，第二个操作是volatile读时，不能进行重排序</p>
+</blockquote>
+<p>也就是:<br>1.两个操作都有volatile的，一定不能重排序指令<br>2.后面如果是volatile写操作，则即便前面是普通写操作，为了保证主存数据是后面操作的结果，所以不能重排序<br>3.前面如果是volatile读操作，因为后面的普通写操作可能会刷新主存，为了保证百分百执行结果的正确，则也不能重排序</p>
+<p>4.其他情况可以重排序指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//x、y为非volatile变量</span><br><span class="line">//flag为volatile变量</span><br><span class="line">x = 2;        //语句1</span><br><span class="line">y = 0;        //语句2</span><br><span class="line">flag = true;  //语句3</span><br></pre></td></tr></table></figure>
+<p>由于flag变量为volatile变量，那么在进行指令重排序的过程的时候，不会将语句3放到语句1、语句2前面，但是语句1和语句2的顺序是不作任何保证的。</p>
+<h4 id="4-volatile的原理和实现机制"><a href="#4-volatile的原理和实现机制" class="headerlink" title="4.volatile的原理和实现机制"></a>4.volatile的原理和实现机制</h4><p>volatile到底如何保证可见性和禁止指令重排序的？</p>
+<p>　　下面这段话摘自《深入理解Java虚拟机》：</p>
+<p>　　“观察加入volatile关键字和没有加入volatile关键字时所生成的汇编代码发现，加入volatile关键字时，会多出一个lock前缀指令”</p>
+<p>　　lock前缀指令实际上相当于一个<strong>内存屏障</strong>（也成内存栅栏），内存屏障会提供3个功能：</p>
+<p>　　1）它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成；</p>
+<p>　　2）它会强制将对缓存的修改操作立即写入主存；</p>
+<p>　　3）如果是写操作，它会导致其他CPU中对应的缓存行无效。</p>
+<h3 id="synchronized关键字和volatile关键字比较"><a href="#synchronized关键字和volatile关键字比较" class="headerlink" title="synchronized关键字和volatile关键字比较"></a>synchronized关键字和volatile关键字比较</h3><p>volatile关键字是线程同步的轻量级实现，所以volatile性能肯定比synchronized关键字要好。但是volatile关键字只能用于变量而synchronized关键字可以修饰方法以及代码块。</p>
+<p>多线程访问volatile关键字不会发生阻塞，而synchronized关键字可能会发生阻塞 </p>
+<p>volatile关键字能保证数据的可见性，但不能保证数据的原子性。synchronized关键字两者都能保证。 </p>
+<p>volatile关键字主要用于解决变量在多个线程之间的可见性，而 synchronized关键字解决的是多个线程之间访问资源的同步性。 </p>
+<hr>
+<p>参考：</p>
+<p>《深入理解Java虚拟机》</p>
+<p><a href="https://juejin.im/post/5a2b53b7f265da432a7b821c" target="_blank" rel="noopener">https://juejin.im/post/5a2b53b7f265da432a7b821c</a></p>
+<p><a href="https://www.cnblogs.com/dolphin0520/p/3920373.html" target="_blank" rel="noopener">https://www.cnblogs.com/dolphin0520/p/3920373.html</a></p>
+<p><a href="https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E5%B9%B6%E5%8F%91?id=_1-%E5%8E%9F%E5%AD%90%E6%80%A7" target="_blank" rel="noopener">https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E5%B9%B6%E5%8F%91?id=_1-%E5%8E%9F%E5%AD%90%E6%80%A7</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java-并发/" rel="tag"># java,并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/23/理解synchronized关键字/" rel="next" title="理解synchronized关键字">
+                <i class="fa fa-chevron-left"></i> 理解synchronized关键字
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java内存模型（JMM）"><span class="nav-number">1.</span> <span class="nav-text">Java内存模型（JMM）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#内存模型三大特性"><span class="nav-number">1.1.</span> <span class="nav-text">内存模型三大特性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-原子性"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.原子性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-可见性"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.可见性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-有序性"><span class="nav-number">1.1.3.</span> <span class="nav-text">3.有序性</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理解volatile关键字"><span class="nav-number">2.</span> <span class="nav-text">理解volatile关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-volatile保证可见性"><span class="nav-number">2.1.</span> <span class="nav-text">1.volatile保证可见性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-volatile保证原子性吗"><span class="nav-number">2.2.</span> <span class="nav-text">2.volatile保证原子性吗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-volatile保证有序性吗"><span class="nav-number">2.3.</span> <span class="nav-text">3.volatile保证有序性吗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-volatile的原理和实现机制"><span class="nav-number">2.4.</span> <span class="nav-text">4.volatile的原理和实现机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronized关键字和volatile关键字比较"><span class="nav-number">3.</span> <span class="nav-text">synchronized关键字和volatile关键字比较</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

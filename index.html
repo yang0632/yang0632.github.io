@@ -229,7 +229,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/17/理解synchronized关键字/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/01/volatile关键字与java内存模型/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -248,7 +248,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/04/17/理解synchronized关键字/" itemprop="url">理解synchronized关键字</a></h1>
+                <a class="post-title-link" href="/2019/04/01/volatile关键字与java内存模型/" itemprop="url">volatile关键字与java内存模型</a></h1>
         
 
         <div class="post-meta">
@@ -260,8 +260,234 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-17T00:14:19+08:00">
-                2019-04-17
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-01T09:56:34+08:00">
+                2019-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><em>由volatile为切入点，串一串java并发的一些知识点</em></p>
+<p>被volatile修饰的共享变量，具有了以下两点特性：</p>
+<p>1 . 保证变量的内存可见性;</p>
+<p>2 . 禁止指令重排序</p>
+<p>涉及到的几个名词：</p>
+<p>共享变量：代指实例域，静态域，数组元素；它们存储在堆内存里，堆内存在线程之间共享，会存在内存可见性问题</p>
+<p>内存可见性、重排序：这个从Java内存模型（JMM）说起</p>
+<h3 id="Java内存模型（JMM）"><a href="#Java内存模型（JMM）" class="headerlink" title="Java内存模型（JMM）"></a>Java内存模型（JMM）</h3><p>线程之间的共享变量存在主内存中，每个线程都有一个私有的本地内存，保存了该线程使用的变量的主内存副本。</p>
+<p>线程只能直接操作本地内存中的变量，不同线程之间的变量值传递需要通过主内存来完成。</p>
+<p>使用本地内存和主内存，虽然加快的速度，但是也带来了一些问题。例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i = i + 1;</span><br></pre></td></tr></table></figure>
+<p>假设i初值为0，当只有一个线程执行它时，结果肯定得到1，当两个线程执行时，不一定是2，可能会：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">线程1： load i from 主存    // i = 0</span><br><span class="line">        i + 1  // i = 1</span><br><span class="line">线程2： load i from主存  // 因为线程1还没将i的值写回主存，所以i还是0</span><br><span class="line">        i +  1 //i = 1</span><br><span class="line">线程1:  save i to 主存</span><br><span class="line">线程2： save i to 主存</span><br></pre></td></tr></table></figure>
+<p>如果两个线程按照上面的执行流程，那么i最后是1。如果最后的写回生效的慢，你再读取i的值，都可能是0，这就是缓存不一致问题。</p>
+<p>JMM主要就是围绕着如何在并发过程中如何处理原子性、可见性和有序性这3个特征来建立的，通过解决这三个问题，可以解除缓存不一致的问题。而volatile跟可见性和有序性都有关。</p>
+<h4 id="内存模型三大特性"><a href="#内存模型三大特性" class="headerlink" title="内存模型三大特性"></a>内存模型三大特性</h4><h5 id="1-原子性"><a href="#1-原子性" class="headerlink" title="1.原子性"></a>1.原子性</h5><p>Java中，对基本数据类型的读取和赋值操作是原子性操作，所谓原子性操作就是指这些操作是不可中断的，要做一定做完，要么就没有执行。 比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i = 2;</span><br><span class="line">j = i;</span><br><span class="line">i++;</span><br><span class="line">i = i + 1；</span><br></pre></td></tr></table></figure>
+<p>上面4个操作中，</p>
+<p><code>i=2</code>是读取操作，必定是原子性操作</p>
+<p><code>j=i</code>其实分为两步，一是读取i的值，然后再赋值给j,这就是2步操作了，称不上原子操作</p>
+<p><code>i++</code>和<code>i = i + 1</code>其实是等效的，读取、操作、赋值3个操作。所以上面的举例中，最后的值可能出现多种情况，就是因为满足不了原子性。</p>
+<p>这么说来，只有简单的读取，赋值是原子操作，还只能是用数字赋值，用变量的话还多了一步读取变量值的操作。有个例外是，虚拟机规范中允许对64位数据类型(long和double)，分为2次32为的操作来处理，但是最新JDK实现还是实现了原子操作的。</p>
+<p>JMM只实现了基本的原子性，像上面<code>i++</code>那样的操作，使用原子类或者<code>synchronized</code>来保证整块代码的原子性，线程在释放锁之前，必然会把<code>i</code>的值刷回到主存的。</p>
+<h5 id="2-可见性"><a href="#2-可见性" class="headerlink" title="2.可见性"></a>2.可见性</h5><p>可见性指当一个线程修改了共享变量的值，其它线程能够立即得知这个修改。Java 内存模型是通过在变量修改后将新值同步回主内存，在变量读取前从主内存刷新变量值来实现可见性的。</p>
+<p>主要有三种实现可见性的方式：</p>
+<ul>
+<li>volatile，当一个变量被volatile修饰时，那么对它的修改会立刻刷新到主存，当其它线程需要读取该变量时，会去内存中读取新值。而普通变量则不能保证这一点。</li>
+<li>synchronized，线程在释放锁之前，，必须把变量值刷新回主内存。</li>
+<li>final，被 final 关键字修饰的字段在构造器中一旦初始化完成，并且没有发生 this 逃逸（其它线程通过 this 引用访问到初始化了一半的对象），那么其它线程就能看见 final 字段的值。</li>
+</ul>
+<h5 id="3-有序性"><a href="#3-有序性" class="headerlink" title="3.有序性"></a>3.有序性</h5><p>JMM是允许编译器和处理器对指令重排序的，但是规定了as-if-serial语义，即不管怎么重排序，（单线程）程序的执行结果不能改变。比如下面的程序段：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">double pi = 3.14;    //A</span><br><span class="line">double r = 1;        //B</span><br><span class="line">double s= pi * r * r;//C</span><br></pre></td></tr></table></figure>
+<p>上面的语句，可以按照<code>A-&gt;B-&gt;C</code>执行，结果为3.14,但是也可以按照<code>B-&gt;A-&gt;C</code>的顺序执行，因为A、B是两句独立的语句，而C则依赖于A、B，所以A、B可以重排序，但是C却不能排到A、B的前面。JMM保证了重排序不会影响到单线程的执行，但是在多线程中却容易出问题。</p>
+<p>比如这样的代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;</span><br><span class="line">bool flag = false;</span><br><span class="line"></span><br><span class="line">public void write() &#123;</span><br><span class="line">    a = 2;              //1</span><br><span class="line">    flag = true;        //2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void multiply() &#123;</span><br><span class="line">    if (flag) &#123;         //3</span><br><span class="line">        int ret = a * a;//4</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如有两个线程执行上述代码段，线程1先执行write，随后线程2再执行multiply，最后ret的值一定是4吗？结果不一定：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">线程1            线程2</span><br><span class="line">flag = true；</span><br><span class="line">								</span><br><span class="line">								if(flag)</span><br><span class="line">								int ret = a*a;</span><br><span class="line">								</span><br><span class="line">a=2;</span><br></pre></td></tr></table></figure>
+<p> 如图所示，write方法里的1和2做了重排序，线程1先对flag赋值为true，随后执行到线程2，ret直接计算出结果，再到线程1，这时候a才赋值为2,很明显迟了一步。</p>
+<p>这时候可以为flag加上volatile关键字，禁止重排序，可以确保程序的“有序性”，也可以上重量级的synchronized来保证有序性,它们能保证那一块区域里的代码都是一次性执行完毕的。</p>
+<p>另外，JMM具备一些先天的<strong>有序性</strong>,即不需要通过任何手段就可以保证的有序性，通常称为<strong>happens-before</strong>原则。<code>&lt;&lt;JSR-133：Java Memory Model and Thread Specification&gt;&gt;</code>定义了如下happens-before规则：</p>
+<blockquote>
+<ol>
+<li><strong>单一线程规则(Single Thread rule)</strong>： 在一个线程内，在程序前面的操作先行发生于后面的操作</li>
+<li><strong>监视器锁规则(Monitor Lock Rule)</strong>：对一个线程的解锁，先行发生于随后对同一个锁的加锁</li>
+<li><strong>volatile变量规则（Volatile Variable Rule）</strong>： 对一个 volatile 变量的写操作先行发生于后面对这个变量的读操作</li>
+<li><strong>传递性</strong>：如果A happens-before B ,且 B happens-before C, 那么 A happens-before C</li>
+<li><strong>线程启动规则</strong>： 如果线程A执行操作<code>ThreadB_start()</code>(启动线程B) ,  那么A线程的<code>ThreadB_start()</code>happens-before 于B中的任意操作</li>
+<li><strong>线程加入原则</strong>： 如果A执行<code>ThreadB.join()</code>并且成功返回，那么线程B中的任意操作happens-before于线程A从<code>ThreadB.join()</code>操作成功返回。</li>
+<li><strong>线程中断原则</strong>： 对线程<code>interrupt()</code>方法的调用先行发生于被中断线程代码检测到中断事件的发生，可以通过<code>Thread.interrupted()</code>方法检测是否有中断发生</li>
+<li><strong>finalize()原则</strong>：一个对象的初始化完成先行发生于它的<code>finalize()</code>方法的开始</li>
+</ol>
+</blockquote>
+<p>第1条规则程序顺序规则是说在一个线程里，所有的操作都是按顺序的，但是在JMM里其实只要执行结果一样，是允许重排序的，这边的happens-before强调的重点也是单线程执行结果的正确性，但是无法保证多线程也是如此。</p>
+<p>第2条规则监视器规则其实也好理解，就是在加锁之前，确定这个锁之前已经被释放了，才能继续加锁。</p>
+<p>第3条规则，就适用到所讨论的volatile，如果一个线程先去写一个变量，另外一个线程再去读，那么写入操作一定在读操作之前。</p>
+<p>第4条规则，就是happens-before的传递性。</p>
+<p>后面几条就不再一一赘述了。</p>
+<h3 id="理解volatile关键字"><a href="#理解volatile关键字" class="headerlink" title="理解volatile关键字"></a>理解volatile关键字</h3><h4 id="1-volatile保证可见性"><a href="#1-volatile保证可见性" class="headerlink" title="1.volatile保证可见性"></a>1.volatile保证可见性</h4><p><strong>volatile写-读的内存语义：</strong></p>
+<p><strong>当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存</strong></p>
+<p><strong>当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，线程接下来将从主内存中读取共享变量。</strong></p>
+<p>再来看volatile建立的happens-before规则，也就是上面说的<strong>volatile变量规则</strong>：</p>
+<p>继续拿上面的一段代码举例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;</span><br><span class="line">bool flag = false;</span><br><span class="line"></span><br><span class="line">public void write() &#123;</span><br><span class="line">   a = 2;              //1</span><br><span class="line">   flag = true;        //2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void multiply() &#123;</span><br><span class="line">   if (flag) &#123;         //3</span><br><span class="line">       int ret = a * a;//4</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码不仅仅受到重排序的困扰，即使1、2没有重排序。3也不会那么顺利的执行的。假设还是线程1先执行<code>write</code>操作，线程2再执行<code>multiply</code>操作，由于线程1是在工作内存里把flag赋值为1，不一定立刻写回主存，所以线程2执行时，<code>multiply</code>再从主存读flag值，仍然可能为false，那么括号里的语句将不会执行。</p>
+<p>如果改成下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;</span><br><span class="line">volatile bool flag = false;</span><br><span class="line"></span><br><span class="line">public void write() &#123;</span><br><span class="line">   a = 2;              //1</span><br><span class="line">   flag = true;        //2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void multiply() &#123;</span><br><span class="line">   if (flag) &#123;         //3</span><br><span class="line">       int ret = a * a;//4</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么线程1先执行<code>write</code>,线程2再执行<code>multiply</code>。根据happens-before原则，这个过程会满足以下3类规则：</p>
+<ol>
+<li>程序顺序规则：1 happens-before 2; 3 happens-before 4; (volatile限制了指令重排序，所以1 在2 之前执行)</li>
+<li>volatile规则：2 happens-before 3</li>
+<li>传递性规则：1 happens-before 4</li>
+</ol>
+<h4 id="2-volatile保证原子性吗"><a href="#2-volatile保证原子性吗" class="headerlink" title="2.volatile保证原子性吗"></a>2.volatile保证原子性吗</h4><p>对单个volatile变量的读/写具有原子性，但是对于类似volatile++这样的复合操作不可以。</p>
+<p>比如下面的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public volatile int inc = 0;</span><br><span class="line"> </span><br><span class="line">    public void increase() &#123;</span><br><span class="line">        inc++;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        final Test test = new Test();</span><br><span class="line">        for(int i=0;i&lt;10;i++)&#123;</span><br><span class="line">            new Thread()&#123;</span><br><span class="line">                public void run() &#123;</span><br><span class="line">                    for(int j=0;j&lt;1000;j++)</span><br><span class="line">                        test.increase();</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;.start();</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完</span><br><span class="line">            Thread.yield();</span><br><span class="line">        System.out.println(test.inc);</span><br><span class="line">    &#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>按道理来说结果是10000，但是运行下很可能是个小于10000的值。有人可能会说volatile不是保证了可见性啊，一个线程对inc的修改，另外一个线程应该立刻看到啊！可是这里的操作inc++是个复合操作啊，包括读取inc的值，对其自增，然后再写回主存。</p>
+<p>假设线程A，读取了inc的值为10，这时候被阻塞了，因为没有对变量进行修改，触发不了volatile规则。</p>
+<p>线程B此时也读读inc的值，主存里inc的值依旧为10，做自增，然后立刻就被写回主存了，为11。</p>
+<p>此时又轮到线程A执行，由于工作内存里保存的是10，所以继续做自增，再写回主存，11又被写了一遍。所以虽然两个线程执行了两次increase()，结果却只加了一次。</p>
+<p>有人说，<strong>volatile不是会使缓存行无效的吗</strong>？但是这里线程A读取到线程B也进行操作之前，并没有修改inc值，所以线程B读取的时候，还是读的10。</p>
+<p>又有人说，线程B将11写回主存，<strong>不会把线程A的缓存行设为无效吗</strong>？但是线程A的读取操作已经做过了啊，只有在做读取操作时，发现自己缓存行无效，才会去读主存的值，所以这里线程A只能继续做自增了。</p>
+<p>综上所述，在这种复合操作的情景下，原子性的功能是维持不了了。但是volatile在上面那种设置flag值的例子里，由于对flag的读/写操作都是单步的，所以还是能保证原子性的。</p>
+<p>要想保证原子性，只能借助于synchronized,Lock以及并发包下的atomic的原子操作类了，即对基本数据类型的 自增（加1操作），自减（减1操作）、以及加法操作（加一个数），减法操作（减一个数）进行了封装，保证这些操作是原子性操作。atomic是利用CAS来实现原子性操作的（Compare And Swap），CAS实际上是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作。</p>
+<h4 id="3-volatile保证有序性吗"><a href="#3-volatile保证有序性吗" class="headerlink" title="3.volatile保证有序性吗"></a>3.volatile保证有序性吗</h4><blockquote>
+<p>若用volatile修饰共享变量，在编译时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序<br>volatile禁止指令重排序的一些规则：<br>　　1.当第二个操作是voaltile写时，无论第一个操作是什么，都不能进行重排序<br>　　2.当第一个操作是volatile读时，不管第二个操作是什么，都不能进行重排序<br>　　3.当第一个操作是volatile写时，第二个操作是volatile读时，不能进行重排序</p>
+</blockquote>
+<p>也就是:<br>1.两个操作都有volatile的，一定不能重排序指令<br>2.后面如果是volatile写操作，则即便前面是普通写操作，为了保证主存数据是后面操作的结果，所以不能重排序<br>3.前面如果是volatile读操作，因为后面的普通写操作可能会刷新主存，为了保证百分百执行结果的正确，则也不能重排序</p>
+<p>4.其他情况可以重排序指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//x、y为非volatile变量</span><br><span class="line">//flag为volatile变量</span><br><span class="line">x = 2;        //语句1</span><br><span class="line">y = 0;        //语句2</span><br><span class="line">flag = true;  //语句3</span><br></pre></td></tr></table></figure>
+<p>由于flag变量为volatile变量，那么在进行指令重排序的过程的时候，不会将语句3放到语句1、语句2前面，但是语句1和语句2的顺序是不作任何保证的。</p>
+<h4 id="4-volatile的原理和实现机制"><a href="#4-volatile的原理和实现机制" class="headerlink" title="4.volatile的原理和实现机制"></a>4.volatile的原理和实现机制</h4><p>volatile到底如何保证可见性和禁止指令重排序的？</p>
+<p>　　下面这段话摘自《深入理解Java虚拟机》：</p>
+<p>　　“观察加入volatile关键字和没有加入volatile关键字时所生成的汇编代码发现，加入volatile关键字时，会多出一个lock前缀指令”</p>
+<p>　　lock前缀指令实际上相当于一个<strong>内存屏障</strong>（也成内存栅栏），内存屏障会提供3个功能：</p>
+<p>　　1）它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成；</p>
+<p>　　2）它会强制将对缓存的修改操作立即写入主存；</p>
+<p>　　3）如果是写操作，它会导致其他CPU中对应的缓存行无效。</p>
+<h3 id="synchronized关键字和volatile关键字比较"><a href="#synchronized关键字和volatile关键字比较" class="headerlink" title="synchronized关键字和volatile关键字比较"></a>synchronized关键字和volatile关键字比较</h3><p>volatile关键字是线程同步的轻量级实现，所以volatile性能肯定比synchronized关键字要好。但是volatile关键字只能用于变量而synchronized关键字可以修饰方法以及代码块。</p>
+<p>多线程访问volatile关键字不会发生阻塞，而synchronized关键字可能会发生阻塞 </p>
+<p>volatile关键字能保证数据的可见性，但不能保证数据的原子性。synchronized关键字两者都能保证。 </p>
+<p>volatile关键字主要用于解决变量在多个线程之间的可见性，而 synchronized关键字解决的是多个线程之间访问资源的同步性。 </p>
+<hr>
+<p>参考：</p>
+<p>《深入理解Java虚拟机》</p>
+<p><a href="https://juejin.im/post/5a2b53b7f265da432a7b821c" target="_blank" rel="noopener">https://juejin.im/post/5a2b53b7f265da432a7b821c</a></p>
+<p><a href="https://www.cnblogs.com/dolphin0520/p/3920373.html" target="_blank" rel="noopener">https://www.cnblogs.com/dolphin0520/p/3920373.html</a></p>
+<p><a href="https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E5%B9%B6%E5%8F%91?id=_1-%E5%8E%9F%E5%AD%90%E6%80%A7" target="_blank" rel="noopener">https://cyc2018.github.io/CS-Notes/#/notes/Java%20%E5%B9%B6%E5%8F%91?id=_1-%E5%8E%9F%E5%AD%90%E6%80%A7</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/23/理解synchronized关键字/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/23/理解synchronized关键字/" itemprop="url">理解synchronized关键字</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-23T00:14:19+08:00">
+                2019-03-23
               </time>
             
 
@@ -1137,6 +1363,488 @@ BufferedReader, BufferedWriter
 目的设备
     控制台 System.out,硬盘 FileStream，内存 ArrayStream
 </code></pre><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ByteArrayStream</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//数据源</span></span><br><span class="line">        ByteArrayInputStream bis = <span class="keyword">new</span> ByteArrayInputStream(<span class="string">"ABCD"</span>.getBytes());</span><br><span class="line">        <span class="comment">//数据目的</span></span><br><span class="line">        ByteArrayOutputStream bos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> by = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> ((by=bis.read())!=-<span class="number">1</span>)&#123;</span><br><span class="line">            bos.write(by);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/15/排序整理/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/02/15/排序整理/" itemprop="url">排序整理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-15T10:07:25+08:00">
+                2019-02-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><h3 id="简单选择"><a href="#简单选择" class="headerlink" title="简单选择"></a>简单选择</h3><blockquote>
+<p>一种简单且直观的排序算法。</p>
+<p>不断在剩余元素中选择最小者，因此叫选择排序。</p>
+</blockquote>
+<p><strong>思想：</strong></p>
+<ul>
+<li>找到数组中最小的元素，和a[0]交换</li>
+<li>在剩下的元素里找到最小的元素，和a[1]交换</li>
+</ul>
+<p>两个鲜明特点；</p>
+<ol>
+<li>和输入的初始状态无关。 哪怕原数组已排序完成，也是O(n²)</li>
+<li>数据移动最少。选择排序用了N次交换</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">selectionSort</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;a.length-<span class="number">1</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> min = i;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = i;j&lt;a.length;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(a[j]&lt;a[min])</span><br><span class="line">                    min = j;</span><br><span class="line">            &#125;</span><br><span class="line">            exch(a,i,min);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exch</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> i,<span class="keyword">int</span> j)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = a[i];</span><br><span class="line">        a[i] = a[j];</span><br><span class="line">        a[j]=tmp;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>平均时间复杂度</th>
+<th>最好情况</th>
+<th>最坏情况</th>
+<th>空间复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O(n²)</td>
+<td>O(n²)</td>
+<td>O(n²)</td>
+<td>O(1)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h3><h4 id="堆"><a href="#堆" class="headerlink" title="堆"></a><strong>堆</strong></h4><p>堆排序是对简单选择排序的改进。</p>
+<p>堆是一颗完全二叉树。</p>
+<p>有n个节点，堆的索引从0开始，<strong>节点i的</strong></p>
+<ul>
+<li>左孩子：2⋅i+1</li>
+<li>右孩子：2⋅i+2</li>
+<li>父亲：（i−1）/2</li>
+<li>最后一个父节点：（n/2）-1</li>
+</ul>
+<p><strong>堆添加</strong></p>
+<p>先把元素<strong>添加到末尾</strong>，再<strong>依次向上面调整</strong>，若大于父节点，就<strong>和父节点交换</strong>。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap_04.jpg" alt="img"></p>
+<p><strong>堆删除</strong></p>
+<p><strong>删除堆顶元素</strong>：把末尾元素，放到堆顶，再依次向下调整，每次<strong>选择较大的子节点进行交换</strong>。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap_05.jpg" alt="img"></p>
+<p><strong>删除堆中元素</strong>：把末尾元素，放入空白处，再调整堆即可。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap_06.jpg" alt="img"></p>
+<h4 id="堆排序-1"><a href="#堆排序-1" class="headerlink" title="堆排序"></a><strong>堆排序</strong></h4><p><strong>思路</strong></p>
+<ol>
+<li>初始化堆。把a1,⋯,an构造成为大顶堆</li>
+<li>取出最大值（将其与堆数组的末尾元素交换，此时末尾元素就是最大值)。将a1与an交换，再把a1,⋯.an−1调整为最大堆。</li>
+<li>重复2 (即，交换，建堆；交换，建堆…)</li>
+</ol>
+<p><strong>建立堆</strong></p>
+<p>n个元素，<strong>最后一个父亲节点</strong>：下标 k=n/2−1。</p>
+<p>对这些节点ak,⋯,a0， <strong>依次调整它们的子树，使子树成堆</strong>。即，若<strong>根节点小于左右节点的较大值，则交换</strong>。</p>
+<p><strong>举例</strong></p>
+<p>对于数据{20,30,90,40,70,110,60,10,100,50,80}，建立为最大堆{110,100,90,40,80,20,60,10,30,50,70}</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p1_01.jpg" alt="img"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p1_02.jpg" alt="img"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p1_03.jpg" alt="img"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p1_04.jpg" alt="img"></p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p1_05.jpg" alt="img"></p>
+<p><strong>取出最大值</strong></p>
+<p>把根节点（最大值）和当前堆的末尾值进行交换，最大值放到最后。再对剩余的数据进行成堆，再依次取最大值交换。</p>
+<p><img src="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p2.jpg" alt="img"></p>
+<p>每一次取出最大值重新恢复堆，要O(logn)，有n个数，一共是O(nlogn)。</p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//堆排序</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">heapSort</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n  = a.length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = n/<span class="number">2</span>-<span class="number">1</span>; i&gt;= <span class="number">0</span>;i-- )&#123;</span><br><span class="line">            maxHeap(a,i,n-<span class="number">1</span>);  <span class="comment">// 初始化一个最大堆</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = n-<span class="number">1</span>; i&gt;<span class="number">0</span>; i--)&#123;</span><br><span class="line">            exch(a,<span class="number">0</span>,i);</span><br><span class="line">            maxHeap(a,<span class="number">0</span>,i-<span class="number">1</span>); <span class="comment">// 保证a[0...i-1]依然是个最大堆</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exch</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = a[i];</span><br><span class="line">        a[i] = a[j];</span><br><span class="line">        a[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">maxHeap</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> child;</span><br><span class="line">        <span class="keyword">int</span> cur = start;</span><br><span class="line">        <span class="keyword">for</span>(;<span class="number">2</span>*cur+<span class="number">1</span>&lt;=end;cur = child)&#123;</span><br><span class="line">            child = <span class="number">2</span>*cur+<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span>(child+<span class="number">1</span>&lt;=end &amp;&amp; a[child+<span class="number">1</span>]&gt;a[child])  <span class="comment">// 先找到较大的孩子；有右孩子，且右孩子比左孩子大，则选择右孩子</span></span><br><span class="line">                child++;</span><br><span class="line">            <span class="keyword">if</span>(a[child] &gt; a[cur])&#123;  <span class="comment">// 孩子大于父亲，则交换</span></span><br><span class="line">                exch(a,child,cur);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>总结分析</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>时间</th>
+<th>最好</th>
+<th>最差</th>
+<th>空间</th>
+<th>稳定</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>堆排序</td>
+<td>O(nlogn)</td>
+<td>O(nlogn)</td>
+<td>O(logn)</td>
+<td>O(n)</td>
+<td>不稳定</td>
+</tr>
+</tbody>
+</table>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><h3 id="直接插入排序"><a href="#直接插入排序" class="headerlink" title="直接插入排序"></a>直接插入排序</h3><blockquote>
+<p>将元素插入到有序数组里。</p>
+<p>将数组中的所有元素依次跟前面已经排好的元素相比较，如果选择的元素比已排序的元素小，则交换，直到全部元素都比较过为止。</p>
+<p>可以边比较边交换；或者先比较，大的右移，找到位置再插入（采用这种）</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insertionSort</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = a.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span> ; i&lt; len;i++)&#123; <span class="comment">//从1开始,假设a[0]有序</span></span><br><span class="line">            <span class="keyword">int</span> tmp = a[i];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i;j&gt;=<span class="number">0</span>;j--)&#123;</span><br><span class="line">                <span class="keyword">if</span>(j&gt;<span class="number">0</span> &amp;&amp; a[j-<span class="number">1</span>]&gt;tmp)&#123;</span><br><span class="line">                    a[j] = a[j-<span class="number">1</span>];</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    a[j] = tmp;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h3><blockquote>
+<p>简单插入排序的改进版；它与插入排序的不同之处在于，它会优先比较距离较远的元素。</p>
+<p>希尔排序又称为<code>缩小增量排序</code>， 把整个列表，分成多个[i,i+d,i+2d,…,i+kd]这样的列表，每个进行直接插入排序。每一轮不断缩小d的值，直到全部有序。</p>
+</blockquote>
+<p>实际例子 <code>4 5 1 2 6 3</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># d = 3</span><br><span class="line"><span class="number">4</span> _ _ <span class="number">2</span> _ _</span><br><span class="line">_ <span class="number">5</span> _ _ <span class="number">6</span> _</span><br><span class="line">_ _ <span class="number">1</span> _ _ <span class="number">3</span></span><br><span class="line"># 化为3个列表，分别进行直接插入排序，得到</span><br><span class="line"><span class="number">2</span> <span class="number">5</span> <span class="number">1</span> <span class="number">4</span> <span class="number">6</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"># d = 2</span><br><span class="line"><span class="number">2</span> _ <span class="number">1</span> _ <span class="number">6</span> _</span><br><span class="line">_ <span class="number">5</span> _ <span class="number">4</span> _ <span class="number">3</span></span><br><span class="line"># 排序，得到</span><br><span class="line"><span class="number">1</span> <span class="number">3</span> <span class="number">2</span> <span class="number">4</span> <span class="number">6</span> <span class="number">5</span></span><br><span class="line"></span><br><span class="line"># d = 1</span><br><span class="line"><span class="number">1</span> <span class="number">3</span> <span class="number">2</span> <span class="number">4</span> <span class="number">6</span> <span class="number">5</span></span><br><span class="line"># 直接插入排序，得到</span><br><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><blockquote>
+<p>归并排序的思想是将数组分成两部分，分别进行排序，然后归并起来。</p>
+</blockquote>
+<p>可通过两种方式实现：</p>
+<ul>
+<li>自上而下的递归</li>
+<li>自下而上的迭代</li>
+</ul>
+<p>递归实现的步骤：</p>
+<p>分解&amp;递归&amp;合并</p>
+<ol>
+<li>分解 – 将区间一分为二，求分裂点<code>mid = (lo+hi)/2</code></li>
+<li>递归求解，sort，终结条件是区间长度为1:  <code>lo&gt;=hi</code> （其实sort的作用是决定调用merge的时机）</li>
+<li>合并，merge – 把两个有序的子区间<code>a[lo]...a[mid],a[mid+1]...a[hi]</code>,合并成一个有序区间</li>
+</ol>
+<p><img src="https://i.loli.net/2019/03/25/5c98f8dd22259.png" alt="image.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> low,<span class="keyword">int</span> high)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(low&gt;=high)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> mid = low + (high-low)/<span class="number">2</span>;</span><br><span class="line">    sort(a,low,mid);</span><br><span class="line">    sort(a,mid+<span class="number">1</span>,high);</span><br><span class="line">    <span class="comment">//左右归并</span></span><br><span class="line">    merge(a,low,mid,high);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> low, <span class="keyword">int</span> mid, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] temp = <span class="keyword">new</span> <span class="keyword">int</span>[high-low+<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> i= low;</span><br><span class="line">    <span class="keyword">int</span> j = mid+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> k=<span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 把较小的数先移到新数组中</span></span><br><span class="line">    <span class="keyword">while</span>(i&lt;=mid &amp;&amp; j&lt;=high)&#123;</span><br><span class="line">        <span class="keyword">if</span>(a[i]&lt;a[j])&#123;</span><br><span class="line">            temp[k++] = a[i++];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            temp[k++] = a[j++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 把左边剩余的数移入数组</span></span><br><span class="line">    <span class="keyword">while</span>(i&lt;=mid)&#123;</span><br><span class="line">        temp[k++] = a[i++];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 把右边边剩余的数移入数组</span></span><br><span class="line">    <span class="keyword">while</span>(j&lt;=high)&#123;</span><br><span class="line">        temp[k++] = a[j++];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 把新数组中的数覆盖nums数组</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> x=<span class="number">0</span>;x&lt;temp.length;x++)&#123;</span><br><span class="line">        a[x+low] = temp[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>平均时间复杂度</th>
+<th>最好情况</th>
+<th>最坏情况</th>
+<th>空间复杂度</th>
+<th>稳定性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O(nlogn)</td>
+<td>O(nlogn)</td>
+<td>O(nlogn)</td>
+<td>O(n) ，merge占用</td>
+<td>稳定</td>
+</tr>
+</tbody>
+</table>
+<p>归并排序的形式是一颗二叉树，遍历的次数就是二叉树的深度O(logn)， 而一共n个数。</p>
+<h2 id="交换排序"><a href="#交换排序" class="headerlink" title="交换排序"></a>交换排序</h2><h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><ol>
+<li>冒泡比较的是相邻元素，大的下沉</li>
+<li>每趟排序确定一个最下面位置的数</li>
+</ol>
+<p>冒泡排序算法的运作如下：</p>
+<p>①. 比较相邻的元素。如果第一个比第二个大，就交换他们两个。</p>
+<p>②. 对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对。这步做完后，最后的元素会是最大的数。</p>
+<p>③. 针对所有的元素重复以上的步骤，除了最后一个。</p>
+<p>④. 持续每次对越来越少的元素重复上面的步骤①~③，直到没有任何一对数字需要比较。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">    public static void bubbleSort(int[] a)&#123;</span><br><span class="line">    if(a == null || a.length == 0)&#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    for(int i = 0;i &lt; a.length;i++)&#123;</span><br><span class="line">        for(int j = 0; j &lt; a.length-1-i; j++)&#123;</span><br><span class="line">            if(a[j] &gt; a[j+1])&#123;</span><br><span class="line">                int tmp = a[j];</span><br><span class="line">                a[j] = a[j+1];</span><br><span class="line">                a[j+1] = tmp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="快排"><a href="#快排" class="headerlink" title="快排"></a>快排</h3><p>思路：</p>
+<ul>
+<li><p>选一个数(第一个)为基准v；</p>
+</li>
+<li><p>进行划分（partition）。左边小于等于x，中间x，右边大于等于x；</p>
+</li>
+<li><p>再递归地划分左右两边。</p>
+</li>
+</ul>
+<p>（设置两个指针lo和hi，它们分别指向待排序的数组的头尾；每一趟是把基准归位）</p>
+<p><strong>递归快排</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> lo,<span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(lo&gt;=hi || a == <span class="keyword">null</span> || a.length==<span class="number">0</span>)&#123;</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">int</span> v = partition(a,lo,hi);</span><br><span class="line">      quickSort(a,lo,v-<span class="number">1</span>);</span><br><span class="line">      quickSort(a,v+<span class="number">1</span>,hi);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> lo,<span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">      <span class="keyword">int</span> v = a[lo];</span><br><span class="line">      <span class="keyword">while</span> (lo&lt;hi)&#123;</span><br><span class="line">          <span class="keyword">while</span> (lo&lt;hi &amp;&amp; a[hi]&gt;=v)&#123; <span class="comment">//当&gt;=时，先从后往前(移动指针时保证lo&lt;hi)</span></span><br><span class="line">              hi--;</span><br><span class="line">          &#125;</span><br><span class="line">          exch(a,lo,hi);            </span><br><span class="line">          <span class="keyword">while</span> (lo&lt;hi &amp;&amp; a[lo]&lt;=v)&#123;</span><br><span class="line">              lo++;</span><br><span class="line">          &#125;</span><br><span class="line">          exch(a,lo,hi);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> lo; <span class="comment">//返回轴</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exch</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span></span>&#123;</span><br><span class="line">      <span class="keyword">int</span> tmp = a[i];</span><br><span class="line">      a[i] = a[j];</span><br><span class="line">      a[j] = tmp;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>非递归快排</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSort1</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">    LinkedList&lt;Integer&gt; stack = <span class="keyword">new</span> LinkedList&lt;&gt;(); <span class="comment">// 用栈模拟，存放lo和hi</span></span><br><span class="line">    <span class="keyword">if</span> (start &lt; end) &#123;</span><br><span class="line">        stack.push(end);  <span class="comment">//较大的下标先入栈</span></span><br><span class="line">        stack.push(start);</span><br><span class="line">        <span class="keyword">while</span> (!stack.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">int</span> lo = stack.pop();</span><br><span class="line">            <span class="keyword">int</span> hi = stack.pop();</span><br><span class="line">            <span class="keyword">int</span> index = partition(a, lo, hi);</span><br><span class="line">            <span class="keyword">if</span> (lo &lt; index - <span class="number">1</span>) &#123;</span><br><span class="line">                stack.push(index - <span class="number">1</span>);</span><br><span class="line">                stack.push(lo);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (hi &gt; index + <span class="number">1</span>) &#123;</span><br><span class="line">                stack.push(hi);</span><br><span class="line">                stack.push(index + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>时间</th>
+<th>最好</th>
+<th>最差</th>
+<th>空间</th>
+<th>稳定</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>快排</td>
+<td>O(nlogn)</td>
+<td>O(nlogn)</td>
+<td>O($n^2 $)</td>
+<td>O(logn)栈的深度</td>
+<td>不稳定</td>
+<td>基本有序或者逆序，效果最差</td>
+</tr>
+</tbody>
+</table>
+<p>快排最好的情况是，每次正好中分，复杂度为O(nlogn)</p>
+<p>最差情况，每一趟数都划分到基准的一边，另一边为空，复杂度为O(n^2)；如果用树画出来，得到的将会是一棵单斜树，需要执行n‐1次递归调用（n-1+n-2+…+1=n(n-1)/2）</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>思想总结</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>一句话描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直接插入</td>
+<td>前面有序，为新来的，在前面找到合适的位置，进行插入</td>
+</tr>
+<tr>
+<td>折半插入</td>
+<td>前面有序，为新来的，使用<strong>折半查找</strong>到插入位置，进行插入</td>
+</tr>
+<tr>
+<td>希尔排序</td>
+<td><strong>gap个间隔为gap的子序列</strong>，<strong>每个进行直接插入排序</strong>；减小gap，依次排序，直至为1</td>
+</tr>
+<tr>
+<td>冒泡排序</td>
+<td><strong>交换n-1趟</strong>，ai−1&gt;ai，则进行交换，每一趟都有个最大的沉到末尾</td>
+</tr>
+<tr>
+<td>快排</td>
+<td>第一个数x，先<strong>划分</strong>，左边小于x，中间x，右边大于x。再依次<strong>递归排序左右两边</strong></td>
+</tr>
+<tr>
+<td>简单选择</td>
+<td>前面有序，从后面选择最小的与前面末尾进行交换</td>
+</tr>
+<tr>
+<td>堆排序</td>
+<td>初始化<strong>大根堆</strong>，<strong>堆顶和末尾元素交换</strong>，再调整<strong>使剩下的元素成堆</strong>， 重复</td>
+</tr>
+<tr>
+<td>归并排序</td>
+<td><strong>分解</strong>为左右两个序列，对左右两个序列进行<strong>递归归并排序</strong>，<strong>再合并</strong>。即sort,sort,merge</td>
+</tr>
+<tr>
+<td>基数排序</td>
+<td>位数一样，从低位到高位，分别按照每一位进行排序</td>
+</tr>
+</tbody>
+</table>
+<p><strong>时空复杂度总结</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>时间</th>
+<th>最好</th>
+<th>最差</th>
+<th>空间</th>
+<th>稳定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直插</td>
+<td>O($n^2 $)</td>
+<td>O(n)</td>
+<td>O($n^2 $)</td>
+<td>O(1)</td>
+<td>是</td>
+</tr>
+<tr>
+<td>希尔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>O(1)</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>冒泡</td>
+<td>O($n^2 $)</td>
+<td>O(n)</td>
+<td>O($n^2 $)</td>
+<td>O(1)</td>
+<td>是</td>
+</tr>
+<tr>
+<td>快排</td>
+<td>O(nlogn)</td>
+<td>O(nlogn)</td>
+<td>O($n^2 $)</td>
+<td>O(logn)，栈的深度</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>简选</td>
+<td>O($n^2 $)</td>
+<td>O($n^2 $)</td>
+<td>O($n^2 $)</td>
+<td>O(1)</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>堆排序</td>
+<td>O(nlog⁡n)</td>
+<td>O(nlogn)</td>
+<td>O(nlogn)</td>
+<td>O(n)</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>归并排序</td>
+<td>O(nlog⁡n)</td>
+<td>O(nlogn)</td>
+<td>O(nlogn)</td>
+<td>O(n)， merge占用</td>
+<td>是</td>
+</tr>
+<tr>
+<td>基数排序</td>
+<td>O(d(n+r))</td>
+<td>O(d(n+r))</td>
+<td>O(d(n+r))</td>
+<td>O(r)， r个队列</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<p>稳定的：<strong>插、冒、归、基</strong></p>
+<p>比较次数与初始状态无关：<strong>选择O($n^2 $)、</strong>归并**O(nlogn)</p>
+<p>排序趟数与初始状态无关：选择、插入、基数</p>
+<p>冒、选、堆：每趟都有1个在最终的位置</p>
+<p><strong>时间复杂度</strong>：<strong>比较重要的三种：快归堆，都是</strong>O(nlogn)，基数排序O(d(n+r))， 其余O($n^2 $)，</p>
+<p><strong>空间复杂度</strong>：归O(n)， 快O(logn)， 基O(r)， 其余O(1)</p>
+<p><strong>算法选择</strong></p>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th>可选算法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>n较小， n≤50n≤50</td>
+<td>直接插入、简单选择</td>
+</tr>
+<tr>
+<td>基本有序</td>
+<td>直接插入、冒泡</td>
+</tr>
+<tr>
+<td>n较大，要O(nlogn)O(nlog⁡n)</td>
+<td>快排、堆排（不稳定），归并排序（稳定）</td>
+</tr>
+<tr>
+<td>n较大，要快，要稳定</td>
+<td>归并排序，与直插结合的改进的归并排序</td>
+</tr>
+<tr>
+<td>n很大，位数很少，可以分解</td>
+<td>基数排序</td>
+</tr>
+<tr>
+<td>记录本身信息量太大</td>
+<td>为了避免移动，可以使用链表作为存储结构</td>
+</tr>
+</tbody>
+</table>
+
           
         
       
@@ -2097,512 +2805,13 @@ BufferedReader, BufferedWriter
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/02/java基础（视频）二/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/02/java基础（视频）二/" itemprop="url">java基础（视频内容）（二）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-02T11:09:03+08:00">
-                2018-11-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本文内容为学习毕向东的java视频时记录下的内容</p>
-<h2 id="ch11-多线程"><a href="#ch11-多线程" class="headerlink" title="ch11 多线程"></a>ch11 多线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">进程：是一个正在执行中的程序</span><br><span class="line">每一个进程执行都有一个执行顺序，该顺序是一个控制单元</span><br><span class="line"></span><br><span class="line">线程：进程中的一个独立的控制单元。</span><br><span class="line">		线程在控制着进程的执行</span><br><span class="line">一个进程至少有一个线程</span><br></pre></td></tr></table></figure>
-<h3 id="如何自定义一个线程呢？"><a href="#如何自定义一个线程呢？" class="headerlink" title="如何自定义一个线程呢？"></a>如何自定义一个线程呢？</h3><p>java提供了thread类，对线程这类事物描述</p>
-<blockquote>
-<p>创建线程的第一种方式：继承Thread类</p>
-</blockquote>
-<p>步骤：</p>
-<ol>
-<li>定义类继承Thread</li>
-<li>复写Thread类中的run方法（run方法用于存储线程要运行的代码）</li>
-<li>调用线程的start方法（启动线程，调用run方法）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">发现运行结果每一次都不同，因为多个线程都在获取cpu的执行权</span><br><span class="line">明确一点：在某一个时刻，只有一个程序在运行（多核除外）</span><br><span class="line">cpu在做着快速切换，看上去是同时运行的效果</span><br><span class="line">可以把多线程的运行行为在互相抢夺cpu的执行权</span><br><span class="line">这就是多线程的一个特性：随机性。谁抢到谁执行，至于执行多长，cpu说的算</span><br><span class="line"></span><br><span class="line">区别：</span><br><span class="line">d.start() //开启线程并调用run方法</span><br><span class="line">d.run() //仅仅是对象调用方法，线程创建了，并没有运行 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">线程都有自己的默认名称</span><br><span class="line">Tread-编号，从0开始</span><br><span class="line"></span><br><span class="line">static Thread currentThread（）：获取当前线程对象</span><br><span class="line">getName（）：获取线程名称</span><br><span class="line"></span><br><span class="line">设置线程名称：setName或者构造函数</span><br><span class="line"></span><br><span class="line">需求：简单的买票程序</span><br><span class="line">多个窗口卖票</span><br><span class="line">（程序代码省略）</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
-<h4 id="创建线程的第二种方式：实现Runable接口"><a href="#创建线程的第二种方式：实现Runable接口" class="headerlink" title="创建线程的第二种方式：实现Runable接口"></a>创建线程的第二种方式：实现Runable接口</h4><p>步骤：</p>
-<ol>
-<li>定义类实现Runnable接口</li>
-<li>覆盖Runnable接口的run方法</li>
-<li>通过Thread类建立线程对象</li>
-<li>将Runnable接口的子类对象作为实际参数传递给Thread类的构造函数<br> 因为，自定义的run方法所属对象是Runnable接口的子类对象<br> 所以要让线程去执行指定对象的run方法，就必须明确该run方法所属对象</li>
-<li>调用Thread类的start方法开启线程并调用Runnable接口子类的run方法</li>
-</ol>
-<p>（for面试）实现方式和继承方式有什么区别呢？<br>实现方式的好处：避免了单继承的局限性<br>在定义线程时，建议用实现方式</p>
-<h4 id="两种方式的区别："><a href="#两种方式的区别：" class="headerlink" title="两种方式的区别："></a>两种方式的区别：</h4><p>继承Thread：线程代码存放在Thread子类run方法中<br>实现Runnable：线程代码存放在接口的子类run方法</p>
-<p>通过分析，发现会打印出0，-1，-2等错票</p>
-<p>问题原因：<br>    当多条语句在操作同一个县线程共享数据时，一个线程对多条语句只执行了一部分还没执行完<br>    另一个线程参与进来执行，导致共享数据的错误</p>
-<p>解决办法：</p>
-<p>java对于多线程的安全问题提供了专业的解决方式：</p>
-<h3 id="同步代码块"><a href="#同步代码块" class="headerlink" title="同步代码块"></a>同步代码块</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">synchronized（对象）</span><br><span class="line">&#123;</span><br><span class="line">	需要被同步的代码</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>对象如同锁，持有锁的线程可以在同步中执行<br>没有持有锁的线程即使获取cpu的执行权，也进不去，因为没有获取锁<br>（火车上的卫生间）</p>
-<p>同步的前提：</p>
-<ol>
-<li>必须要有两个或两个以上的线程</li>
-<li>必须是多个线程使用一个锁<br>必须保证同步中只有一个线程在运行。</li>
-</ol>
-<p>好处：解决了多线程的安全问题<br>弊端：多个线程都需要判断锁，较为消耗资源</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class Ticket implements Runnable //extends Thread</span><br><span class="line">&#123;</span><br><span class="line">	private int tick = 100;</span><br><span class="line">	Object obj = new Object();</span><br><span class="line">	public void run()</span><br><span class="line">	&#123;</span><br><span class="line">		while(true)</span><br><span class="line">		&#123;</span><br><span class="line">			synchronized(obj)</span><br><span class="line">			&#123;</span><br><span class="line">				if(tick&gt;0)</span><br><span class="line">				&#123;</span><br><span class="line">					System.out.println(Thread.currentThread().getName()+&quot;...sale：&quot;+ tick--);</span><br><span class="line">				&#125;  		</span><br><span class="line">			&#125;		</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class TicketDemo</span><br><span class="line">&#123;</span><br><span class="line">	public static void main(String[] args)</span><br><span class="line">	&#123;</span><br><span class="line">		Ticket t = new Ticket();</span><br><span class="line">		</span><br><span class="line">		Thread t1 = new Thread(t); //创建了一个线程</span><br><span class="line">		Thread t2 = new Thread(t);</span><br><span class="line">		Thread t3 = new Thread(t);</span><br><span class="line">		Thread t4 = new Thread(t);</span><br><span class="line">		</span><br><span class="line">		t1.start();</span><br><span class="line">		t2.start();</span><br><span class="line">		t3.start();</span><br><span class="line">		t4.start();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">同步函数用的是哪一个锁呢？</span><br><span class="line">函数需要被对象调用。那么函数都有一个所属对象引用：this</span><br><span class="line">如果同步函数被静态修饰，使用的锁是？</span><br><span class="line">不是this，静态进内存时，内存没有本类对象，但是有该类对应的字节码文件对象</span><br><span class="line">类名.class 该对象的类型是class</span><br><span class="line">静态的同步方法，使用的是该方法所在类的字节码文件对象。类名.class</span><br><span class="line">*/</span><br><span class="line">class Ticket implements Runnable </span><br><span class="line">&#123;</span><br><span class="line">	private int tick = 100;</span><br><span class="line">	public synchronized void run()</span><br><span class="line">	&#123;</span><br><span class="line">		while(true)</span><br><span class="line">		&#123;</span><br><span class="line">			show();	</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	public synchronized void show()</span><br><span class="line">	&#123;</span><br><span class="line">		if(tick&gt;0)</span><br><span class="line">			&#123;</span><br><span class="line">				System.out.println(Thread.currentThread().getName()+&quot;...sale：&quot;+ tick--);</span><br><span class="line">			&#125;  	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//面试时，要求写延迟加载的单例设计模式（懒汉式），写这个：</span><br><span class="line">//双重判断提高效率</span><br><span class="line">使用的锁：该类所属的字节码文件对象</span><br><span class="line">class Single </span><br><span class="line">&#123;</span><br><span class="line">    private static Single s = null;</span><br><span class="line">    private Single()&#123;&#125;</span><br><span class="line">     </span><br><span class="line">    public static  Single getInstance()</span><br><span class="line">    &#123;</span><br><span class="line">        if(s==null)</span><br><span class="line">        &#123;</span><br><span class="line">            synchronized(Single.class)</span><br><span class="line">            &#123;</span><br><span class="line">                if(s==nul)</span><br><span class="line">                    //---&gt;A</span><br><span class="line">                    s = new Single();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">线程间通讯：</span><br><span class="line">多个线程操作同一个资源</span><br><span class="line">但是操作的动作不同</span><br><span class="line"></span><br><span class="line">wait</span><br><span class="line">notify（）；</span><br><span class="line">notifyAll（）；</span><br><span class="line">都使用在同步中，因为要对持有监视器（锁）的线程操作</span><br><span class="line">之所以使用在同步中，因为只有同步才有锁</span><br><span class="line"></span><br><span class="line">为什么这些操作线程的方法要定义在Object类中呢？</span><br><span class="line">因为这些方法在操作同步中的线程时，都必须要标识她们所操作线程持有的锁</span><br><span class="line">只有同一个锁上的被等待线程，可以被同一个锁上notify唤醒</span><br><span class="line"></span><br><span class="line">也就是说，等待和唤醒必须是同一个锁</span><br><span class="line"></span><br><span class="line">JDK1.5中提供了多线程的升级解决方案</span><br><span class="line">将同步Synchronized替换成Lock操作</span><br><span class="line">将Object的wait，notify，notifAll，替换了Condition对象</span><br><span class="line">该对象可以通过Lock锁获取</span><br><span class="line">示例中，失效唤醒对方操作</span><br><span class="line"></span><br><span class="line">stop方法已经过时</span><br><span class="line">如何停止线程？</span><br><span class="line">只有一种，run方法结束</span><br><span class="line">开启多线程运行，运行代码通常是循环结构</span><br><span class="line"></span><br><span class="line">只要控制住循环，就可以让run方法结束，也就是线程结束</span><br><span class="line"></span><br><span class="line">特殊情况：</span><br><span class="line">当线程处于冻结状态</span><br><span class="line">就不会读取到标记，线程不会结束</span><br><span class="line"></span><br><span class="line">当没有指定的方式让冻结的线程恢复到运行状态时，需要对冻结进行清除</span><br><span class="line">强制让线程恢复到运行状态中来，就可以操作标记让线程结束</span><br><span class="line">Thread类中提供该方法interrupt（）</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
-<h2 id="ch13-String"><a href="#ch13-String" class="headerlink" title="ch13 String"></a>ch13 String</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String s1 = &quot;abc&quot;; //s1是一个类型变量，“abc”是一个对象；字符串最大特点：一旦被初始化就不可以被改变</span><br><span class="line">String s2 = new String(&quot;abc&quot;);</span><br><span class="line">//s1在内存中有一个对象</span><br><span class="line">//s2在内存中有两个对象</span><br></pre></td></tr></table></figure>
-<p>String类复写了Object类中equals方法，判断字符串是否相同<br>String类用于描述字符串事物，提供了多个方法对字符串操作</p>
-<h3 id="常见操作"><a href="#常见操作" class="headerlink" title="常见操作"></a>常见操作</h3><ol>
-<li><p>获取</p>
-<ol>
-<li>int length() 字符串长度</li>
-<li>char charAt(int index) 根据位置获取某个字符</li>
-<li><p>int indexOf(int ch) 返回的是ch在字符串中第一次出现的位置</p>
-<p> int indexOf(int ch，int fromIndex) 从指定位置开始，获取ch在字符串中的位置,没找到返回-1</p>
-<p> int indexOf(String str) 返回的是str在字符串第一次出现的位置</p>
-<p> int indexOf(String str，int fromIndex)</p>
-<p> int lastIndexOf(int ch)</p>
-</li>
-</ol>
-</li>
-<li>判断<ol>
-<li>字符串是否包含某一个字符串<br> 返回类型<br> boolean contains()<br> 特殊之处：indexOf (str)：返回-1即不包含<br> if(str,indexOf(“aa”)!=-1)</li>
-<li>字符串是否有内容<br> boolean isEmpty()：原理是判断长度是否为0 </li>
-<li>字符串是否以指定内容开头<br> boolean startsWith(str)；</li>
-<li>字符串是否以指定内容结尾<br> boolean endsWith(str)；</li>
-<li>判断内容是否相同，且忽略大小写<br> boolean equalsIgnoreCase();</li>
-</ol>
-</li>
-<li>转换<ol>
-<li>将字符数组转换成字符串<br> 构造函数：String(char[])<pre><code>String(char[],int offset,int count)
-</code></pre> 静态方法：<pre><code>static String copyValueOf(char[]);
-static String copyValueOf(char[] data,int offset,int count)            
-</code></pre></li>
-<li>将字符串转换成字符数组<pre><code>char[] toCharArray() 
-</code></pre></li>
-<li>将字节数组转换成字符串<pre><code>String(byte[])
-String(byte[],int offset,int count)
-</code></pre></li>
-<li>将字符串转换成字节数组<br> byte[] getBytes()</li>
-<li>将基本类型转成字符串<br> static String valueOf(int)<br>4.替换<br>String replace(oldchar,newchar)<br>5.切割<br>String[] split(“,”)<br>6.子串<br>String substring(begain);<br>String substring(begain,end);//包含头，不包含尾<br>7.转换，去空格，比较<br>7.1将字符串转成大写或者小写<br> String toUpperCase();<br> String toLowerCase();<br>7.2将字符串两端的多个空格去除<br> String trim();<br>7.3对两个字符串进行自然顺序的比较<br> int compareTo(string); </li>
-</ol>
-</li>
-</ol>
-<p>StringBuffer是字符串缓冲区<br>是一个容器<br>1 长度可变化<br>2 可操作多个数据类型<br>3 最终会通过toString方法变成字符串</p>
-<h3 id="CURD"><a href="#CURD" class="headerlink" title="CURD"></a>CURD</h3><p>create update read delete</p>
-<ol>
-<li>存储<br> StringBuffer append()<br> StringBuffer insert(index,数据)</li>
-<li>删除<br> StringBuffer delete(start,end) //sb.delete(0,sb.length());清空缓冲区<br> StringBuffer deleteCharAt(index) 删除指定位置字符</li>
-<li>获取</li>
-<li>修改<br> StringBuffer replace(start,end,string);<br> void setCharAt(int index,char ch);</li>
-</ol>
-<p>JDK1.5版本后，出现了StringBuilder<br>    StringBuilder 是线程不同步，多线程用StringBuffer<br>    以后开发建议使用StringBuilder</p>
-<h3 id="基本数据对象包装类"><a href="#基本数据对象包装类" class="headerlink" title="基本数据对象包装类"></a>基本数据对象包装类</h3><p>byte Byte<br>short Short<br>int   Integer //整数类型的最大值 Integer.MAX_VALUE<br>long  Long<br>char  Character<br>double Double<br>float  Float<br>boolean Boolean</p>
-<h4 id="基本数据对象包装类最常见的应用："><a href="#基本数据对象包装类最常见的应用：" class="headerlink" title="基本数据对象包装类最常见的应用："></a>基本数据对象包装类最常见的应用：</h4><p>基本数据类型和字符串类型之间做转换</p>
-<p>基本类型转字符串：<br>    基本数据类型+“”<br>    基本数据类型.toString(基本数据类型)；<br>    Integer.toString(34);<br>字符串转基本类型<br>    xxx a = Xxx.parseXxx(String);<br>    int a = Integer.parseInt(“123”);<br>    boolean b = Boolean.parseBoolean(“true”);<br>十进制转换成其他<br>        toBinaryString();<br>        toHexString();<br>        toOctalString();<br>其他进制转十进制<br>        parseInt(“110”,2);</p>
-<p>JDK1.5版本后的新特性<br>    Integer x = 4；//自动装箱//new Integer(4)<br>    x = x+2;// 自动拆箱，x进行自动拆箱，变成整数类型与2运算，在将和装箱赋给x</p>
-<h2 id="集合类"><a href="#集合类" class="headerlink" title="集合类"></a>集合类</h2><p>集合存储对象，长度可变，可存储不同长度的对象</p>
-<p>迭代器：<br>集合取出元素的方式</p>
-<p>取出方式定义在集合内部，取出方式可以直接访问集合内容的元素<br>那么取出方式就被定义成了内部类</p>
-<p>每一个容器数据结构不同，共性内容是判断和取出，所以将其抽取<br>这些内部类都符合一个规则，该规则是Iterator<br>通过一个对外提供的方法 itetator（）；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">Collection</span><br><span class="line">|--List  元素是有序的，元素可以重复，因为该集合体系有索引</span><br><span class="line">|--ArrayList底层数据结构是数组结构。特点：查询很快，增删稍慢。线程不同步</span><br><span class="line">|--LinkedList底层数据结构是链表结构。特点：增删速度很快，查询稍慢</span><br><span class="line">|--Vector底层数据结构是数组结构。线程同步。被ArrayList替代了</span><br><span class="line">|--Set:元素是无序的（存入和取出顺序不一定一致），元素可以重复</span><br><span class="line">|--HashSet：底层数据结构是哈希表。线程是非同步的</span><br><span class="line">HashSet如何保证元素唯一性？</span><br><span class="line">判断元素的hashCodeh值是否相同。</span><br><span class="line">如果元素的HashCode值相同，还会继续判断equals是否为true；</span><br><span class="line">如果元素的HashCode值不同，不会调用equals。</span><br><span class="line"></span><br><span class="line">注意：对于元素是否存在，以及删除等操作，依赖的方法是元素的hashCode和equals方法。</span><br><span class="line">|--TreeSet：可以对set集合中的元素进行排序。</span><br><span class="line">底层数据结构是二叉树</span><br><span class="line">保证元素唯一性依据：compareTo方法return0</span><br><span class="line"></span><br><span class="line">TreeSet排序第一种方式：让元素自身具备比较性</span><br><span class="line">TreeSet排序第二种方式：让元素自身不具备比较性或不是所需要的时，让集合自身具备比较性。定义比较器，将比较器对象作为参数传递给TreeSet集合的构造函数</span><br><span class="line">两种方式都存在时，以比较器为主。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">List：</span><br><span class="line">特有方法，凡是可以操作角标的方法都是该体系特有的方法</span><br><span class="line"></span><br><span class="line">List集合特有的迭代器。ListIterator是Iterator的子接口</span><br><span class="line"></span><br><span class="line">在迭代时，不可以通过集合对象的方法操作集合的元素，会发生CorrentModifucationException异常</span><br><span class="line">Iterator方法有限，只能判断，取出，删除</span><br><span class="line">如果想要添加，修改等操作，需要使用其子接口。</span><br><span class="line"></span><br><span class="line">List集合判断元素是否相同，用的是equals方法</span><br><span class="line">LinkedList特有方法</span><br><span class="line">addFirst（）</span><br><span class="line">addLast（）</span><br><span class="line">removeFirst（）</span><br><span class="line">removeLast（）</span><br><span class="line">获取并删除元素。如果集合中没有元素，会出现NoSuchElementException  </span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/java基础（视频）一/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/01/java基础（视频）一/" itemprop="url">java基础（视频内容）（一）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-01T22:21:49+08:00">
-                2018-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本文内容为学习毕向东的java视频时记录下的内容</p>
-<h2 id="ch01-07"><a href="#ch01-07" class="headerlink" title="ch01-07"></a>ch01-07</h2><p>需求：定义一个hello，world程序。</p>
-<p>步骤</p>
-<ol>
-<li>通过class关键字定义一个类，代码都写在该类中。</li>
-<li>为了保证该类独立运行，定义主函数</li>
-<li>保存一个扩展名为java的文件</li>
-<li>在dos控制台中通过javac工具对java文件进行编译</li>
-<li>通过java命令对生成的class文件进行编译 </li>
-</ol>
-<p>main函数保证该类的独立运行，它会被JVM调用，主函数是程序的运行起始点，不需要类运行可以不写主函数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"hello java"</span>);	<span class="comment">//要有分号</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>class：关键字，小写，用于定义类，类名定义，首字母都大写：XxxxYyyyZzzz</p>
-<p>多层注释不可以嵌套</p>
-<p>java严格区分大小写</p>
-<p>8个二进制位表示一个字节（最大255）</p>
-<p>三个二进制位表示一位八进制；四个二进制位表示一个十六进制</p>
-<p>负数的二进制：正数的二进制取反（0变1,1变0）加一，负数的最高位都是1（取反取来的）<br>6=110</p>
-<p>一个数占四个字节（32二进制位）</p>
-<p>0000-0000 0000-0000 0000-0000 0000-0110</p>
-<p>1111-1111   1111-1111  1111-1111   1111-1001</p>
-<p>+0000-0000 0000-0000 0000-0000 0000-0001</p>
-<p>=1111-1111   1111-1111   111-1111   1111-1010=-6</p>
-<p>变量：将不确定的数据进行存储</p>
-<pre><code>java是强类型语言，对每种数据都定义明确的具体数据类型，在内存中分配了不同大小的内存空间
-小数默认double，
-float f=2.3f；
-byte是一个八位（字节）
-int，float是四个八位
-整数默认int
-
-a 97
-b 98
-A 65
-字符1： 49
-char类型可以进行运算
-System.out.println((char)(&apos;a&apos;+1));   //b
-
-1%-5 //1
--1%5 //-1(负数只看左边)
-
-b=a++先赋值给b，再a自增 
-b=++a先自增
-
-字符串数据和任何数据都可以+连接，最后都会变成字符串
-
-转义字符
-\t 制表符，相当于tab键
-\r 按下回车键。Windows系统中，回车由\r\n表示
-\b 退格，相当于backspace
-\n 换行
-
-面试题：
-short s=4;
-s=s+5;//编译失败，两次运算，先加法再赋值，5是int，加完是int，赋给s会精度丢失
-s+=5;//成功，只做赋值运算，有自动转换动作（和s=4一样，在short范围内会自动转换）
-
-异或^：两边不同是true，两边相同是false，一个数异或同一个数两次，还是那个数（数据加密）
-
-位运算（比直接乘高效）：
-左移右移：
-左移&lt;&lt;：乘以2 的移动位数次幂
-右移&gt;&gt;：除以
-3&lt;&lt;2=3*2^2
-
-三元运算符：简化if else语句  
-</code></pre><p>定义函数可以放上面或者放下面，但是都从主函数开始执行<br>如何定义一个函数？</p>
-<ol>
-<li>函数是一个独立的功能，该功能的运算结果是什么先明确（明确返回值类型）</li>
-<li>明确是否需要未知的内容参与运算（明确参数类型和个数）</li>
-</ol>
-<h4 id="重载："><a href="#重载：" class="headerlink" title="重载："></a>重载：</h4><p>当定义的功能相同，参与运算的位置内容不同，那么就定义一个函数名称，方便阅读，通过参数列表的不同来区分多个同名函数</p>
-<p>面向对象:</p>
-<p>找对象，建对象，用对象，维护对象的关系</p>
-<p>类中的成员（成员变量，成员函数）</p>
-<h4 id="静态代码块："><a href="#静态代码块：" class="headerlink" title="静态代码块："></a>静态代码块：</h4><p>static{ }</p>
-<p>只执行一次，给类初始化<br>构造代码块，优先于构造函数（给对应对象初始化）执行<br>给所有对象进行统一初始化<br>构造函数：给对应对象初始化</p>
-<h4 id="this："><a href="#this：" class="headerlink" title="this："></a>this：</h4><p>哪个对象在调用this所在的函数，this就代表哪个对象</p>
-<p>this的应用：本类功能用到的本类对象，用this表示</p>
-<p>this语句用于构造函数间相互调用<br>this语句只能定义在构造函数的第一行</p>
-<h4 id="static特点"><a href="#static特点" class="headerlink" title="static特点"></a>static特点</h4><ol>
-<li>随着类的加载而加载，类的消失而消失</li>
-<li>优先于对象存在（静态先存在，对象后存在）</li>
-<li>被所有对象共享</li>
-<li>可以直接被类名调用</li>
-</ol>
-<p>实例变量和类变量区别：</p>
-<ol>
-<li><p>存放位置</p>
-<p>类变量随着类的加载而存于方法区中;<br>实例变量随着对象的建立二存在于堆内存中</p>
-</li>
-<li>生命周期<br>类变量生命周期最长</li>
-</ol>
-<p>静态使用注意事项：</p>
-<ol>
-<li>静态方法只能访问静态成员<br> 非静态方法既可以访问静态也可以访问非静态</li>
-<li>静态方法中不可以定义this，super关键字<br>因为静态优先于对象存在</li>
-<li>主函数是静态的</li>
-</ol>
-<p>静态有利有弊：</p>
-<p>利：对对象的共享数据进行单独空间的存储，节省空<br>可以被类名直接调用</p>
-<p>弊：生命周期过长；访问出现局限性（静态只能访问静态 ）</p>
-<p>何时使用静态：</p>
-<p>从两方面下手:</p>
-<p>因为静态修饰的内容有成员变量和函数</p>
-<p>什么时候定义静态变量呢？<br>当对象中出现共享数据是，该数据被静态所修饰<br>对象中的特有数据要定义成非静态存在于堆内存</p>
-<p>什么时候定义静态函数呢？<br>当功能内部没有访问到非静态数据时，那么该功能可以定义成静态的</p>
-<h4 id="main函数："><a href="#main函数：" class="headerlink" title="main函数："></a>main函数：</h4><ul>
-<li>public：代表该函数访问权限是最大的</li>
-<li>void：主函数没有具体的返回值</li>
-<li>main：不是关键字，但是是一个特殊的单词，可以被jvm识别</li>
-<li>（String[] args）：函数的参数，字符串类型的数组</li>
-</ul>
-<p>一个类中会有一个默认的空参数构造函数，其权限随着类的变化而变化</p>
-<h4 id="对象初始化过程："><a href="#对象初始化过程：" class="headerlink" title="对象初始化过程："></a>对象初始化过程：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person p = <span class="keyword">new</span> Person（<span class="string">"zhangsan"</span>,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p>该句话做了什么事情？</p>
-<ol>
-<li>因为new用到了Person.class文件，所以先找到Person.class文件加载到文件中</li>
-<li>执行类中的static代码块，给类初始化</li>
-<li>在堆内存中开辟空间，分配内存地址</li>
-<li>在堆内存中建立对象的特有属性，并进行默认初始化（null，0）</li>
-<li>对属性进行显示初始化</li>
-<li>对对象进行构造代码块初始化</li>
-<li>对对象进行构造函数初始化</li>
-<li>将内存地址赋给栈内存的p变量</li>
-</ol>
-<h4 id="设计模式："><a href="#设计模式：" class="headerlink" title="设计模式："></a>设计模式：</h4><p>java中有23种设计模式</p>
-<p>单例设计模式：解决一个类在内存只存在一个对象</p>
-<p>饿汉式：Single类一进内存，就已经创建好了对象（定义单例，建议用饿汉式）</p>
-<p>懒汉式：Single类进内存，对象还没有存在，调用getInstance方法时才在堆内存里加载对象，把地址值给s，s指向对象，也叫对象的延迟加载</p>
-<p>java只支持单继承，不支持多继承（一个孩子一个父亲）</p>
-<p>java支持多层继承，也就是继承体系。想要使用体系，：查阅父类功能，创建子类对象使用功能</p>
-<h4 id="类中成员："><a href="#类中成员：" class="headerlink" title="类中成员："></a>类中成员：</h4><p>变量<br>函数<br>构造函数</p>
-<p>在对子类对象进行初始化时，父类的构造函数也会运行</p>
-<p>this（）和super（）都是只能出现在第一行（初始化要先做），所以二者不能同时出现</p>
-<h4 id="子类的实例化过程："><a href="#子类的实例化过程：" class="headerlink" title="子类的实例化过程："></a>子类的实例化过程：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">子类的所有构造函数，默认都会访问父类中空参数的构造函数</span><br><span class="line">因为子类中每一个构造函数内第一行都有一个隐式super（）</span><br><span class="line">当父类中没有空参数的构造函数时，要手动通过super语句访问父类中的构造函数</span><br><span class="line">子类中至少会有一个构造函数会访问父类中的构造函数</span><br></pre></td></tr></table></figure>
-<h4 id="final：修饰符"><a href="#final：修饰符" class="headerlink" title="final：修饰符"></a>final：修饰符</h4><ol>
-<li>可以修饰类，函数，变量</li>
-<li>被final修饰的类不能被继承，为了避免被子类继承，被子类复写功能</li>
-<li>被final修饰的变量是一个常量（所有字母大写，_连接），只能被赋值一次</li>
-<li>被final修饰方法不可以被重写</li>
-</ol>
-<h4 id="抽象："><a href="#抽象：" class="headerlink" title="抽象："></a>抽象：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">当多个类出现相同功能，但是功能主体不同</span></span><br><span class="line"><span class="comment">这时可以进行向上抽取，只抽取功能，不抽取功能主体</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">抽象类的特点：</span></span><br><span class="line"><span class="comment">1.抽象方法一定在抽象类中</span></span><br><span class="line"><span class="comment">2 抽象类不可以用new创建对象，因为调用抽象方法没意义</span></span><br><span class="line"><span class="comment">3 抽象类中的抽象方法被使用，必须由子类复写所有的抽象方法后，建立子类对象</span></span><br><span class="line"><span class="comment">  如果子类只覆盖了部分抽象方法，那么子类还是一个抽象类</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">比一般类多了抽象函数</span></span><br><span class="line"><span class="comment">抽象类不可以实例化</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">study</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BaseStudent</span> <span class="keyword">extends</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">study</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"base stuudy"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdvStudent</span> <span class="keyword">extends</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">study</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"adv stuudy"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AbstractAction</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">new</span> BaseStudent().study();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">接口：可以理解为一个特殊的抽象类</span><br><span class="line">      当抽象类的方法都是抽象的，那么该类可以</span><br><span class="line">	  常量：<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span></span><br><span class="line">	  方法：<span class="keyword">public</span> <span class="keyword">abstract</span> </span><br><span class="line">	  </span><br><span class="line">记住：接口中的成员都是<span class="keyword">public</span>的</span><br><span class="line">接口需要被子类实现，子类对接口中的抽象方法全都覆盖后，子类才可实例化</span><br><span class="line">否则子类是一个抽象类</span><br></pre></td></tr></table></figure>
-<h2 id="ch08-09"><a href="#ch08-09" class="headerlink" title="ch08-09"></a>ch08-09</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">多态</span></span><br><span class="line"><span class="comment">cat x = new cat();</span></span><br><span class="line"><span class="comment">animal x  = new cat();</span></span><br><span class="line"><span class="comment">1.多态的体现</span></span><br><span class="line"><span class="comment">	父类的引用指向了自己的子类对象</span></span><br><span class="line"><span class="comment">2.多态的前提</span></span><br><span class="line"><span class="comment">	必须是类与类之间有联系，要么继承，要么实现</span></span><br><span class="line"><span class="comment">	通常还有一个前提：覆盖</span></span><br><span class="line"><span class="comment">3.多态的好处</span></span><br><span class="line"><span class="comment">	大大提高程序扩展性</span></span><br><span class="line"><span class="comment">4.多态的弊端</span></span><br><span class="line"><span class="comment">	提高扩展性，但是只能使用父类引用访问父类的成员</span></span><br><span class="line"><span class="comment">*/</span>	</span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">study</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sleep</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"躺着睡"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoStudent</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSome</span><span class="params">(Student stu)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		stu.study();</span><br><span class="line">		stu.sleep();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BaseStudent</span> <span class="keyword">extends</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">study</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"base study"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sleep</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"坐着睡"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdvStudent</span> <span class="keyword">extends</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">study</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"avd study"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DuoTaiDemo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		DoStudent ds = <span class="keyword">new</span> DoStudent();</span><br><span class="line">		ds.doSome(<span class="keyword">new</span> BaseStudent());</span><br><span class="line">		ds.doSome(<span class="keyword">new</span> AdvStudent());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="在多态中成员函数的特点："><a href="#在多态中成员函数的特点：" class="headerlink" title="在多态中成员函数的特点："></a>在多态中成员函数的特点：</h3><ol>
-<li>编译时期：参阅引用型变量所属类中是否有调用的方法。有则编译通过，没有编译失败</li>
-<li>运行时期：参阅对象所属类中是否有调用的方法</li>
-</ol>
-<p>成员函数在多态调用时，编译看左边，运行看右边</p>
-<p>（for 面试）</p>
-<p>在多态中，成员变量的特点：<br>无论编译和运行，都参照左边 </p>
-<p>在多态中，静态成员函数特点：<br>无论编译和运行，都参照左边</p>
-<h3 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h3><h4 id="内部类的访问规则："><a href="#内部类的访问规则：" class="headerlink" title="内部类的访问规则："></a>内部类的访问规则：</h4><ol>
-<li><p>内部类可以直接访问外部类中的成员，包括私有</p>
-<pre><code>之所以可以直接访问，因为内部类中持有一个外部类的引用 外部类名.this
-</code></pre></li>
-<li>外部类要访问内部类，必须建立内部类对象</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Outer.Inner in = new Outer().new Inner(); //直接访问内部类中的成员</span><br><span class="line">外部类名.内部类名 变量名=外部对象.内部对象</span><br><span class="line">in.function();</span><br></pre></td></tr></table></figure>
-<p>内部类被定义在局部时：</p>
-<ol>
-<li>不可以被成员修饰符修饰</li>
-<li>可以访问外部类中的成员，但是不可以访问它所在局部中的变量，只能访问被final修饰的局部变量</li>
-</ol>
-<h4 id="匿名内部类："><a href="#匿名内部类：" class="headerlink" title="匿名内部类："></a>匿名内部类：</h4><ol>
-<li>内部类的简写格式</li>
-<li>定义匿名内部类的前提：<br> 内部类必须是继承一个类或者实现接口</li>
-<li>格式：new 父类或者接口（）{定义子类的内容}</li>
-<li>其实匿名内部类就是一个匿名子类对象（带内容的对象）</li>
-<li>类中定义的方法最好不要超过三个</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbsDemo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Outer</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> x = <span class="number">3</span>;</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	class Inner extends AbsDemo</span></span><br><span class="line"><span class="comment">	&#123;</span></span><br><span class="line"><span class="comment">		void show()</span></span><br><span class="line"><span class="comment">		&#123;</span></span><br><span class="line"><span class="comment">			System.out.println("x==="+x);</span></span><br><span class="line"><span class="comment">		&#125;</span></span><br><span class="line"><span class="comment">	&#125;</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">function</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="comment">//new Inner().show();</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">new</span> AbsDemo()</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span></span><br><span class="line"><span class="function">			</span>&#123;</span><br><span class="line">				System.out.println(<span class="string">"x==="</span>+x);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;.show();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">InnerClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">new</span> Outer().function();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="包"><a href="#包" class="headerlink" title="包"></a>包</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">javac -d . PackageDemo.javac  // 点 代表当前目录</span></span><br><span class="line"><span class="comment">java pack.PackageDemo</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">javac -d c:\myclass PackageDemo.java   //包存在别的目录下</span></span><br><span class="line"><span class="comment">set classpath=c:\myclass</span></span><br><span class="line"><span class="comment">java pack.PackageDemo</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">包与包之间，被访问的包中的类及类中的成员，需要public修饰</span></span><br><span class="line"><span class="comment">不同包中的子类还可以直接访问被protected权限修饰的成员</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">包与包之间权限只有两种，public protected</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">			public protected 默认 private</span></span><br><span class="line"><span class="comment">同一个类中     ok       ok    ok     ok  </span></span><br><span class="line"><span class="comment">同一个包中     ok       ok    ok</span></span><br><span class="line"><span class="comment">子类          ok       ok</span></span><br><span class="line"><span class="comment">不同包中       ok       </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">为了简化类名书写，使用一个关键字，import</span></span><br><span class="line"><span class="comment">导入的是包中的类</span></span><br><span class="line"><span class="comment">import pack.haha.hehe.*;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -2646,7 +2855,7 @@ s+=5;//成功，只做赋值运算，有自动转换动作（和s=4一样，在s
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2659,7 +2868,7 @@ s+=5;//成功，只做赋值运算，有自动转换动作（和s=4一样，在s
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
