@@ -20,16 +20,16 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="Java,JVM">
+    <meta name="keywords" content="JVM">
     <meta name="description" content="《深入理解java虚拟机》读书笔记">
-<meta name="keywords" content="Java,JVM">
+<meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="理解JVM">
 <meta property="og:url" content="http://yoursite.com/2018/12/28/理解JVM/index.html">
 <meta property="og:site_name" content="YGQ&#39;s Notes">
 <meta property="og:description" content="《深入理解java虚拟机》读书笔记">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-03T07:53:48.632Z">
+<meta property="og:updated_time" content="2019-05-03T08:19:15.242Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解JVM">
 <meta name="twitter:description" content="《深入理解java虚拟机》读书笔记">
@@ -216,12 +216,11 @@
 <h3 id="如何判定哪些对象需要回收（判断一个对象是否存活）？"><a href="#如何判定哪些对象需要回收（判断一个对象是否存活）？" class="headerlink" title="如何判定哪些对象需要回收（判断一个对象是否存活）？"></a>如何判定哪些对象需要回收（判断一个对象是否存活）？</h3><p>在对堆进行对象回收之前，首先要判断哪些是无效对象。我们知道，一个对象不被任何对象或变量引用，那么就是无效对象，需要被回收。一般有两种判别方式：</p>
 <ol>
 <li><p>引用计数法 </p>
-<pre><code>每个对象都有一个引用计数器，当对象增加一个引用时计数器加 1，引用失效时计数器减 1。引用计数为 0 的对象可被回收。
-
-在两个对象出现循环引用的情况下，此时引用计数器永远不为 0，导致无法对它们进行回收。正是因为循环引用的存在，因此 Java 虚拟机不使用引用计数算法。
-</code></pre></li>
+<p>每个对象都有一个引用计数器，当对象增加一个引用时计数器加 1，引用失效时计数器减 1。引用计数为 0 的对象可被回收。</p>
+</li>
 </ol>
-<ol start="2">
+<pre><code>在两个对象出现循环引用的情况下，此时引用计数器永远不为 0，导致无法对它们进行回收。正是因为循环引用的存在，因此 Java 虚拟机不使用引用计数算法。
+</code></pre><ol start="2">
 <li><p>可达性分析法 </p>
 <pre><code>所有和GC Roots直接或间接关联的对象都是有效对象，和GC Roots没有关联的对象就是无效对象。 
 </code></pre></li>
@@ -413,7 +412,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li></ul>
 
 
             
