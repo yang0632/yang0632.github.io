@@ -145,6 +145,8 @@
         <time class="post-time" title="2019-04-01 09:56:34" datetime="2019-04-01T01:56:34.000Z" itemprop="datePublished">2019-04-01</time>
 
         
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/并发/">并发</a></li></ul></li></ul>
+
 
 
     </div>
@@ -165,13 +167,6 @@
 
     
         由volatile为切入点，串一串java并发的一些知识点
-被volatile修饰的共享变量，具有了以下两点特性：
-1 . 保证变量的内存可见性;
-2 . 禁止指令重排序
-涉及到的几个名词：
-共享变量：代指实例域，静态域，数组元素；它们存储在堆内存里，堆内存在线程之间共享，会存在内存可见性问题
-内存可见性、重排序：这个从Java内存模型（JMM）说起
-Java内存模型（JMM）线程之间的共享...
     
 
         <a href="/2019/04/01/volatile关键字与java内存模型/" class="post-more waves-effect waves-button">
@@ -181,7 +176,7 @@ Java内存模型（JMM）线程之间的共享...
     
     <div class="post-footer">
         
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/volatile/">volatile</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
 
     </div>
     
@@ -242,6 +237,8 @@ Java内存模型（JMM）线程之间的共享...
         <time class="post-time" title="2019-03-20 21:52:55" datetime="2019-03-20T13:52:55.000Z" itemprop="datePublished">2019-03-20</time>
 
         
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/Java集合/">Java集合</a></li></ul></li></ul>
+
 
 
     </div>
@@ -261,8 +258,7 @@ Java内存模型（JMM）线程之间的共享...
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        HashMapHashMap 通过 key 的 hashCode 经 过扰动函数处理过后得到 hash 值，然后通过判断当前元素存放的位置(这里的 n 指的是数组的 长度)，如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。
-所谓扰动函数指的就是 HashMap 的 hash 方法。使用扰动函数之后...
+        结合源码理解hashmap
     
 
         <a href="/2019/03/20/HashMap源码分析/" class="post-more waves-effect waves-button">
@@ -272,7 +268,7 @@ Java内存模型（JMM）线程之间的共享...
     
     <div class="post-footer">
         
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java集合/">Java集合</a></li></ul>
 
     </div>
     
@@ -333,6 +329,8 @@ Java内存模型（JMM）线程之间的共享...
         <time class="post-time" title="2019-03-09 15:06:41" datetime="2019-03-09T07:06:41.000Z" itemprop="datePublished">2019-03-09</time>
 
         
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/Java-I-O/">Java I/O</a></li></ul></li></ul>
+
 
 
     </div>
@@ -352,15 +350,7 @@ Java内存模型（JMM）线程之间的共享...
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        Java对数据的操作是通过流的方式，用于操作流的对象都在IO包中
-
-流按操作数据分为两种：字节流与字符流（处理文字数据）
-流按流向分为：输入流，输出流
-字节流的抽象基类： InputStream ，OutputStream
-FileInputStream, FileOnputStream,
-BufferedInputStream, BufferedOnputStream
-
-字符流的抽象基类：...
+        整理Java I/O相关的s知识点
     
 
         <a href="/2019/03/09/IO流/" class="post-more waves-effect waves-button">
@@ -370,7 +360,7 @@ BufferedInputStream, BufferedOnputStream
     
     <div class="post-footer">
         
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java-I-O/">Java I/O</a></li></ul>
 
     </div>
     
@@ -385,7 +375,7 @@ BufferedInputStream, BufferedOnputStream
         <time class="post-time" title="2019-02-15 10:07:25" datetime="2019-02-15T02:07:25.000Z" itemprop="datePublished">2019-02-15</time>
 
         
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/">算法</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/">算法</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/排序/">排序</a></li></ul></li></ul>
 
 
 
@@ -416,7 +406,7 @@ BufferedInputStream, BufferedOnputStream
     
     <div class="post-footer">
         
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/排序/">排序</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
 
     </div>
     
@@ -431,6 +421,8 @@ BufferedInputStream, BufferedOnputStream
         <time class="post-time" title="2018-12-28 15:51:09" datetime="2018-12-28T07:51:09.000Z" itemprop="datePublished">2018-12-28</time>
 
         
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/后端框架/">后端框架</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/后端框架/MyBatis/">MyBatis</a></li></ul></li></ul>
+
 
 
     </div>
@@ -451,10 +443,6 @@ BufferedInputStream, BufferedOnputStream
 
     
         持久层框架。MyBatis使用简单的 XML或注解用于配置和原始映射，将接口和 Java 的POJOs 映射成数据库中的记录。
-配置及增删改查
-pojo：不按mvc分层，只是java bean有一些属性，get和set方法
-domain：不按mvc分层，只是java bean有一些属性，get和set方法
-po：[persistant object]持久层对象。最形象的理解就是一个PO就是数...
     
 
         <a href="/2018/12/28/mybatis学习整理/" class="post-more waves-effect waves-button">
@@ -464,7 +452,7 @@ po：[persistant object]持久层对象。最形象的理解就是一个PO就是
     
     <div class="post-footer">
         
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/后端开发/">后端开发</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis/">MyBatis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/后端框架/">后端框架</a></li></ul>
 
     </div>
     

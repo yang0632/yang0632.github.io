@@ -20,19 +20,19 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="java,并发">
-    <meta name="description" content="由volatile为切入点，串一串java并发的一些知识点 被volatile修饰的共享变量，具有了以下两点特性： 1 . 保证变量的内存可见性; 2 . 禁止指令重排序 涉及到的几个名词： 共享变量：代指实例域，静态域，数组元素；它们存储在堆内存里，堆内存在线程之间共享，会存在内存可见性问题 内存可见性、重排序：这个从Java内存模型（JMM）说起 Java内存模型（JMM）线程之间的共享变量存">
-<meta name="keywords" content="java,并发">
+    <meta name="keywords" content="并发,Java,volatile">
+    <meta name="description" content="由volatile为切入点，串一串java并发的一些知识点">
+<meta name="keywords" content="并发,Java,volatile">
 <meta property="og:type" content="article">
 <meta property="og:title" content="volatile关键字与java内存模型">
 <meta property="og:url" content="http://yoursite.com/2019/04/01/volatile关键字与java内存模型/index.html">
 <meta property="og:site_name" content="YGQ&#39;s Notes">
-<meta property="og:description" content="由volatile为切入点，串一串java并发的一些知识点 被volatile修饰的共享变量，具有了以下两点特性： 1 . 保证变量的内存可见性; 2 . 禁止指令重排序 涉及到的几个名词： 共享变量：代指实例域，静态域，数组元素；它们存储在堆内存里，堆内存在线程之间共享，会存在内存可见性问题 内存可见性、重排序：这个从Java内存模型（JMM）说起 Java内存模型（JMM）线程之间的共享变量存">
+<meta property="og:description" content="由volatile为切入点，串一串java并发的一些知识点">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-03T06:23:07.313Z">
+<meta property="og:updated_time" content="2019-05-03T07:57:40.987Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="volatile关键字与java内存模型">
-<meta name="twitter:description" content="由volatile为切入点，串一串java并发的一些知识点 被volatile修饰的共享变量，具有了以下两点特性： 1 . 保证变量的内存可见性; 2 . 禁止指令重排序 涉及到的几个名词： 共享变量：代指实例域，静态域，数组元素；它们存储在堆内存里，堆内存在线程之间共享，会存在内存可见性问题 内存可见性、重排序：这个从Java内存模型（JMM）说起 Java内存模型（JMM）线程之间的共享变量存">
+<meta name="twitter:description" content="由volatile为切入点，串一串java并发的一些知识点">
     
     <link rel="shortcut icon" href="/img/myblog.jpeg">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -134,6 +134,8 @@
 </time>
 
 
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/并发/">并发</a></li></ul></li></ul>
+
             
         </h5>
     </div>
@@ -162,13 +164,15 @@
             <time class="post-time" title="2019-04-01 09:56:34" datetime="2019-04-01T01:56:34.000Z" itemprop="datePublished">2019-04-01</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/并发/">并发</a></li></ul></li></ul>
+
 
 
             
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p><em>由volatile为切入点，串一串java并发的一些知识点</em></p>
+            <p>由volatile为切入点，串一串java并发的一些知识点<br><a id="more"></a></p>
 <p>被volatile修饰的共享变量，具有了以下两点特性：</p>
 <p>1 . 保证变量的内存可见性;</p>
 <p>2 . 禁止指令重排序</p>
@@ -324,7 +328,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/volatile/">volatile</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
 
 
             
@@ -344,7 +348,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/04/01/volatile关键字与java内存模型/&title=《volatile关键字与java内存模型》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/04/01/volatile关键字与java内存模型/&title=《volatile关键字与java内存模型》 — YGQ's Notes&source=由volatile为切入点，串一串java并发的一些知识点" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -459,7 +463,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/04/01/volatile关键字与java内存模型/&title=《volatile关键字与java内存模型》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/04/01/volatile关键字与java内存模型/&title=《volatile关键字与java内存模型》 — YGQ's Notes&source=由volatile为切入点，串一串java并发的一些知识点" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

@@ -20,19 +20,19 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="java">
-    <meta name="description" content="Java对数据的操作是通过流的方式，用于操作流的对象都在IO包中  流按操作数据分为两种：字节流与字符流（处理文字数据） 流按流向分为：输入流，输出流 字节流的抽象基类： InputStream ，OutputStream FileInputStream, FileOnputStream, BufferedInputStream, BufferedOnputStream  字符流的抽象基类： Re">
-<meta name="keywords" content="java">
+    <meta name="keywords" content="Java I/O">
+    <meta name="description" content="整理Java I/O相关的s知识点">
+<meta name="keywords" content="Java I&#x2F;O">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IO流">
 <meta property="og:url" content="http://yoursite.com/2019/03/09/IO流/index.html">
 <meta property="og:site_name" content="YGQ&#39;s Notes">
-<meta property="og:description" content="Java对数据的操作是通过流的方式，用于操作流的对象都在IO包中  流按操作数据分为两种：字节流与字符流（处理文字数据） 流按流向分为：输入流，输出流 字节流的抽象基类： InputStream ，OutputStream FileInputStream, FileOnputStream, BufferedInputStream, BufferedOnputStream  字符流的抽象基类： Re">
+<meta property="og:description" content="整理Java I/O相关的s知识点">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-03-09T12:51:00.905Z">
+<meta property="og:updated_time" content="2019-05-03T07:57:05.425Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IO流">
-<meta name="twitter:description" content="Java对数据的操作是通过流的方式，用于操作流的对象都在IO包中  流按操作数据分为两种：字节流与字符流（处理文字数据） 流按流向分为：输入流，输出流 字节流的抽象基类： InputStream ，OutputStream FileInputStream, FileOnputStream, BufferedInputStream, BufferedOnputStream  字符流的抽象基类： Re">
+<meta name="twitter:description" content="整理Java I/O相关的s知识点">
     
     <link rel="shortcut icon" href="/img/myblog.jpeg">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -134,6 +134,8 @@
 </time>
 
 
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/Java-I-O/">Java I/O</a></li></ul></li></ul>
+
             
         </h5>
     </div>
@@ -162,13 +164,16 @@
             <time class="post-time" title="2019-03-09 15:06:41" datetime="2019-03-09T07:06:41.000Z" itemprop="datePublished">2019-03-09</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/Java-I-O/">Java I/O</a></li></ul></li></ul>
+
 
 
             
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p>Java对数据的操作是通过流的方式，用于操作流的对象都在IO包中</p>
+            <p>整理Java I/O相关的s知识点<br><a id="more"></a></p>
+<p>Java对数据的操作是通过流的方式，用于操作流的对象都在IO包中</p>
 <ul>
 <li>流按操作数据分为两种：字节流与字符流（处理文字数据）</li>
 <li>流按流向分为：输入流，输出流</li>
@@ -260,6 +265,7 @@ BufferedReader, BufferedWriter
 目的设备
     控制台 System.out,硬盘 FileStream，内存 ArrayStream
 </code></pre><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ByteArrayStream</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//数据源</span></span><br><span class="line">        ByteArrayInputStream bis = <span class="keyword">new</span> ByteArrayInputStream(<span class="string">"ABCD"</span>.getBytes());</span><br><span class="line">        <span class="comment">//数据目的</span></span><br><span class="line">        ByteArrayOutputStream bos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> by = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> ((by=bis.read())!=-<span class="number">1</span>)&#123;</span><br><span class="line">            bos.write(by);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
         </div>
 
         <blockquote class="post-copyright">
@@ -285,7 +291,7 @@ BufferedReader, BufferedWriter
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java-I-O/">Java I/O</a></li></ul>
 
 
             
@@ -305,7 +311,7 @@ BufferedReader, BufferedWriter
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/09/IO流/&title=《IO流》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/09/IO流/&title=《IO流》 — YGQ's Notes&source=整理Java I/O相关的s知识点" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -427,7 +433,7 @@ BufferedReader, BufferedWriter
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/09/IO流/&title=《IO流》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/09/IO流/&title=《IO流》 — YGQ's Notes&source=整理Java I/O相关的s知识点" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

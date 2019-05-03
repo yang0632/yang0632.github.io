@@ -20,22 +20,22 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="java基础">
-    <meta name="description" content="HashMapHashMap 通过 key 的 hashCode 经 过扰动函数处理过后得到 hash 值，然后通过判断当前元素存放的位置(这里的 n 指的是数组的 长度)，如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。 所谓扰动函数指的就是 HashMap 的 hash 方法。使用扰动函数之后可以减">
-<meta name="keywords" content="java基础">
+    <meta name="keywords" content="Java集合">
+    <meta name="description" content="结合源码理解hashmap">
+<meta name="keywords" content="Java集合">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HashMap源码分析">
 <meta property="og:url" content="http://yoursite.com/2019/03/20/HashMap源码分析/index.html">
 <meta property="og:site_name" content="YGQ&#39;s Notes">
-<meta property="og:description" content="HashMapHashMap 通过 key 的 hashCode 经 过扰动函数处理过后得到 hash 值，然后通过判断当前元素存放的位置(这里的 n 指的是数组的 长度)，如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。 所谓扰动函数指的就是 HashMap 的 hash 方法。使用扰动函数之后可以减">
+<meta property="og:description" content="结合源码理解hashmap">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c930a853fd38.png">
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c930e9963f0d.png">
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c930ecf3673d.png">
-<meta property="og:updated_time" content="2019-04-16T14:43:12.934Z">
+<meta property="og:updated_time" content="2019-05-03T07:56:30.150Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HashMap源码分析">
-<meta name="twitter:description" content="HashMapHashMap 通过 key 的 hashCode 经 过扰动函数处理过后得到 hash 值，然后通过判断当前元素存放的位置(这里的 n 指的是数组的 长度)，如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。 所谓扰动函数指的就是 HashMap 的 hash 方法。使用扰动函数之后可以减">
+<meta name="twitter:description" content="结合源码理解hashmap">
 <meta name="twitter:image" content="https://i.loli.net/2019/03/21/5c930a853fd38.png">
     
     <link rel="shortcut icon" href="/img/myblog.jpeg">
@@ -138,6 +138,8 @@
 </time>
 
 
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/Java集合/">Java集合</a></li></ul></li></ul>
+
             
         </h5>
     </div>
@@ -166,13 +168,17 @@
             <time class="post-time" title="2019-03-20 21:52:55" datetime="2019-03-20T13:52:55.000Z" itemprop="datePublished">2019-03-20</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/Java集合/">Java集合</a></li></ul></li></ul>
+
 
 
             
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p><strong>HashMap 通过 key 的 hashCode 经 过扰动函数处理过后得到 hash 值，然后通过判断当前元素存放的位置(这里的 n 指的是数组的 长度)，如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</strong></p>
+            <p>结合源码理解hashmap</p>
+<a id="more"></a>
+<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p><strong>HashMap 通过 key 的 hashCode 经 过扰动函数处理过后得到 hash 值，然后通过判断当前元素存放的位置(这里的 n 指的是数组的 长度)，如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</strong></p>
 <p><strong>所谓扰动函数指的就是 HashMap 的 hash 方法。使用扰动函数之后可以减少碰撞。</strong></p>
 <p>HashMap 底层是基于数组和链表实现的。其中有两个重要的参数：</p>
 <ul>
@@ -293,7 +299,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java集合/">Java集合</a></li></ul>
 
 
             
@@ -313,7 +319,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/20/HashMap源码分析/&title=《HashMap源码分析》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/20/HashMap源码分析/&title=《HashMap源码分析》 — YGQ's Notes&source=结合源码理解hashmap" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -435,7 +441,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/20/HashMap源码分析/&title=《HashMap源码分析》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/20/HashMap源码分析/&title=《HashMap源码分析》 — YGQ's Notes&source=结合源码理解hashmap" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
