@@ -21,18 +21,18 @@
     
     
     <meta name="keywords" content="java基础">
-    <meta name="description" content="String对象不可变String使用private final char value[]来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中不提供修改数据的方法就可以。 然而，String类对象确实有编辑字符串">
+    <meta name="description" content="深入理解String类">
 <meta name="keywords" content="java基础">
 <meta property="og:type" content="article">
 <meta property="og:title" content="谈一谈令人疑惑的String类">
 <meta property="og:url" content="http://yoursite.com/2019/03/11/谈一谈令人疑惑的String类/index.html">
 <meta property="og:site_name" content="YGQ&#39;s Notes">
-<meta property="og:description" content="String对象不可变String使用private final char value[]来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中不提供修改数据的方法就可以。 然而，String类对象确实有编辑字符串">
+<meta property="og:description" content="深入理解String类">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-03-20T13:58:02.875Z">
+<meta property="og:updated_time" content="2019-05-03T07:39:28.458Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="谈一谈令人疑惑的String类">
-<meta name="twitter:description" content="String对象不可变String使用private final char value[]来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中不提供修改数据的方法就可以。 然而，String类对象确实有编辑字符串">
+<meta name="twitter:description" content="深入理解String类">
     
     <link rel="shortcut icon" href="/img/myblog.jpeg">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -134,6 +134,8 @@
 </time>
 
 
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/Java基础/">Java基础</a></li></ul></li></ul>
+
             
         </h5>
     </div>
@@ -162,13 +164,16 @@
             <time class="post-time" title="2019-03-11 21:54:22" datetime="2019-03-11T13:54:22.000Z" itemprop="datePublished">2019-03-11</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/Java基础/">Java基础</a></li></ul></li></ul>
+
 
 
             
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h3 id="String对象不可变"><a href="#String对象不可变" class="headerlink" title="String对象不可变"></a>String对象不可变</h3><p>String使用<code>private final char value[]</code>来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中<code>不提供修改数据的方法</code>就可以。</p>
+            <p>深入理解String类<br><a id="more"></a></p>
+<h3 id="String对象不可变"><a href="#String对象不可变" class="headerlink" title="String对象不可变"></a>String对象不可变</h3><p>String使用<code>private final char value[]</code>来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中<code>不提供修改数据的方法</code>就可以。</p>
 <p>然而，String类对象确实有编辑字符串的功能，比如replace()。这些编辑功能是通过<code>创建一个新的对象</code>来实现的，而不是对原有对象进行修改。比如:<br><code>s = s.replace(&quot;World&quot;, &quot;Universe&quot;);</code><br>上面对s.replace()的调用将创建一个新的字符串”Hello Universe!”，并返回该对象的引用。引用s将指向该新的字符串。如果没有其他引用指向原有字符串”Hello World!”，原字符串对象将被垃圾回收。</p>
 <blockquote>
 <p>String对象一旦被创建就是固定不变的了，对String对象的任何改变都不影响到原对象，相关的任何change操作都会生成新的对象</p>
@@ -257,7 +262,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/11/谈一谈令人疑惑的String类/&title=《谈一谈令人疑惑的String类》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/11/谈一谈令人疑惑的String类/&title=《谈一谈令人疑惑的String类》 — YGQ's Notes&source=深入理解String类" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -295,9 +300,9 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2019/03/15/上传文件到OSS/" id="post-prev" class="post-nav-link">
+      <a href="/2019/03/20/HashMap源码分析/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">上传文件到OSS</h4>
+        <h4 class="title">HashMap源码分析</h4>
       </a>
     </div>
   
@@ -379,7 +384,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/11/谈一谈令人疑惑的String类/&title=《谈一谈令人疑惑的String类》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/03/11/谈一谈令人疑惑的String类/&title=《谈一谈令人疑惑的String类》 — YGQ's Notes&source=深入理解String类" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

@@ -281,61 +281,14 @@ Java内存模型（JMM）线程之间的共享...
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-上传文件到OSS" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2019-03-15 21:54:05" datetime="2019-03-15T13:54:05.000Z" itemprop="datePublished">2019-03-15</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2019/03/15/上传文件到OSS/">上传文件到OSS</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        实习时遇到的需求：把数据导出并以csv文件的形式上传到OSS（阿里云对象存储服务（Object Storage Service，简称 OSS））上。下面简单总结一下
-首先明确几点：
-
-创建了存储空间（Bucket）之后，可以上传任何类型的文件（Object）到存储空间中。
-
-上传Object一般使用putObject或者multipartUpload函数。在OSS中严格来说是没有文件夹的概念...
-    
-
-        <a href="/2019/03/15/上传文件到OSS/" class="post-more waves-effect waves-button">
-            Continue reading...
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/后端开发/">后端开发</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
             <article id="post-谈一谈令人疑惑的String类" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2019-03-11 21:54:22" datetime="2019-03-11T13:54:22.000Z" itemprop="datePublished">2019-03-11</time>
 
         
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/Java基础/">Java基础</a></li></ul></li></ul>
+
 
 
     </div>
@@ -355,8 +308,7 @@ Java内存模型（JMM）线程之间的共享...
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        String对象不可变String使用private final char value[]来实现字符串的存储，也就是说String对象创建之后，就不能再修改此对象中存储的字符串内容，就是因为如此，才说String类型是不可变的(immutable)。程序员不能对已有的不可变对象进行修改。我们自己也可以创建不可变对象，只要在接口中不提供修改数据的方法就可以。
-然而，String类对象确实有编辑...
+        深入理解String类
     
 
         <a href="/2019/03/11/谈一谈令人疑惑的String类/" class="post-more waves-effect waves-button">
@@ -433,6 +385,8 @@ BufferedInputStream, BufferedOnputStream
         <time class="post-time" title="2019-02-15 10:07:25" datetime="2019-02-15T02:07:25.000Z" itemprop="datePublished">2019-02-15</time>
 
         
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/">算法</a></li></ul>
+
 
 
     </div>
@@ -452,21 +406,7 @@ BufferedInputStream, BufferedOnputStream
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        选择排序简单选择
-一种简单且直观的排序算法。
-不断在剩余元素中选择最小者，因此叫选择排序。
-
-思想：
-
-找到数组中最小的元素，和a[0]交换
-在剩下的元素里找到最小的元素，和a[1]交换
-
-两个鲜明特点；
-
-和输入的初始状态无关。 哪怕原数组已排序完成，也是O(n²)
-数据移动最少。选择排序用了N次交换
-
-123456789101112131415public static void sel...
+        本文整理常见的排序算法，包括思想及实现。
     
 
         <a href="/2019/02/15/排序整理/" class="post-more waves-effect waves-button">
@@ -618,6 +558,53 @@ po：[persistant object]持久层对象。最形象的理解就是一个PO就是
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
 
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-java基础（视频）二" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-11-02 11:09:03" datetime="2018-11-02T03:09:03.991Z" itemprop="datePublished">2018-11-02</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/11/02/java基础（视频）二/">java基础（视频内容）（二）</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        本文内容为学习毕向东的java视频时记录下的内容
+ch11 多线程123456进程：是一个正在执行中的程序每一个进程执行都有一个执行顺序，该顺序是一个控制单元线程：进程中的一个独立的控制单元。		线程在控制着进程的执行一个进程至少有一个线程
+如何自定义一个线程呢？java提供了thread类，对线程这类事物描述
+
+创建线程的第一种方式：继承Thread类
+
+步骤：
+
+定义类继承Thread
+...
+    
+
+        <a href="/2018/11/02/java基础（视频）二/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
     </div>
     
 </article>
