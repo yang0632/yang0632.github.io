@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="YGQ&#39;s Notes">
     
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/img/myblog.jpeg">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
     <script>window.lazyScripts=[]</script>
 
@@ -196,6 +196,8 @@ Java内存模型（JMM）线程之间的共享...
         <time class="post-time" title="2019-03-23 00:14:19" datetime="2019-03-22T16:14:19.000Z" itemprop="datePublished">2019-03-23</time>
 
         
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/并发/">并发</a></li></ul></li></ul>
+
 
 
     </div>
@@ -215,8 +217,7 @@ Java内存模型（JMM）线程之间的共享...
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        概述synchronized关键字解决的是多个线程之间访问资源的同步性，synchronized关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。 
-在 Java 早期版本中，synchronized属于重量级锁，效率低下，因为监视器锁(monitor)是依赖于底层的操作系统的 Mutex Lock 来实现的，Java 的线程是映射到操作系统的原生线程之上的。如果要挂起或者...
+        深入理解synchronized关键字。
     
 
         <a href="/2019/03/23/理解synchronized关键字/" class="post-more waves-effect waves-button">
@@ -226,7 +227,7 @@ Java内存模型（JMM）线程之间的共享...
     
     <div class="post-footer">
         
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
 
     </div>
     
@@ -538,6 +539,8 @@ po：[persistant object]持久层对象。最形象的理解就是一个PO就是
         <time class="post-time" title="2018-12-28 15:13:12" datetime="2018-12-28T07:13:12.000Z" itemprop="datePublished">2018-12-28</time>
 
         
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/JVM/">JVM</a></li></ul></li></ul>
+
 
 
     </div>
@@ -557,9 +560,7 @@ po：[persistant object]持久层对象。最形象的理解就是一个PO就是
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是： 
-程序计数器程序计数器是一块较小的内存空间，记录正在执行的虚拟机字节码指令的地址（如果正在执行的是本地方法则为空）。
-Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，为了线程切换后能恢复到正确的位置，每条线程都需要一个独立的程序计数器，互不影响，该区域为“线程...
+        《深入理解java虚拟机》读书笔记
     
 
         <a href="/2018/12/28/理解JVM/" class="post-more waves-effect waves-button">
@@ -569,7 +570,7 @@ Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间�
     
     <div class="post-footer">
         
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
 
     </div>
     
@@ -584,6 +585,8 @@ Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间�
         <time class="post-time" title="2018-12-28 15:04:47" datetime="2018-12-28T07:04:47.000Z" itemprop="datePublished">2018-12-28</time>
 
         
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/数据库/">数据库</a></li></ul>
+
 
 
     </div>
@@ -604,11 +607,6 @@ Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间�
 
     
         本文整理数据库相关的知识点（更新中）
-
-  关系型数据库：存放实体与实体之间的关系的数据库
-  非关系型数据库：存放的是对象（redis） no-sql
-  常见的关系型数据库：
-  1234mysql         oracle   开源数据库oracle        oracle   大型收费的数据库DB2           IBM      大型收费的数据库sqlserver  ...
     
 
         <a href="/2018/12/28/数据库学习/" class="post-more waves-effect waves-button">

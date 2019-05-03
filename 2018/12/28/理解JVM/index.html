@@ -20,21 +20,21 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="java">
-    <meta name="description" content="JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是：  程序计数器程序计数器是一块较小的内存空间，记录正在执行的虚拟机字节码指令的地址（如果正在执行的是本地方法则为空）。 Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，为了线程切换后能恢复到正确的位置，每条线程都需要一个独立的程序计数器，互不影响，该区域为“线程私有”">
-<meta name="keywords" content="java">
+    <meta name="keywords" content="Java,JVM">
+    <meta name="description" content="《深入理解java虚拟机》读书笔记">
+<meta name="keywords" content="Java,JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="理解JVM">
 <meta property="og:url" content="http://yoursite.com/2018/12/28/理解JVM/index.html">
 <meta property="og:site_name" content="YGQ&#39;s Notes">
-<meta property="og:description" content="JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是：  程序计数器程序计数器是一块较小的内存空间，记录正在执行的虚拟机字节码指令的地址（如果正在执行的是本地方法则为空）。 Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，为了线程切换后能恢复到正确的位置，每条线程都需要一个独立的程序计数器，互不影响，该区域为“线程私有”">
+<meta property="og:description" content="《深入理解java虚拟机》读书笔记">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-09T15:29:09.451Z">
+<meta property="og:updated_time" content="2019-05-03T07:27:59.454Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解JVM">
-<meta name="twitter:description" content="JVM内存模型Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是：  程序计数器程序计数器是一块较小的内存空间，记录正在执行的虚拟机字节码指令的地址（如果正在执行的是本地方法则为空）。 Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，为了线程切换后能恢复到正确的位置，每条线程都需要一个独立的程序计数器，互不影响，该区域为“线程私有”">
+<meta name="twitter:description" content="《深入理解java虚拟机》读书笔记">
     
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/img/myblog.jpeg">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
     <script>window.lazyScripts=[]</script>
 
@@ -134,6 +134,8 @@
 </time>
 
 
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/JVM/">JVM</a></li></ul></li></ul>
+
             
         </h5>
     </div>
@@ -162,13 +164,17 @@
             <time class="post-time" title="2018-12-28 15:13:12" datetime="2018-12-28T07:13:12.000Z" itemprop="datePublished">2018-12-28</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/JVM/">JVM</a></li></ul></li></ul>
+
 
 
             
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h2 id="JVM内存模型"><a href="#JVM内存模型" class="headerlink" title="JVM内存模型"></a>JVM内存模型</h2><p>Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是： </p>
+            <p>《深入理解java虚拟机》读书笔记</p>
+<a id="more"></a>
+<h2 id="JVM内存模型"><a href="#JVM内存模型" class="headerlink" title="JVM内存模型"></a>JVM内存模型</h2><p>Java虚拟机(Java Virtual Machine=JVM)的内存空间分为五个部分，分别是： </p>
 <h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>程序计数器是一块较小的内存空间，记录<strong>正在执行的虚拟机字节码指令的地址</strong>（如果正在执行的是本地方法则为空）。</p>
 <p>Java虚拟机的多线程就是通过线程轮流切换并分配处理器时间来实现的，为了线程切换后能恢复到正确的位置，每条线程都需要一个独立的程序计数器，互不影响，该区域为“线程私有”。</p>
 <h3 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h3><p>线程私有的，与线程生命周期相同。</p>
@@ -407,7 +413,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
 
 
             
@@ -427,7 +433,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/28/理解JVM/&title=《理解JVM》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/28/理解JVM/&title=《理解JVM》 — YGQ's Notes&source=《深入理解java虚拟机》读书笔记" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -549,7 +555,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/28/理解JVM/&title=《理解JVM》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/28/理解JVM/&title=《理解JVM》 — YGQ's Notes&source=《深入理解java虚拟机》读书笔记" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
