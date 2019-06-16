@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c934bd109b34.png">
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c934bcce83ed.png">
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c934bcfb134d.png">
-<meta property="og:updated_time" content="2019-05-03T07:18:05.520Z">
+<meta property="og:updated_time" content="2019-06-16T07:07:06.700Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库学习">
 <meta name="twitter:description" content="本文整理数据库相关的知识点（更新中）">
@@ -114,7 +114,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -155,8 +155,8 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#sql的分类："><span class="post-toc-number">1.</span> <span class="post-toc-text">sql的分类：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#关系数据库管理系统的特点："><span class="post-toc-number">2.</span> <span class="post-toc-text">关系数据库管理系统的特点：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#主键和外键："><span class="post-toc-number">3.</span> <span class="post-toc-text">主键和外键：</span></a></li></ol><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数据库系统原理"><span class="post-toc-number"></span> <span class="post-toc-text">数据库系统原理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#事务"><span class="post-toc-number">1.</span> <span class="post-toc-text">事务</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#并发一致性问题"><span class="post-toc-number">2.</span> <span class="post-toc-text">并发一致性问题</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#隔离级别"><span class="post-toc-number">3.</span> <span class="post-toc-text">隔离级别</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#MYSQL"><span class="post-toc-number"></span> <span class="post-toc-text">MYSQL</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#存储引擎"><span class="post-toc-number">1.</span> <span class="post-toc-text">存储引擎</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#InnoDB"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">InnoDB</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#MyISAM"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">MyISAM</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#索引"><span class="post-toc-number">2.</span> <span class="post-toc-text">索引</span></a></li></ol>
-        </li></nav>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#sql的分类："><span class="post-toc-number">1.</span> <span class="post-toc-text">sql的分类：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#关系数据库管理系统的特点："><span class="post-toc-number">2.</span> <span class="post-toc-text">关系数据库管理系统的特点：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#主键和外键："><span class="post-toc-number">3.</span> <span class="post-toc-text">主键和外键：</span></a></li></ol><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#数据库系统原理"><span class="post-toc-number"></span> <span class="post-toc-text">数据库系统原理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#事务"><span class="post-toc-number"></span> <span class="post-toc-text">事务</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#并发一致性问题"><span class="post-toc-number"></span> <span class="post-toc-text">并发一致性问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#隔离级别"><span class="post-toc-number"></span> <span class="post-toc-text">隔离级别</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#MYSQL"><span class="post-toc-number"></span> <span class="post-toc-text">MYSQL</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#存储引擎"><span class="post-toc-number"></span> <span class="post-toc-text">存储引擎</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#InnoDB"><span class="post-toc-number">1.</span> <span class="post-toc-text">InnoDB</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#MyISAM"><span class="post-toc-number">2.</span> <span class="post-toc-text">MyISAM</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#索引"><span class="post-toc-number"></span> <span class="post-toc-text">索引</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#B-树索引"><span class="post-toc-number">1.</span> <span class="post-toc-text">B+树索引</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#B-树数据结构"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">B+树数据结构</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#操作"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">操作</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#为什么是B-树-与红黑树比较"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">为什么是B+树/与红黑树比较</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#哈希索引"><span class="post-toc-number">2.</span> <span class="post-toc-text">哈希索引</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#全文索引"><span class="post-toc-number">3.</span> <span class="post-toc-text">全文索引</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#索引的使用"><span class="post-toc-number">4.</span> <span class="post-toc-text">索引的使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#单列索引"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">单列索引</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#最左前缀原则"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">最左前缀原则</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#覆盖索引"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">覆盖索引</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#索引优缺点"><span class="post-toc-number">5.</span> <span class="post-toc-text">索引优缺点</span></a></li></ol>
+        </li></ol></li></nav>
     </aside>
 
 
@@ -266,7 +266,7 @@
 <li>外键用于与另一张表的关联。是能确定另一张表记录的字段，用于保持数据的一致性。</li>
 </ol>
 <p>比如，A表中的一个字段，是B表的主键，那他就可以是A表的外键。</p>
-<h2 id="数据库系统原理"><a href="#数据库系统原理" class="headerlink" title="数据库系统原理"></a>数据库系统原理</h2><h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>概念：事务指的是满足 ACID 特性的一组操作，可以通过 Commit 提交一个事务，也可以使用 Rollback 进行回滚。</p>
+<h1 id="数据库系统原理"><a href="#数据库系统原理" class="headerlink" title="数据库系统原理"></a>数据库系统原理</h1><h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>概念：事务指的是满足 ACID 特性的一组操作，可以通过 Commit 提交一个事务，也可以使用 Rollback 进行回滚。</p>
 <blockquote>
 <p>ACID</p>
 </blockquote>
@@ -287,7 +287,7 @@
 <p> 使用重做日志来保证持久性。</p>
 </li>
 </ol>
-<h3 id="并发一致性问题"><a href="#并发一致性问题" class="headerlink" title="并发一致性问题"></a>并发一致性问题</h3><p>在并发环境下，事务的隔离性很难保证，因此会出现很多并发一致性问题。</p>
+<h2 id="并发一致性问题"><a href="#并发一致性问题" class="headerlink" title="并发一致性问题"></a>并发一致性问题</h2><p>在并发环境下，事务的隔离性很难保证，因此会出现很多并发一致性问题。</p>
 <ul>
 <li>丢失修改</li>
 </ul>
@@ -311,7 +311,7 @@
 <div align="center"><br><img src="https://i.loli.net/2019/03/21/5c934bcfb134d.png" width="320" hegiht="313"><br></div>
 
 <p>产生并发不一致性问题主要原因是破坏了事务的隔离性，解决方法是通过并发控制来保证隔离性。数据库管理系统提供了事务的隔离级别，让用户以一种更轻松的方式处理并发一致性问题。</p>
-<h3 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h3><ol>
+<h2 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h2><ol>
 <li><p>未提交读（READ UNCOMMITTED）</p>
 <p> 事务中的修改，即使没有提交，对其它事务也是可见的。</p>
 <p> 所有事务都可以看到其他未提交事务的执行结果。本隔离级别很少用于实际应用，因为它的性能也不比其他级别好多少。读取未提交的数据，也被称之为脏读（Dirty Read）。</p>
@@ -371,63 +371,86 @@
 </tr>
 </tbody>
 </table>
-<h2 id="MYSQL"><a href="#MYSQL" class="headerlink" title="MYSQL"></a>MYSQL</h2><h3 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h3><h4 id="InnoDB"><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h4><p>是 MySQL 默认的事务型存储引擎，只有在需要它不支持的特性时，才考虑使用其它存储引擎。</p>
+<h1 id="MYSQL"><a href="#MYSQL" class="headerlink" title="MYSQL"></a>MYSQL</h1><h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><h3 id="InnoDB"><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h3><p>是 MySQL 默认的事务型存储引擎，只有在需要它不支持的特性时，才考虑使用其它存储引擎。</p>
 <p>实现了四个标准的隔离级别，默认级别是<strong>可重复读</strong>（REPEATABLE READ）。在可重复读隔离级别下，通过多版本并发控制（MVCC）+ 间隙锁（Next-Key Locking）防止幻影读。</p>
-<p>主索引是聚簇索引，在索引中保存了数据，从而避免直接读取磁盘，因此对查询性能有很大的提升。</p>
+<p>主索引是聚集索引，在索引中保存了数据，从而避免直接读取磁盘，因此对查询性能有很大的提升。</p>
 <p>内部做了很多优化，包括从磁盘读取数据时采用的可预测性读、能够加快读操作并且自动创建的自适应哈希索引、能够加速插入操作的插入缓冲区等。</p>
 <p>支持真正的在线热备份。其它存储引擎不支持在线热备份，要获取一致性视图需要停止对所有表的写入，而在读写混合场景中，停止写入可能也意味着停止读取。</p>
-<h4 id="MyISAM"><a href="#MyISAM" class="headerlink" title="MyISAM"></a>MyISAM</h4><p>设计简单，数据以紧密格式存储。对于只读数据，或者表比较小、可以容忍修复操作，则依然可以使用它。</p>
+<h3 id="MyISAM"><a href="#MyISAM" class="headerlink" title="MyISAM"></a>MyISAM</h3><p>设计简单，数据以紧密格式存储。对于只读数据，或者表比较小、可以容忍修复操作，则依然可以使用它。</p>
 <p>提供了大量的特性，包括压缩表、空间数据索引等。</p>
 <p>不支持事务。</p>
 <p>不支持行级锁，只能对整张表加锁</p>
-<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p>索引的实现通常使用B树及其变种B+树，是一种数据结构「平衡树」(非二叉)。</p>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是在<strong>存储引擎层</strong>实现的，而不是在服务器层实现的，所以不同存储引擎具有不同的索引类型和实现。</p>
+<p>InnoDB存储引擎支持以下常见索引：</p>
+<ul>
+<li>B+树索引<ul>
+<li>聚集索引</li>
+<li>辅助索引</li>
+</ul>
+</li>
+<li>哈希索引</li>
+<li>全文索引</li>
+</ul>
+<h3 id="B-树索引"><a href="#B-树索引" class="headerlink" title="B+树索引"></a>B+树索引</h3><p>是传统意义上的索引，是大多数 MySQL 存储引擎的<strong>默认索引类型</strong>。</p>
+<p>因为 B+ Tree 的有序性，所以除了用于查找，还可以用于<strong>排序和分组</strong>。</p>
+<p>可以指定多个列作为索引列，多个索引列共同组成键。</p>
+<p>适用于全键值、键值范围和键前缀查找，其中键前缀查找只适用于最左前缀查找。如果不是按照索引列的顺序进行查找，则无法使用索引。</p>
+<p>InnoDB 的 B+Tree 索引分为<strong>聚集索引和辅助索引</strong>。</p>
+<p>聚集索引的叶子节点 data 域记录着整张表的行记录数据。因为无法把数据行存放在两个不同的地方，所以一个表只能有一个聚簇索引。</p>
+<p>辅助索引的叶子节点的 data 域记录着<strong>主键的值</strong>，因此在使用辅助索引进行查找时，需要先查找到主键值，然后再到聚集索引中进行查找。</p>
+<hr>
+<h4 id="B-树数据结构"><a href="#B-树数据结构" class="headerlink" title="B+树数据结构"></a>B+树数据结构</h4><p>B+树是一种<strong>平衡查找树</strong>，为了磁盘或其他直接存取辅助设备而设计。</p>
+<p>非叶子节点不存储数据，只有叶子节点才存储数据。</p>
+<p>一个节点中的 key 从左到右非递减排列，各叶子节点通过双向链表连接，<strong>提高范围查找的效率</strong>。</p>
+<h4 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h4><p>进行查找操作时，首先在根节点进行<strong>二分查找</strong>，找到一个 key 所在的指针，然后递归地在指针所指向的节点进行查找。直到查找到叶子节点，然后在叶子节点上进行二分查找，找出 key 所对应的 data。</p>
+<p>插入删除操作会破坏平衡树的平衡性，因此在插入删除操作之后，需要对树进行一个拆分、合并、旋转等操作来维护平衡性</p>
+<h4 id="为什么是B-树-与红黑树比较"><a href="#为什么是B-树-与红黑树比较" class="headerlink" title="为什么是B+树/与红黑树比较"></a>为什么是B+树/与红黑树比较</h4><p>红黑树等平衡树也可以用来实现索引，但是文件系统及数据库系统普遍采用 B+ Tree 作为索引结构，主要有以下两个原因：</p>
+<p>（一）更少的查找次数</p>
+<p>平衡树查找操作的时间复杂度和树高 h 相关，O(h)=O(logdN)，其中 d 为每个节点的出度。</p>
+<p>红黑树的出度为 2，而 B+ Tree 的出度一般都非常大（<strong>高扇出性、矮胖</strong>），所以 B+ Tree 查找次数更少。 </p>
+<p>（二）利用磁盘预读特性</p>
+<p>为了减少磁盘 I/O 操作，磁盘往往不是严格按需读取，而是每次都会预读。预读过程中，磁盘进行顺序读取，顺序读取不需要进行磁盘寻道，并且只需要很短的磁盘旋转时间，速度会非常快。</p>
+<p>操作系统一般将内存和磁盘分割成固定大小的块，每一块称为一页，内存与磁盘以页为单位交换数据。数据库系统将索引的<strong>一个节点的大小设置为页的大小</strong>，使得<strong>一次 I/O 就能完全载入一个节点</strong>。并且可以利用预读特性，相邻的节点也能够被预先载入。</p>
+<h3 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h3><p>哈希索引能以 O(1) 时间进行查找，但是失去了有序性：</p>
+<ul>
+<li>无法用于排序与分组；</li>
+<li>只支持精确查找，无法用于部分查找和范围查找。</li>
+</ul>
+<p>InnoDB 存储引擎有一个特殊的功能叫“<strong>自适应哈希索引</strong>”，当某个索引值被使用的非常频繁时，会在 B+Tree 索引之上再创建一个哈希索引，这样就让 B+Tree 索引具有哈希索引的一些优点，比如快速的哈希查找。</p>
+<h3 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h3><p>用于查找文本中的关键词，而不是直接比较是否相等。</p>
+<p>查找条件使用 MATCH AGAINST，而不是普通的 WHERE。</p>
+<p>全文索引使用<strong>倒排索引</strong>实现，它和B+树索引一样，也是一种索引结构，它在辅助表中记录着关键词到其所在文档的映射。</p>
+<p>MyISAM 存储引擎支持全文索引，InnoDB 存储引擎在 MySQL 5.6.4 版本中也开始支持全文索引。</p>
+<h3 id="索引的使用"><a href="#索引的使用" class="headerlink" title="索引的使用"></a>索引的使用</h3><h4 id="单列索引"><a href="#单列索引" class="headerlink" title="单列索引"></a>单列索引</h4><p>在进行查询时，索引列不能是<strong>表达式的一部分，也不能是函数的参数</strong>，否则无法使用索引。</p>
+<p>例如下面的查询不能使用 actor_id 列的索引：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> actor_id <span class="keyword">FROM</span> sakila.actor <span class="keyword">WHERE</span> actor_id + <span class="number">1</span> = <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h4><p>MySQL中的索引可以以一定顺序引用多列，这种索引叫作<code>联合索引</code>。如User表的name和city加联合索引就是 (name,city)o而最左前缀原则指的是，如果查询的时候查询条件精确匹配<strong>索引的左边连续一列或几列</strong>，则此列就可以 被用到。如下: </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">name</span>=xx <span class="keyword">and</span> city=xx ; //可以命中索引 </span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">name</span>=xx ; // 可以命中索引</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> city=xx; // 无法命中索引</span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是，查询的时候如果两个条件都用上了，但是顺序不同，如 city= xx and name =xx ，那么现在 的查询引擎会自动优化为匹配联合索引的顺序，这样是能够命中索引的. </p>
+<p>由于最左前缀原则，在创建联合索引时，<strong>让选择性最强、区分度高的索引列放在前面</strong>。</p>
+<h4 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h4><p>索引包含了所有需要查询的字段的值。</p>
+<p>具有以下优点：</p>
+<ul>
+<li>select的数据列只从索引中就能够取得，不必从数据表中读取，大大减少数据访问量。</li>
+<li>一些存储引擎（例如 MyISAM）在内存中只缓存索引，而数据依赖于操作系统来缓存。因此，只访问索引可以不使用系统调用（通常比较费时）。</li>
+<li>对于 InnoDB 引擎，若辅助索引能够覆盖查询，则无需访问主索引。</li>
+</ul>
+<p>不是所有类型的索引都可以成为覆盖索引。覆盖索引必须要存储索引的列，而哈希索引、空间索引和全文索引等都不存储索引列的值，所以MySQL只能使用B+Tree索引做覆盖索引。</p>
+<h3 id="索引优缺点"><a href="#索引优缺点" class="headerlink" title="索引优缺点"></a>索引优缺点</h3><blockquote>
+<p> 索引的优点/为什么要用索引/索引如何提高查询速度的：</p>
+</blockquote>
+<ul>
+<li><strong>不再需要进行全表扫描，只需要对树进行搜索</strong>即可，所以查找速度快很多。</li>
+<li>帮助服务器避免进行排序和分组，以及避免创建临时表（B+Tree 索引是有序的，可以用于 ORDER BY 和 GROUP BY 操作。临时表主要是在排序和分组过程中创建，不需要排序和分组，也就不需要创建临时表）。</li>
+<li>将随机 I/O 变为顺序 I/O（B+Tree 索引是有序的，会将相邻的数据都存储在一起）</li>
+</ul>
 <blockquote>
 <p>索引的不利：</p>
 </blockquote>
 <ol>
-<li>创建索引和维护索引要耗费时间，这种时间随着数据量的增加而增加。</li>
-<li>增加了数据库的存储空间（每次给字段建一个新索引，字段中的数据就会被复制一份出来，用于生成索引）</li>
+<li>创建索引和维护索引要耗费<strong>时间</strong>，这种时间随着数据量的增加而增加。</li>
+<li>增加了数据库的<strong>存储空间</strong>（每次给字段建一个新索引，字段中的数据就会被复制一份出来，用于生成索引）</li>
 <li>当对表中的数据进行增，删，改的时候，索引也要动态的维护，这样就降低了数据的维护速度。</li>
-</ol>
-<blockquote>
-<p>创建索引</p>
-</blockquote>
-<ol>
-<li><p>表的主键、外键必须有索引；</p>
-</li>
-<li><p>数据量超过300的表应该有索引；</p>
-</li>
-<li><p>经常与其他表进行连接的表，在连接字段上应该建立索引；</p>
-</li>
-<li><p>经常出现在Where子句中的字段，特别是大表的字段，应该建立索引；</p>
-</li>
-<li><p>索引应该建在选择性高的字段上；</p>
-</li>
-<li><p>索引应该建在小字段上，对于大的文本字段甚至超长字段，不要建索引；</p>
-</li>
-<li><p>频繁进行数据操作的表，不要建立太多的索引；</p>
-</li>
-</ol>
-<blockquote>
-<p>索引种类</p>
-</blockquote>
-<p>根据数据库的功能，可以在数据库设计器中创建三种索引：唯一索引、主键索引和聚集索引。</p>
-<ol>
-<li><p>唯一索引 </p>
-<p> 索引列的值必须唯一，但允许有空值。</p>
-<p> 当现有数据中存在重复的键值时，大多数数据库不允许将新创建的唯一索引与表一起保存。数据库还可能防止添加将在表中创建重复键值的新数据。例如，如果在employee表中职员的姓(lname)上创建了唯一索引，则任何两个员工都不能同姓。</p>
-</li>
-<li><p>主键索引</p>
-<p> 数据库表经常有<strong>一列或列组合</strong>，其值唯一标识表中的每一行。该列称为表的主键。</p>
-<p> 数据库为主键自动创建主键索引，<strong>主键索引是唯一索引的特定类型</strong>。</p>
-<pre><code>主键不一定只包含一个字段，所以如果你在主键的其中一个字段建唯一索引还是必要的；
-主键与唯一索引不同的是：
-(1).主健不可为空
-(2).每个表只能有一个
-</code></pre></li>
-<li><p>聚集索引</p>
-<p> 在聚集索引中，表中行的物理顺序与键值的逻辑（索引）顺序相同。一个表只能包含一个聚集索引。<br>如果某索引不是聚集索引，则表中行的物理顺序与键值的逻辑顺序不匹配。与非聚集索引相比，聚集索引通常提供更快的数据访问速度。</p>
-</li>
 </ol>
 
         </div>
@@ -565,7 +588,7 @@
 
         <p>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
         </p>
     </div>
     <div class="bottom">
