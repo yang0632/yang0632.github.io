@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>[剑指offer] 树 | YGQ&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="剑指,树">
+    <meta name="description" content="整理了《剑指offer》里树类型的题目，思路及解法(序号表示LeetCode里相同的题对应的题号)">
+<meta name="keywords" content="剑指,树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[剑指offer] 树">
+<meta property="og:url" content="http://yoursite.com/2019/06/16/剑指offer-树/index.html">
+<meta property="og:site_name" content="YGQ&#39;s Notes">
+<meta property="og:description" content="整理了《剑指offer》里树类型的题目，思路及解法(序号表示LeetCode里相同的题对应的题号)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-06-16T07:41:05.120Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[剑指offer] 树">
+<meta name="twitter:description" content="整理了《剑指offer》里树类型的题目，思路及解法(序号表示LeetCode里相同的题对应的题号)">
+    
+    <link rel="shortcut icon" href="/img/myblog.jpeg">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/myblog.jpeg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">YGQ</h5>
+          <a href="mailto:594yangguanqun@163.com" title="594yangguanqun@163.com" class="mail">594yangguanqun@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">[剑指offer] 树</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">[剑指offer] 树</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-06-16T07:33:32.000Z" itemprop="datePublished" class="page-time">
+  2019-06-16
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/">算法</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#104-二叉树的最大深度"><span class="post-toc-number">1.</span> <span class="post-toc-text">104. 二叉树的最大深度</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#110-平衡二叉树"><span class="post-toc-number">2.</span> <span class="post-toc-text">110. 平衡二叉树</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#102-二叉树的层次遍历"><span class="post-toc-number">3.</span> <span class="post-toc-text">102. 二叉树的层次遍历</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#重建二叉树"><span class="post-toc-number">4.</span> <span class="post-toc-text">重建二叉树</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二叉树的下一节点-考查中序遍历"><span class="post-toc-number">5.</span> <span class="post-toc-text">二叉树的下一节点 (考查中序遍历)</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#对称的二叉树"><span class="post-toc-number">6.</span> <span class="post-toc-text">对称的二叉树</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二叉树的镜像"><span class="post-toc-number">7.</span> <span class="post-toc-text">二叉树的镜像</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二叉树的子结构"><span class="post-toc-number">8.</span> <span class="post-toc-text">二叉树的子结构</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#之字形打印二叉树"><span class="post-toc-number">9.</span> <span class="post-toc-text">之字形打印二叉树</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二叉搜索树的后序遍历序列"><span class="post-toc-number">10.</span> <span class="post-toc-text">二叉搜索树的后序遍历序列</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二叉树中和为某一值的路径"><span class="post-toc-number">11.</span> <span class="post-toc-text">二叉树中和为某一值的路径</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-剑指offer-树" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">[剑指offer] 树</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-06-16 15:33:32" datetime="2019-06-16T07:33:32.000Z" itemprop="datePublished">2019-06-16</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/">算法</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>整理了《剑指offer》里树类型的题目，思路及解法(序号表示LeetCode里相同的题对应的题号)</p>
+<a id="more"></a>
+<h1 id="104-二叉树的最大深度"><a href="#104-二叉树的最大深度" class="headerlink" title="104. 二叉树的最大深度"></a>104. 二叉树的最大深度</h1><p>递归，深度优先搜索</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public int maxDepth(TreeNode root) &#123;</span><br><span class="line">  if (root == null) &#123;</span><br><span class="line">    return 0;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    int l = maxDepth(root.left);</span><br><span class="line">    int r = maxDepth(root.right);</span><br><span class="line">    return Math.max(l, r) + 1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复杂度分析</p>
+<p>时间复杂度：我们每个结点只访问一次，因此时间复杂度为 O(N)， 其中 N 是结点的数量。</p>
+<p>空间复杂度：在最糟糕的情况下，树是完全不平衡的，例如每个结点只剩下左子结点，递归将会被调用 N 次（树的高度），因此保持调用栈的存储将是 O(N)。但在最好的情况下（树是完全平衡的），树的高度将是 log(N)。因此，在这种情况下的空间复杂度将是 O(log(N))。</p>
+<h1 id="110-平衡二叉树"><a href="#110-平衡二叉树" class="headerlink" title="110. 平衡二叉树"></a>110. 平衡二叉树</h1><p>用后序遍历，从下到上遍历如果子树中任一不满足条件返回 false，否则返回 true 这样每个节点的高度只会算一次。</p>
+<p>深度计算的同时也再进行对每个节点的判断</p>
+<p>这样最终计算下来，我们相当于只对这棵树进行了一遍后序遍历，所以这个时间复杂度是O（N）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">private boolean flag = true;</span><br><span class="line"></span><br><span class="line">public boolean isBalanced(TreeNode root) &#123;</span><br><span class="line">    maxDepth(root);</span><br><span class="line">    return flag;    //flag会在maxDepth里赋值</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public int maxDepth(TreeNode root) &#123;</span><br><span class="line">    if (root == null) </span><br><span class="line">        return 0;</span><br><span class="line">    int l = maxDepth(root.left);</span><br><span class="line">    int r = maxDepth(root.right);</span><br><span class="line">    if (Math.abs(l - r) &gt; 1) </span><br><span class="line">        flag = false;   //只要有一个子树的左右子树不满足条件，标记为false</span><br><span class="line">    return 1 + Math.max(l, r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="102-二叉树的层次遍历"><a href="#102-二叉树的层次遍历" class="headerlink" title="102. 二叉树的层次遍历"></a>102. 二叉树的层次遍历</h1><p>利用队列实现二叉树的层次遍历</p>
+<p>层次遍历的关键就是利用队列先进先出的思想。遇到结点就入队列，在该结点出队列的时候进行处理（打印），同时将该结点的左右孩子入队列。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public ArrayList&lt;Integer&gt; PrintFromTopToBottom(TreeNode root) &#123;</span><br><span class="line">    ArrayList&lt;Integer&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line">    if (root == null) &#123;</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">    Queue&lt;TreeNode&gt; queue = new LinkedList&lt;&gt;();//队列里类型是treenode！</span><br><span class="line">    queue.add(root);//先把根节点加入</span><br><span class="line"></span><br><span class="line">    while (!queue.isEmpty()) &#123;</span><br><span class="line">        TreeNode node = queue.poll();</span><br><span class="line">        list.add(node.val);</span><br><span class="line">        if (node.left != null) &#123;</span><br><span class="line">            queue.offer(node.left);</span><br><span class="line">        &#125;</span><br><span class="line">        if (node.right != null) &#123;</span><br><span class="line">            queue.offer(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;ArrayList&lt;Integer&gt;&gt; Print(TreeNode root) &#123;</span><br><span class="line">ArrayList&lt;ArrayList&lt;Integer&gt;&gt; ret = new ArrayList&lt;&gt;();</span><br><span class="line">if(root == null)</span><br><span class="line">    return ret;</span><br><span class="line">Queue&lt;TreeNode&gt; queue = new LinkedList&lt;&gt;();</span><br><span class="line">    queue.offer(root);</span><br><span class="line">    while (!queue.isEmpty())&#123;</span><br><span class="line">        ArrayList&lt;Integer&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line">        for(int size = queue.size();size&gt;0;size--)&#123;  //队列的size</span><br><span class="line">            TreeNode temp = queue.poll();</span><br><span class="line">            list.add(temp.val);</span><br><span class="line">            if(temp.left!=null)</span><br><span class="line">                queue.offer(temp.left);</span><br><span class="line">            if(temp.right!=null)</span><br><span class="line">                queue.offer(temp.right);</span><br><span class="line">        &#125;</span><br><span class="line">            ret.add(list);</span><br><span class="line">    &#125;</span><br><span class="line">     return ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="重建二叉树"><a href="#重建二叉树" class="headerlink" title="重建二叉树"></a>重建二叉树</h1><p> 题目描述:<br>输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public class Solution &#123;</span><br><span class="line">    public TreeNode reConstructBinaryTree(int [] pre,int [] in) &#123;</span><br><span class="line">        TreeNode root=reConstructBinaryTree(pre,0,pre.length-1,in,0,in.length-1);</span><br><span class="line">        return root;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private TreeNode reConstructBinaryTree(int [] pre,int startPre,int endPre,int [] in,int startIn,int endIn) &#123;</span><br><span class="line">         </span><br><span class="line">        if(startPre&gt;endPre||startIn&gt;endIn) //结束条件</span><br><span class="line">            return null;</span><br><span class="line">        TreeNode root=new TreeNode(pre[startPre]);</span><br><span class="line">         </span><br><span class="line">        for(int i=startIn;i&lt;=endIn;i++)</span><br><span class="line">            if(in[i]==pre[startPre])&#123;</span><br><span class="line">                root.left=reConstructBinaryTree(pre,startPre+1,startPre+i-startIn,in,startIn,i-1);</span><br><span class="line">                root.right=reConstructBinaryTree(pre,i-startIn+startPre+1,endPre,in,i+1,endIn);</span><br><span class="line">                      break;</span><br><span class="line">            &#125;</span><br><span class="line">                 </span><br><span class="line">        return root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二叉树的下一节点-考查中序遍历"><a href="#二叉树的下一节点-考查中序遍历" class="headerlink" title="二叉树的下一节点 (考查中序遍历)"></a>二叉树的下一节点 (考查中序遍历)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> 思路：</span><br><span class="line">（1）如果输入的当前节点有右孩子，则它的下一个节点即为该右孩子为根节点的子树的最左边的节点，比如2-&gt;5,1-&gt;3</span><br><span class="line">（2）如果输入的当前节点没有右孩子，就需要判断其与自身父节点的关系：</span><br><span class="line">（2.1）如果当前节点没有父节点，那所求的下一个节点不存在，返回null.</span><br><span class="line">（2.2）如果输入节点是他父节点的左孩子，那他的父节点就是所求的下一个节点,比如4-&gt;2</span><br><span class="line">（2.3）如果输入节点是他父节点的右孩子，那就需要将输入节点的父节点作为新的当前节点，返回到（2）,判断新的当前节点与他自身父节点的关系,比如5-&gt;1</span><br><span class="line"> </span><br><span class="line"> public static TreeNode getNext(TreeNode pNode)&#123;</span><br><span class="line">        if(pNode==null)</span><br><span class="line">            return null;</span><br><span class="line">        else if(pNode.right!=null)&#123;</span><br><span class="line">            pNode = pNode.right;</span><br><span class="line">            while(pNode.left!=null)</span><br><span class="line">                pNode = pNode.left;</span><br><span class="line">            return pNode;</span><br><span class="line">        &#125;</span><br><span class="line">        while(pNode.father!=null)&#123;</span><br><span class="line">            if(pNode.father.left==pNode)</span><br><span class="line">                return pNode.father;</span><br><span class="line">            pNode = pNode.father;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="对称的二叉树"><a href="#对称的二叉树" class="headerlink" title="对称的二叉树"></a>对称的二叉树</h1><p>请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。</p>
+<p>解题思路</p>
+<p>法一：递归。根节点的左右子树相同，左子树的左子树和右子树的右子树相同，左子树的右子树和右子树的左子树相同即可。</p>
+<p>法二：非递归。非递归也是一样，采用栈或队列存取各级子树根节点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">//递归</span><br><span class="line">public class Solution &#123;</span><br><span class="line">    boolean isSymmetrical(TreeNode pRoot)</span><br><span class="line">    &#123;</span><br><span class="line">        if(pRoot == null)</span><br><span class="line">            return true;</span><br><span class="line">        return isSymmetrical(pRoot.left, pRoot.right);</span><br><span class="line">    &#125;</span><br><span class="line">    boolean isSymmetrical(TreeNode left, TreeNode right)&#123;</span><br><span class="line">        if(left == null &amp;&amp; right == null)</span><br><span class="line">            return true;</span><br><span class="line">        if(left == null || right == null)</span><br><span class="line">            return false;</span><br><span class="line">        if(left.val == right.val)&#123;</span><br><span class="line">            return isSymmetrical(left.left, right.right) &amp;&amp; </span><br><span class="line">                isSymmetrical(left.right, right.left);</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//非递归</span><br><span class="line">public class Solution &#123;</span><br><span class="line">    boolean isSymmetrical(TreeNode pRoot)</span><br><span class="line">    &#123;</span><br><span class="line">        if(pRoot == null)</span><br><span class="line">            return true;</span><br><span class="line">        Stack&lt;TreeNode&gt; s = new Stack&lt;TreeNode&gt;();</span><br><span class="line">        s.push(pRoot.left);</span><br><span class="line">        s.push(pRoot.right);</span><br><span class="line">        while(!s.isEmpty())&#123;</span><br><span class="line">            TreeNode right = s.pop();</span><br><span class="line">            TreeNode left = s.pop();</span><br><span class="line">            if(right == null &amp;&amp; left == null)</span><br><span class="line">                continue;</span><br><span class="line">            if(right == null || left == null)</span><br><span class="line">                return false;</span><br><span class="line">            if(right.val != left.val)</span><br><span class="line">                return false;</span><br><span class="line">            s.push(left.left);</span><br><span class="line">            s.push(right.right);</span><br><span class="line">            s.push(left.right);</span><br><span class="line">            s.push(right.left);</span><br><span class="line">        &#125;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二叉树的镜像"><a href="#二叉树的镜像" class="headerlink" title="二叉树的镜像"></a>二叉树的镜像</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class Solution &#123;</span><br><span class="line">    public void Mirror(TreeNode root) &#123;</span><br><span class="line">        if(root==null)</span><br><span class="line">            return;</span><br><span class="line">        if(root.left==null &amp;&amp; root.right==null)</span><br><span class="line">            return;</span><br><span class="line">        TreeNode tmp = root.left;</span><br><span class="line">        root.left = root.right;</span><br><span class="line">        root.right = tmp;</span><br><span class="line">        Mirror(root.left);</span><br><span class="line">        Mirror(root.right);</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二叉树的子结构"><a href="#二叉树的子结构" class="headerlink" title="二叉树的子结构"></a>二叉树的子结构</h1><p>解题思路：<br>当A有一个节点与B的根节点值相同时，则需要从A的那个节点开始严格匹配，对应于下面的tree1HasTree2FromRoot函数。如果匹配不成功，则对它的左右子树继续判断是否与B的根节点值相同，重复上述过程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public class Solution &#123;</span><br><span class="line">    public boolean HasSubtree(TreeNode root1,TreeNode root2) &#123;</span><br><span class="line">        if(root2==null)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        if(root1==null)</span><br><span class="line">            return false;</span><br><span class="line">        if(root1.val == root2.val)&#123;</span><br><span class="line">            if(tree1HasTree2FromRoot(root1,root2))&#123;</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return HasSubtree(root1.left,root2) || HasSubtree(root1.right,root2);</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br><span class="line">    public boolean tree1HasTree2FromRoot(TreeNode root1,TreeNode root2)&#123;</span><br><span class="line">        if(root2==null)&#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        if(root1==null)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        if(root1.val == root2.val)&#123;</span><br><span class="line">            return tree1HasTree2FromRoot(root1.left,root2.left) &amp;&amp; tree1HasTree2FromRoot(root1.right,root2.right);</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="之字形打印二叉树"><a href="#之字形打印二叉树" class="headerlink" title="之字形打印二叉树"></a>之字形打印二叉树</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">解题思路</span><br><span class="line">1. 使用两个栈s1,s2,来分别存储奇数层节点和偶数层节点</span><br><span class="line">2. 打印s1的节点时，将该结点的孩子按照先 左孩子、后 右孩子的顺序 保存到s2栈中</span><br><span class="line">3. 打印s2的节点时，将该结点的孩子按照先 右孩子、后 左孩子的顺序 保存到s1栈中</span><br><span class="line"></span><br><span class="line">public class Solution &#123;</span><br><span class="line">public static ArrayList&lt;ArrayList&lt;Integer&gt;&gt; Print(TreeNode pRoot) &#123;</span><br><span class="line">    int layer = 1;</span><br><span class="line">     //s1存奇数层节点</span><br><span class="line">    Stack&lt;TreeNode&gt; s1 = new Stack&lt;TreeNode&gt;();</span><br><span class="line">    //s2存偶数层节点</span><br><span class="line">    Stack&lt;TreeNode&gt; s2 = new Stack&lt;TreeNode&gt;();</span><br><span class="line">    ArrayList&lt;ArrayList&lt;Integer&gt;&gt; list = new ArrayList&lt;ArrayList&lt;Integer&gt;&gt;();</span><br><span class="line">    </span><br><span class="line">    if(pRoot == null)</span><br><span class="line">        return list;</span><br><span class="line">    s1.push(pRoot);</span><br><span class="line">    while (!s1.isEmpty() || !s2.isEmpty()) &#123;</span><br><span class="line">       ArrayList&lt;Integer&gt; temp = new ArrayList&lt;Integer&gt;();</span><br><span class="line">        if (!s1.isEmpty()) &#123;</span><br><span class="line">            while (!s1.isEmpty()) &#123;</span><br><span class="line">                TreeNode node = s1.pop();</span><br><span class="line">				temp.add(node.val);</span><br><span class="line">                if(node.left != null) </span><br><span class="line">                    s2.push(node.left);</span><br><span class="line">                if(node.right != null)</span><br><span class="line">					s2.push(node.right);</span><br><span class="line">                &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            while (!s2.isEmpty()) &#123;</span><br><span class="line">                TreeNode node = s2.pop();</span><br><span class="line">                temp.add(node.val);</span><br><span class="line">                if(node.right != null)</span><br><span class="line">					s1.push(node.right);			</span><br><span class="line">				if(node.left != null) </span><br><span class="line">                    s1.push(node.left);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        list.add(temp);</span><br><span class="line">	&#125;</span><br><span class="line">    return list;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二叉搜索树的后序遍历序列"><a href="#二叉搜索树的后序遍历序列" class="headerlink" title="二叉搜索树的后序遍历序列"></a>二叉搜索树的后序遍历序列</h1><p>题目要求：<br>输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果，假设输入数组的任意两个数都互不相同。</p>
+<p>解题思路：<br>二叉搜索树的中序遍历是有序的，而此题是后序遍历。<br>后序遍历可以很容易找到根节点，然后根据二叉搜索树的性质（左子树小于根节点，右子树大于根节点），可以将序列分为根节点的左子树部分与右子树部分，而后递归判断两个子树。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class Solution &#123;</span><br><span class="line">    public boolean VerifySquenceOfBST(int [] sequence) &#123;</span><br><span class="line">        if(sequence==null||sequence.length==0)</span><br><span class="line">            return false;</span><br><span class="line">        return VerifySquenceOfBST(sequence,0,sequence.length-1);</span><br><span class="line">    &#125;</span><br><span class="line">    public boolean VerifySquenceOfBST(int [] sequence,int start,int end) &#123;</span><br><span class="line">        if( start&gt;=end )</span><br><span class="line">            return true;</span><br><span class="line">        int root = sequence[end];</span><br><span class="line">        int i = start;</span><br><span class="line">        while(sequence[i]&lt;root)&#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        int j=i;</span><br><span class="line">        while(j&lt;end)&#123;</span><br><span class="line">            if(sequence[j]&lt;root)</span><br><span class="line">                return false;</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        return VerifySquenceOfBST(sequence,start,i-1) &amp;&amp; VerifySquenceOfBST(sequence,i,end-1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实建立二叉树，也是利用了递归的原理。只不过在原来应该是打印结点的地<br>方，改成了生成结点、给结点赋值的操作而已</p>
+<h1 id="二叉树中和为某一值的路径"><a href="#二叉树中和为某一值的路径" class="headerlink" title="二叉树中和为某一值的路径"></a>二叉树中和为某一值的路径</h1><p>带记忆的DFS</p>
+<ul>
+<li>递归先序遍历树， 把结点加入路径</li>
+<li>若该结点是叶子结点 &amp;&amp; 当前路径和等于target，加入结果集</li>
+<li>递归到叶子节点如果还没有找到路径，就要回退到父节点继续寻找</li>
+</ul>
+<p>listAll 和 list定义在方法外</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class Solution &#123;</span><br><span class="line">    private ArrayList&lt;ArrayList&lt;Integer&gt;&gt; listAll = new ArrayList&lt;ArrayList&lt;Integer&gt;&gt;();</span><br><span class="line">    private ArrayList&lt;Integer&gt; list = new ArrayList&lt;Integer&gt;();</span><br><span class="line">    public ArrayList&lt;ArrayList&lt;Integer&gt;&gt; FindPath(TreeNode root,int target) &#123;</span><br><span class="line">        if(root == null) return listAll;</span><br><span class="line">        list.add(root.val);</span><br><span class="line">        target -= root.val;</span><br><span class="line">        if(target == 0 &amp;&amp; root.left == null &amp;&amp; root.right == null)</span><br><span class="line">            listAll.add(new ArrayList&lt;Integer&gt;(list)); //重新new， 不然从始至终就一个list</span><br><span class="line">        FindPath(root.left, target);</span><br><span class="line">        FindPath(root.right, target);</span><br><span class="line">        list.remove(list.size()-1);  //移除最后一个元素，深度遍历完一条路径后要回退</span><br><span class="line">        return listAll;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2019/06/16/剑指offer-树/" target="_blank" rel="external">http://yoursite.com/2019/06/16/剑指offer-树/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/myblog.jpeg" alt="YGQ">
+            YGQ
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/剑指/">剑指</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/树/">树</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/06/16/剑指offer-树/&title=《[剑指offer] 树》 — YGQ's Notes&pic=http://yoursite.com/img/myblog.jpeg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/06/16/剑指offer-树/&title=《[剑指offer] 树》 — YGQ's Notes&source=整理了《剑指offer》里树类型的题目，思路及解法(序号表示LeetCode里相同的题对应的题号)" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/06/16/剑指offer-树/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《[剑指offer] 树》 — YGQ's Notes&url=http://yoursite.com/2019/06/16/剑指offer-树/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/06/16/剑指offer-树/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/06/16/剑指offer-栈和队列/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">[剑指offer] 栈和队列</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/05/21/剑指offer-链表/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">[剑指offer] 链表</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>YGQ &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/06/16/剑指offer-树/&title=《[剑指offer] 树》 — YGQ's Notes&pic=http://yoursite.com/img/myblog.jpeg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/06/16/剑指offer-树/&title=《[剑指offer] 树》 — YGQ's Notes&source=整理了《剑指offer》里树类型的题目，思路及解法(序号表示LeetCode里相同的题对应的题号)" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/06/16/剑指offer-树/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《[剑指offer] 树》 — YGQ's Notes&url=http://yoursite.com/2019/06/16/剑指offer-树/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/06/16/剑指offer-树/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2019/06/16/剑指offer-树/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '诶去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

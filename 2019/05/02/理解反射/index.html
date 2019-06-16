@@ -21,18 +21,18 @@
     
     
     <meta name="keywords" content="反射">
-    <meta name="description" content="什么是反射？反射 (Reflection) 是 Java 的特征之一，它允许运行中的 Java 程序获取自身的信息，并且可以操作类或对象的内部属性。 简而言之，通过反射，我们可以在运行时获得程序或程序集中每一个类型的成员和成员的信息。程序中一般的对象的类型都是在编译期就确定下来的，而 Java 反射机制可以动态地创建对象并调用其属性，这样的对象的类型在编译期是未知的。所以我们可以通过反射机制直接创">
+    <meta name="description" content="整理了java反射的相关知识">
 <meta name="keywords" content="反射">
 <meta property="og:type" content="article">
 <meta property="og:title" content="理解反射">
 <meta property="og:url" content="http://yoursite.com/2019/05/02/理解反射/index.html">
 <meta property="og:site_name" content="YGQ&#39;s Notes">
-<meta property="og:description" content="什么是反射？反射 (Reflection) 是 Java 的特征之一，它允许运行中的 Java 程序获取自身的信息，并且可以操作类或对象的内部属性。 简而言之，通过反射，我们可以在运行时获得程序或程序集中每一个类型的成员和成员的信息。程序中一般的对象的类型都是在编译期就确定下来的，而 Java 反射机制可以动态地创建对象并调用其属性，这样的对象的类型在编译期是未知的。所以我们可以通过反射机制直接创">
+<meta property="og:description" content="整理了java反射的相关知识">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-16T07:22:02.558Z">
+<meta property="og:updated_time" content="2019-06-16T07:42:35.045Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解反射">
-<meta name="twitter:description" content="什么是反射？反射 (Reflection) 是 Java 的特征之一，它允许运行中的 Java 程序获取自身的信息，并且可以操作类或对象的内部属性。 简而言之，通过反射，我们可以在运行时获得程序或程序集中每一个类型的成员和成员的信息。程序中一般的对象的类型都是在编译期就确定下来的，而 Java 反射机制可以动态地创建对象并调用其属性，这样的对象的类型在编译期是未知的。所以我们可以通过反射机制直接创">
+<meta name="twitter:description" content="整理了java反射的相关知识">
     
     <link rel="shortcut icon" href="/img/myblog.jpeg">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -172,7 +172,9 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="什么是反射？"><a href="#什么是反射？" class="headerlink" title="什么是反射？"></a>什么是反射？</h1><p>反射 (Reflection) 是 Java 的特征之一，它允许<strong>运行中</strong>的 Java 程序获取自身的信息，并且可以操作类或对象的内部属性。</p>
+            <p>整理了java反射的相关知识</p>
+<a id="more"></a>
+<h1 id="什么是反射？"><a href="#什么是反射？" class="headerlink" title="什么是反射？"></a>什么是反射？</h1><p>反射 (Reflection) 是 Java 的特征之一，它允许<strong>运行中</strong>的 Java 程序获取自身的信息，并且可以操作类或对象的内部属性。</p>
 <p>简而言之，通过反射，我们可以在运行时获得程序或程序集中每一个类型的成员和成员的信息。程序中一般的对象的类型都是在编译期就确定下来的，而 Java 反射机制可以动态地创建对象并调用其属性，这样的对象的类型在编译期是未知的。所以我们可以通过反射机制直接创建对象，即使这个对象的类型在编译期是未知的。</p>
 <p>反射的核心是 JVM <strong>在运行时才动态加载类或调用方法/访问属性</strong>，它不需要事先（写代码的时候或编译期）知道运行对象是谁。</p>
 <p>Java 反射主要提供以下功能：</p>
@@ -303,7 +305,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/05/02/理解反射/&title=《理解反射》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/05/02/理解反射/&title=《理解反射》 — YGQ's Notes&source=整理了java反射的相关知识" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -341,18 +343,18 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2019/05/10/java异常/" id="post-prev" class="post-nav-link">
+      <a href="/2019/05/15/剑指offer-数组/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">java异常</h4>
+        <h4 class="title">[剑指offer] 数组</h4>
       </a>
     </div>
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2019/04/01/volatile关键字与java内存模型/" id="post-next" class="post-nav-link">
+      <a href="/2019/04/10/java异常/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">volatile关键字与java内存模型</h4>
+        <h4 class="title">java异常</h4>
       </a>
     </div>
   
@@ -425,7 +427,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/05/02/理解反射/&title=《理解反射》 — YGQ's Notes&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/05/02/理解反射/&title=《理解反射》 — YGQ's Notes&source=整理了java反射的相关知识" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
