@@ -30,7 +30,7 @@
 <meta property="og:description" content="整理了《剑指offer》里数组类型的题目，思路及解法(序号表示LeetCode里相同的题对应的题号)">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://uploadfiles.nowcoder.com/files/20180504/7491640_1525400721676_20170710223428592">
-<meta property="og:updated_time" content="2019-06-16T07:41:53.074Z">
+<meta property="og:updated_time" content="2019-06-18T14:45:35.743Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[剑指offer] 数组">
 <meta name="twitter:description" content="整理了《剑指offer》里数组类型的题目，思路及解法(序号表示LeetCode里相同的题对应的题号)">
@@ -153,7 +153,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#数组-排序"><span class="post-toc-number">1.</span> <span class="post-toc-text">数组/排序</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最小的k个数"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">最小的k个数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-需要修改数据源的O-n-解法"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">1. 需要修改数据源的O(n)解法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-适合处理海量数据的O-nlogk-解法"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">2. 适合处理海量数据的O(nlogk)解法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数组中的逆序对"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">数组中的逆序对</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使数组中奇数位于偶数前面"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">使数组中奇数位于偶数前面</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#机器人的运动范围"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">机器人的运动范围</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#把数组排成最小的数"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">把数组排成最小的数</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#算法和数据操作总览"><span class="post-toc-number">1.</span> <span class="post-toc-text">算法和数据操作总览</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#数组-排序"><span class="post-toc-number">2.</span> <span class="post-toc-text">数组/排序</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最小的k个数"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">最小的k个数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-需要修改数据源的O-n-解法"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">1. 需要修改数据源的O(n)解法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-适合处理海量数据的O-nlogk-解法"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">2. 适合处理海量数据的O(nlogk)解法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数组中的逆序对"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">数组中的逆序对</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使数组中奇数位于偶数前面"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">使数组中奇数位于偶数前面</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#机器人的运动范围"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">机器人的运动范围</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#把数组排成最小的数"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">把数组排成最小的数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数组中出现次数超过一半的数字"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">数组中出现次数超过一半的数字</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数据流中的中位数"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">数据流中的中位数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数组中只出现一次的数字"><span class="post-toc-number">2.8.</span> <span class="post-toc-text">数组中只出现一次的数字</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -176,6 +176,46 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             <p>整理了《剑指offer》里数组类型的题目，思路及解法(序号表示LeetCode里相同的题对应的题号)</p>
 <a id="more"></a>
+<h1 id="算法和数据操作总览"><a href="#算法和数据操作总览" class="headerlink" title="算法和数据操作总览"></a>算法和数据操作总览</h1><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>题型</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>递归和循环</td>
+<td>树的遍历</td>
+<td>递归简介，循环效率高</td>
+</tr>
+<tr>
+<td>排序和查找</td>
+<td>二分查找、归并排序、快速排序</td>
+<td>正确、完整写出代码</td>
+</tr>
+<tr>
+<td>二维数组</td>
+<td>迷宫、棋盘</td>
+<td>回溯法；栈模拟递归</td>
+</tr>
+<tr>
+<td>最优解</td>
+<td>动态规划，问题分解为多个子问题</td>
+<td>自上而下递归分析；自下而上循环代码实现，数组保存</td>
+</tr>
+<tr>
+<td>最优解</td>
+<td>贪心算法</td>
+<td>分解时是否存在某个特殊选择：贪心得到最优解</td>
+</tr>
+<tr>
+<td>位运算</td>
+<td>与、或、异或、左移、右移</td>
+</tr>
+</tbody>
+</table>
 <h1 id="数组-排序"><a href="#数组-排序" class="headerlink" title="数组/排序"></a>数组/排序</h1><h2 id="最小的k个数"><a href="#最小的k个数" class="headerlink" title="最小的k个数"></a>最小的k个数</h2><blockquote>
 <p><strong>题目：</strong>输入n个整数，找出其中最小的k个数。例如输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。</p>
 </blockquote>
@@ -219,7 +259,51 @@
 </ul>
 <p>自定义比较器Comparator，重写compare方法</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">PrintMinNumber</span><span class="params">(<span class="keyword">int</span> [] numbers)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = numbers.length;</span><br><span class="line">        <span class="keyword">if</span>(len == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">        <span class="keyword">if</span>(len == <span class="number">1</span>)</span><br><span class="line">            <span class="keyword">return</span> String.valueOf(numbers[<span class="number">0</span>]);</span><br><span class="line">        StringBuffer res = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">        String [] str = <span class="keyword">new</span> String[len];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;len; i++)</span><br><span class="line">            str[i] = String.valueOf(numbers[i]);</span><br><span class="line">        Arrays.sort(str, <span class="keyword">new</span> Comparator&lt;String&gt;()&#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(String s1, String s2)</span> </span>&#123;</span><br><span class="line">                String c1 = s1 + s2;</span><br><span class="line">                String c2 = s2 + s1;</span><br><span class="line">                <span class="keyword">return</span> c1.compareTo(c2); <span class="comment">//和return c1-c2;是一个意思</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;len; i++)</span><br><span class="line">            res.append(str[i]);</span><br><span class="line">        <span class="keyword">return</span> res.toString();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p># </p>
+<h2 id="数组中出现次数超过一半的数字"><a href="#数组中出现次数超过一半的数字" class="headerlink" title="数组中出现次数超过一半的数字"></a>数组中出现次数超过一半的数字</h2><p>三种解法：</p>
+<p>直接想到的是法1，还有两种思路：</p>
+<ul>
+<li>法1：HashMap法；</li>
+<li>法2：排序。数组排序后，如果某个数字出现次数超过数组的长度的一半，则一定会数组中间的位置。所以我们取出排序后中间位置的数，统计一下它的出现次数是否大于数组长度的一半；（这种方法虽然容易理解，但由于涉及到快排sort，其时间复杂度为O(NlogN)并非最优）</li>
+<li><strong>法3：<br>采用阵地攻守的思想：</strong><br>第一个数字作为第一个士兵，守阵地；count = 1；<br>遇到相同元素，count++;<br>遇到不相同元素，即为敌人，同归于尽,count–；当遇到count为0的情况，又以新的i值作为守阵地的士兵，继续下去，到最后还留在阵地上的士兵，有可能是主元素。<br>再加一次循环，记录这个士兵的个数看是否大于数组一般即可。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">MoreThanHalfNum_Solution3</span><span class="params">(<span class="keyword">int</span> [] array)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = array[<span class="number">0</span>]；</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;array.length; i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(array[i] == res)</span><br><span class="line">                count++;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                count--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(count == <span class="number">0</span>)&#123;</span><br><span class="line">                res = array[i];</span><br><span class="line">                count = <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;array.length; i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(array[i] == res)</span><br><span class="line">                count++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count &gt; array.length/<span class="number">2</span> ? res : <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="数据流中的中位数"><a href="#数据流中的中位数" class="headerlink" title="数据流中的中位数"></a>数据流中的中位数</h2><blockquote>
+<p>题目描述：</p>
+</blockquote>
+<p>给一个数据流，找到数组排序之后的中间的数值。奇数，中间；偶数，中间两个数的平均值。</p>
+<p>思路：</p>
+<p>使用 PriorityQueue </p>
+<p>为了保证插入新数据和取中位数的时间效率都高效，使用两个容器（最大堆和最小堆），数据量平均分配（两个堆中的数据数目差不能超过1），大顶堆的所有数据都小于小顶堆</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 最小堆（右）</span></span><br><span class="line">    <span class="keyword">private</span> PriorityQueue&lt;Integer&gt; rHeap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(); </span><br><span class="line">    <span class="comment">// 最大堆（左），PriorityQueue默认是小顶堆，实现大顶堆，需要反转默认比较器</span></span><br><span class="line">    <span class="keyword">private</span> PriorityQueue&lt;Integer&gt; lHeap = <span class="keyword">new</span> PriorityQueue&lt;Integer&gt;(<span class="number">15</span>, <span class="keyword">new</span> Comparator&lt;Integer&gt;() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Integer o1, Integer o2)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> o2.compareTo(o1);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    <span class="comment">// 保证lHeap.size()&gt;=rHeap.size()</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Insert</span><span class="params">(Integer num)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 先按大小插入，再调整</span></span><br><span class="line">        <span class="keyword">if</span>(lHeap.isEmpty() || num &lt;= lHeap.peek())</span><br><span class="line">            lHeap.offer(num);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            rHeap.offer(num);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(lHeap.size() &lt; rHeap.size())&#123;</span><br><span class="line">            lHeap.offer(rHeap.peek());</span><br><span class="line">            rHeap.poll();</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(lHeap.size() - rHeap.size() == <span class="number">2</span>)&#123;</span><br><span class="line">            rHeap.offer(lHeap.peek());</span><br><span class="line">            lHeap.poll();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Double <span class="title">GetMedian</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(lHeap.size() &gt; rHeap.size())</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Double(lHeap.peek());</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Double(lHeap.peek() + rHeap.peek())/<span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="数组中只出现一次的数字"><a href="#数组中只出现一次的数字" class="headerlink" title="数组中只出现一次的数字"></a>数组中只出现一次的数字</h2><p>法一：大家都能想到的HashMap法，containsKey，就remove</p>
+<p>法二：异或法</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">运算</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">0 ^ 0=0,0 ^ 1=1</td>
+<td style="text-align:left">0异或任何数，其结果=任何数</td>
+</tr>
+<tr>
+<td style="text-align:left">1 ^ 0=1,1 ^ 1=0</td>
+<td style="text-align:left">1异或任何数，其结果=任何数取反</td>
+</tr>
+<tr>
+<td style="text-align:left">x ^ x=0</td>
+<td style="text-align:left">任何数异或自己，等于把自己置0</td>
+</tr>
+</tbody>
+</table>
+<p>自反性：b ^ a ^ a = b，出现两次的数字可以抵消掉</p>
+<p>如果数组中只一个数字是只出现一次的，将数组中所有元素进行亦或，即可得到那个只出现一次的一个数字。</p>
+<p>那么回到我们的题目，因为有两个只出现一次的数字，所以我们可以试着把原数组分成两个子数组，使得每个数组包含一个只出现一次的数字。</p>
+<p>问题来了，如何进行分组呢？<br>我们还是从头到尾依次异或数组中的每个数字，那么最终得到的结果就是两个只出现一次的数字异或的结果。由于这两个数字不一样，所以<strong>异或的结果</strong>至少有一位为1，我们在结果数字中找到<strong>第一个为1的位置，记为index位</strong>，现在我们以第index位是不是1为标准把原数组拆分成两个子数组，第一个子数组中的数组第index位都为1，第二个子数组中的数组第index位都为0，那么只出现一次的数字将被分配到两个子数组中去，于是每个子数组中只包含一个出现一次的数字，而其他数字都出现两次。这样我们就可以用之前的方法找到数组中只出现一次的数字了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">FindNumsAppearOnce</span><span class="params">(<span class="keyword">int</span> [] array,<span class="keyword">int</span> num1[] , <span class="keyword">int</span> num2[])</span> </span>&#123;</span><br><span class="line">        num1[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        num2[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(array.length == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++)&#123;</span><br><span class="line">            num ^= array[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>((num &amp; <span class="number">1</span>) == <span class="number">0</span> &amp;&amp; index &lt; <span class="number">8</span>)&#123;</span><br><span class="line">            num = num &gt;&gt; <span class="number">1</span>;</span><br><span class="line">            index ++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(isa1(array[i], index))</span><br><span class="line">                num1[<span class="number">0</span>] ^= array[i];</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                num2[<span class="number">0</span>] ^= array[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isa1</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> index)</span></span>&#123;</span><br><span class="line">        i = i &gt;&gt; index;</span><br><span class="line">        <span class="keyword">return</span> (i &amp; <span class="number">1</span>) == <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
         </div>
 
