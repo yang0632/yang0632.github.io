@@ -39,7 +39,7 @@
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p1_05.jpg">
 <meta property="og:image" content="http://plm-images.oss-cn-hongkong.aliyuncs.com/image/ds/heap/heap_p2.jpg">
 <meta property="og:image" content="https://i.loli.net/2019/03/25/5c98f8dd22259.png">
-<meta property="og:updated_time" content="2019-06-18T15:15:00.543Z">
+<meta property="og:updated_time" content="2019-06-20T15:49:16.584Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="排序整理">
 <meta name="twitter:description" content="本文整理常见的排序算法，包括思想及实现。">
@@ -439,7 +439,9 @@
 </tbody>
 </table>
 <p>快排最好的情况是，每次正好中分，复杂度为O(nlogn)</p>
-<p>最差情况，每一趟数都划分到基准的一边，另一边为空，复杂度为O(n^2)；如果用树画出来，得到的将会是一棵单斜树，需要执行n‐1次递归调用（n-1+n-2+…+1=n(n-1)/2）</p>
+<p>最差情况，每一趟数都划分到基准的一边，另一边为空，复杂度为O(n^2)；如果递归树画出来，得到的将会是一棵单斜树，需要执行n‐1次递归调用，比较次数为n-1+n-2+…+1=n(n-1)/2</p>
+<p>空间复杂度为栈的深度，最好情况，递归树的深度为log2n，其空间复杂度也就为O(logn)，最坏情况，需要进行n‐1递归调用，其空间复杂度为O(n)，平均情况，空间复杂度也为O(logn)。</p>
+<p>由于关键字的比较和交换是跳跃进行的，因此，快速排序是一种不稳定的排序方法。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>思想总结</strong></p>
 <table>
 <thead>
