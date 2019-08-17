@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Consul:服务注册与发现 | YGQ&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="服务发现">
+    <meta name="description" content="常见的服务发现的开源组件有zookeeper, etcd等，实习时公司用的是Consul，总结整理一下。">
+<meta name="keywords" content="服务发现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Consul:服务注册与发现">
+<meta property="og:url" content="http://yoursite.com/2019/08/17/Consul-服务注册与发现/index.html">
+<meta property="og:site_name" content="YGQ&#39;s Notes">
+<meta property="og:description" content="常见的服务发现的开源组件有zookeeper, etcd等，实习时公司用的是Consul，总结整理一下。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.consul.io/assets/images/consul-arch-420ce04a.png">
+<meta property="og:image" content="http://blog.didispace.com/images/pasted-125.png">
+<meta property="og:updated_time" content="2019-08-17T16:14:15.995Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Consul:服务注册与发现">
+<meta name="twitter:description" content="常见的服务发现的开源组件有zookeeper, etcd等，实习时公司用的是Consul，总结整理一下。">
+<meta name="twitter:image" content="https://www.consul.io/assets/images/consul-arch-420ce04a.png">
+    
+    <link rel="shortcut icon" href="/img/myblog.jpeg">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/myblog.jpeg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">YGQ</h5>
+          <a href="mailto:594yangguanqun@163.com" title="594yangguanqun@163.com" class="mail">594yangguanqun@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Consul:服务注册与发现</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Consul:服务注册与发现</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-08-16T16:31:37.000Z" itemprop="datePublished" class="page-time">
+  2019-08-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/后端技术/">后端技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#为什么使用服务发现"><span class="post-toc-number">1.</span> <span class="post-toc-text">为什么使用服务发现</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Consul是什么"><span class="post-toc-number">2.</span> <span class="post-toc-text">Consul是什么</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Consul整体结构"><span class="post-toc-number">3.</span> <span class="post-toc-text">Consul整体结构</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Consul关键特性"><span class="post-toc-number">4.</span> <span class="post-toc-text">Consul关键特性</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#注册服务"><span class="post-toc-number">5.</span> <span class="post-toc-text">注册服务</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#提供服务定义文件"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">提供服务定义文件</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#调用HTTP-API"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">调用HTTP API</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#查询服务"><span class="post-toc-number">6.</span> <span class="post-toc-text">查询服务</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DNS-API"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">DNS API</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTTP-API"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">HTTP API</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#健康检查"><span class="post-toc-number">7.</span> <span class="post-toc-text">健康检查</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义健康检查"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">定义健康检查</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#检查健康状态"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">检查健康状态</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Consul接口设计"><span class="post-toc-number">8.</span> <span class="post-toc-text">Consul接口设计</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#agent"><span class="post-toc-number">8.0.1.</span> <span class="post-toc-text">agent</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#catalog"><span class="post-toc-number">8.0.2.</span> <span class="post-toc-text">catalog</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#health"><span class="post-toc-number">8.0.3.</span> <span class="post-toc-text">health</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#status"><span class="post-toc-number">8.0.4.</span> <span class="post-toc-text">status</span></a></li></ol></li></ol><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一致性保证"><span class="post-toc-number">9.</span> <span class="post-toc-text">一致性保证</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Consul使用"><span class="post-toc-number">10.</span> <span class="post-toc-text">Consul使用</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Consul和其他技术的对比"><span class="post-toc-number">11.</span> <span class="post-toc-text">Consul和其他技术的对比</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Consul-的优势"><span class="post-toc-number">11.1.</span> <span class="post-toc-text">Consul 的优势</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#参考"><span class="post-toc-number">12.</span> <span class="post-toc-text">参考</span></a></li>
+        </nav>
+    </aside>
+
+
+<article id="post-Consul-服务注册与发现" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Consul:服务注册与发现</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-08-17 00:31:37" datetime="2019-08-16T16:31:37.000Z" itemprop="datePublished">2019-08-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/后端技术/">后端技术</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>常见的服务发现的开源组件有zookeeper, etcd等，实习时公司用的是Consul，总结整理一下。</p>
+<a id="more"></a>
+<h1 id="为什么使用服务发现"><a href="#为什么使用服务发现" class="headerlink" title="为什么使用服务发现"></a>为什么使用服务发现</h1><p>在微服务架构体系中，由于微服务众多，服务之间又有互相调用关系，因此，一个通用的分布式配置管理是必不可少的。因此引入服务发现和服务注册的概念，提供一个<strong>专门用于存储服务地址信息的服务</strong>：实例启动的时候，将自身的名字和地址信息注册到该服务中，需要调用该服务的时候，从该服务中根据提供的名字查询对应服务的地址列表。当服务实例退出的时候，会自动删掉曾经注册的地址信息。</p>
+<p>存储服务注册信息的往往是一个能够提供<strong>高可用存储</strong>服务，因为所有的RPC调用都会通过查询该服务来获取地址。可以作为该服务的开源组件有zookeeper, etcd等，它们都依赖<strong>分布式一致性算法</strong>来保证被存储的数据的可靠性。头条目前使用了另外一种开源方案：Consul。</p>
+<p>所以如果需要使用服务发现，你应该有一些对服务治理的痛点。但是引入服务发现就可能引入一些技术栈，增加系统总体的复杂度，如果你只有很少的几个服务，比如10个以下，并且业务不怎么变化，吞吐量预计也很稳定，可能就没有必要使用服务发现。</p>
+<h1 id="Consul是什么"><a href="#Consul是什么" class="headerlink" title="Consul是什么"></a>Consul是什么</h1><p>Consul是由HashiCorp开发的一个分布式服务框架，被大量应用于基于微服务的软件架构当中。</p>
+<p>Consul用于实现分布式系统的服务发现与配置。与其他分布式服务注册与发现的方案，Consul的方案更”一站式”，内置了服务注册与发现框架、分布一致性协议实现、健康检查、Key/Value存储、多数据中心方案，不再需要依赖其他工具（比如ZooKeeper等）。使用起来也较为简单。<strong>Consul用Golang实现</strong>，因此具有天然可移植性(支持Linux、Windows和Mac OS X)；安装包仅包含一个可执行文件，方便部署，与Docker等轻量级容器可无缝配合。</p>
+<h1 id="Consul整体结构"><a href="#Consul整体结构" class="headerlink" title="Consul整体结构"></a>Consul整体结构</h1><p>下面这张图来源于Consul官网，很好的解释了Consul的工作原理，先大致看一下。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://www.consul.io/assets/images/consul-arch-420ce04a.png" alt="这里写图片描述" title="">
+                </div>
+                <div class="image-caption">这里写图片描述</div>
+            </figure>
+<p>首先Consul支持<strong>多数据中心</strong>，在上图中有两个DataCenter，他们通过Internet互联，同时请注意为了提高通信效率，只有Server节点才加入跨数据中心的通信。每个数据中运行了一个Consul server集群.当一个跨数据中心的服务发现和配置请求创建时.本地Consul Server转发请求到远程的数据中心并返回结果.</p>
+<p>在单个数据中心中，所有的节点被称为Agent，Agent分为Client和Server两种节点：</p>
+<p>​     a. <strong>Client节点</strong>：一个client是一个非常轻量级的进程，用于<strong>注册服务,运行健康检查和转发对server的查询</strong>。Client相对来说是无状态的，它的唯一后台活动是参与LAN gossip pool。</p>
+<p>​     b. <strong>Server节点</strong>：负责<strong>保存和复制数据</strong>，Server节点有一个Leader和多个Follower，Leader负责响应RPC请求和将数据复制同步给Follower，Follower负责将RPC请求转发给Leader。Server的数量推荐是3个或者5个，在Leader挂掉的时候会启动选举机制产生一个新的Leader。每个数据中心建议配置一个server集群。</p>
+<p>Consul使用Gossip协议（流言协议）来管理成员和广播消息。我们只需要知道gossip会触发随机的点到点通信。单个数据中心的流言协议同时使用TCP和UDP通信，并且都使用8301端口。跨数据中心的流言协议也同时使用TCP和UDP通信，端口使用8302。最后，gossip pool允许可靠而快速的事件广播，如leader选举。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Gossip：consul是建立在serf之上的，它提供了一个完整的gossip协议，用在很多地方。Serf提供了成员，故障检测和事件广播。</span><br><span class="line">Consul使用了两个不同的Gossip pool：</span><br><span class="line">LAN Gossip pool：指在同一局域网或数据中心的节点上的LAN Gossip池。</span><br><span class="line">WAN Gossip pool：指包含服务器的WAN Gossip池，这些服务器在不同的数据中心，通过网络进行通信。</span><br></pre></td></tr></table></figure>
+<p>集群内数据的读写请求既可以直接发到Server，也可以通过Client使用RPC转发到Server，请求最终会到达Leader节点，在允许数据轻微陈旧的情况下，读请求也可以在普通的Server节点完成，集群内数据的读写和复制都是通过TCP的8300端口完成。</p>
+<p><strong>服务发现的完整流程：</strong></p>
+<p>[<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://blog.didispace.com/images/pasted-125.png" alt="img](http://blog.didispace.com/images/pasted-125.png)" title="">
+                </div>
+                <div class="image-caption">img](http://blog.didispace.com/images/pasted-125.png)</div>
+            </figure></p>
+<ul>
+<li><p>首先需要有一个正常的Consul集群，有Server，有Leader。这里在服务器Server1、Server2、Server3上分别部署了Consul Server，假设他们选举了Server2上的Consul Server节点为Leader。这些服务器上最好只部署Consul程序，以尽量维护Consul Server的稳定。</p>
+</li>
+<li><p>然后在服务器Server4和Server5上通过Consul Client分别注册Service A、B、C，这里每个Service分别部署在了两个服务器上，这样可以避免Service的单点问题。Consul 接收到 Producer 的注册后，每隔10s（默认）会向 Service 发送一个健康检查的请求，检验其是否健康</p>
+</li>
+<li><p>最后在服务器Server6中Program D需要访问Service B，这时候Program D首先访问本机Consul Client提供的HTTP API，<u>本机Client会将请求转发到Consul Server，Consul Server查询到Service B当前的信息返回，最终Program D拿到了Service B的所有部署的IP和端口，然后就可以选择Service B的其中一个部署并向其发起请求了。</u>如果服务发现采用的是DNS方式，则Program D中直接使用Service B的服务发现域名，域名解析请求首先到达本机DNS代理，然后转发到本机Consul Client，本机Client会将请求转发到Consul Server，Consul Server查询到Service B当前的信息返回，最终Program D拿到了Service B的某个部署的IP和端口。</p>
+</li>
+</ul>
+<h1 id="Consul关键特性"><a href="#Consul关键特性" class="headerlink" title="Consul关键特性"></a>Consul关键特性</h1><p>Consul的关键特性:</p>
+<ul>
+<li><strong>服务发现</strong> Consul通过DNS或者HTTP接口使服务注册和服务发现变的很容易</li>
+<li><strong>健康检查</strong> 健康检测使Consul可以快速的告警在集群中的操作。和服务发现的集成，可以防止服务转发到故障的服务上面。</li>
+<li><strong>Key/Value存储</strong> 一个用来存储动态配置的系统。提供简单的HTTP接口，可以在任何地方操作。比如动态配置,功能标记,协调,领袖选举等等。</li>
+<li><strong>多数据中心</strong>: Consul支持开箱即用的多数据中心，这点是zookeeper所不具备的。</li>
+</ul>
+<h1 id="注册服务"><a href="#注册服务" class="headerlink" title="注册服务"></a>注册服务</h1><p>搭建好conusl集群后，用户或者程序就能到consul中去查询或者注册服务。</p>
+<p>注册一个服务有两种方式:</p>
+<p>1、通过配置文件</p>
+<p>2、调用http api</p>
+<h2 id="提供服务定义文件"><a href="#提供服务定义文件" class="headerlink" title="提供服务定义文件"></a>提供服务定义文件</h2><p>首先,为Consul配置创建一个目录.Consul会载入配置文件夹里的所有配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/consul.d</span><br></pre></td></tr></table></figure>
+<p>然后,我们将编写服务定义配置文件。假设我们有一个名叫<code>web</code>的服务运行在 80端口.另外,我们将给他设置一个标签.这样我们可以使用他作为额外的查询方式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;&#123;&quot;service&quot;: &#123;&quot;name&quot;: &quot;web&quot;, &quot;tags&quot;: [&quot;rails&quot;], &quot;port&quot;: 80&#125;&#125;&apos; &gt;/etc/consul.d/web.json</span><br></pre></td></tr></table></figure>
+<p>现在重启agent , 设置配置目录:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul -node=s1 -bind=10.201.102.198 -rejoin -config-dir=/etc/consul.d/ -client 0.0.0.0</span><br></pre></td></tr></table></figure>
+<h2 id="调用HTTP-API"><a href="#调用HTTP-API" class="headerlink" title="调用HTTP API"></a>调用HTTP API</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT -d &apos;&#123;&quot;Datacenter&quot;: &quot;dc1&quot;, &quot;Node&quot;: &quot;c2&quot;, &quot;Address&quot;: &quot;10.155.0.106&quot;, &quot;Service&quot;: &#123;&quot;Service&quot;: &quot;MAC&quot;, &quot;tags&quot;: [&quot;lianglian&quot;, &quot;Mac&quot;], &quot;Port&quot;: 22&#125;&#125;&apos; http://127.0.0.1:8500/v1/catalog/register</span><br></pre></td></tr></table></figure>
+<h1 id="查询服务"><a href="#查询服务" class="headerlink" title="查询服务"></a>查询服务</h1><p>一旦agent启动并且服务同步了.我们可以通过DNS或者HTTP的API来查询服务.</p>
+<h2 id="DNS-API"><a href="#DNS-API" class="headerlink" title="DNS API"></a>DNS API</h2><p>在DNS API中,服务的DNS名字是 <code>NAME.service.consul</code> ,<code>NAME</code>则是服务的名称</p>
+<p>对于我们上面注册的Web服务, 它的域名是 <code>web.service.consul</code> :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@dhcp-10-201-102-198 ~]# dig @127.0.0.1 -p 8600 web.service.consul</span><br></pre></td></tr></table></figure>
+<h2 id="HTTP-API"><a href="#HTTP-API" class="headerlink" title="HTTP API"></a>HTTP API</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@dhcp-10-201-102-198 ~]# curl -s 127.0.0.1:8500/v1/catalog/service/web | python -m json.tool</span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;Address&quot;: &quot;10.201.102.198&quot;,</span><br><span class="line">        &quot;CreateIndex&quot;: 492843,</span><br><span class="line">        &quot;ID&quot;: &quot;422ec677-74ef-8f29-2f22-01effeed6334&quot;,</span><br><span class="line">        &quot;ModifyIndex&quot;: 492843,</span><br><span class="line">        &quot;Node&quot;: &quot;s1&quot;,</span><br><span class="line">        &quot;NodeMeta&quot;: &#123;&#125;,</span><br><span class="line">        &quot;ServiceAddress&quot;: &quot;&quot;,</span><br><span class="line">        &quot;ServiceEnableTagOverride&quot;: false,</span><br><span class="line">        &quot;ServiceID&quot;: &quot;web&quot;,</span><br><span class="line">        &quot;ServiceName&quot;: &quot;web&quot;,</span><br><span class="line">        &quot;ServicePort&quot;: 80,</span><br><span class="line">        &quot;ServiceTags&quot;: [</span><br><span class="line">            &quot;rails&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;TaggedAddresses&quot;: &#123;</span><br><span class="line">            &quot;lan&quot;: &quot;10.201.102.198&quot;,</span><br><span class="line">            &quot;wan&quot;: &quot;10.201.102.198&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h1 id="健康检查"><a href="#健康检查" class="headerlink" title="健康检查"></a>健康检查</h1><p>添加健康检查到节点和服务。健康检查是服务发现的关键组件，预防使用到不健康的服务。</p>
+<h2 id="定义健康检查"><a href="#定义健康检查" class="headerlink" title="定义健康检查"></a>定义健康检查</h2><p>和服务注册类似,一个检查可以通过<strong>配置文件（常用）或HTTP API请求</strong>来注册.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vagrant@n2:~$ echo &apos;&#123;&quot;check&quot;: &#123;&quot;name&quot;: &quot;ping&quot;,</span><br><span class="line">  &quot;script&quot;: &quot;ping -c1 163.com &gt;/dev/null&quot;, &quot;interval&quot;: &quot;30s&quot;&#125;&#125;&apos; \</span><br><span class="line">  &gt;/etc/consul.d/ping.json</span><br><span class="line"></span><br><span class="line">vagrant@n2:~$ echo &apos;&#123;&quot;service&quot;: &#123;&quot;name&quot;: &quot;web&quot;, &quot;tags&quot;: [&quot;rails&quot;], &quot;port&quot;: 80,</span><br><span class="line">  &quot;check&quot;: &#123;&quot;script&quot;: &quot;curl localhost &gt;/dev/null 2&gt;&amp;1&quot;, &quot;interval&quot;: &quot;10s&quot;&#125;&#125;&#125;&apos; \</span><br><span class="line">  &gt;/etc/consul.d/web.json</span><br></pre></td></tr></table></figure>
+<p>第一个定义增加了一个主机级别的检查,名字为 “ping” . 这个检查每30秒执行一次,执行 <code>ping -c1 163.com</code>. 在基于脚本的健康检查中,脚本运行在与Consul进程一样的用户下.如果这个命令以非0值退出的话这个节点就会被标记为不健康.这是所有基于脚本的健康检查的约定.</p>
+<p>第二个命令定义了名为<code>web</code>的服务,添加了一个检查.每十分钟通过curl发送一个请求,确定web服务器可以访问.和主机级别的检查一样.如果脚本以非0值退出则标记为不健康.</p>
+<h2 id="检查健康状态"><a href="#检查健康状态" class="headerlink" title="检查健康状态"></a>检查健康状态</h2><p>使用 HTTP API</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/v1/health/state/&lt;state&gt;: 返回给定datacenter中指定状态的服务，state可以是&quot;any&quot;, &quot;unknown&quot;, &quot;passing&quot;, &quot;warning&quot;, or &quot;critical&quot;</span><br></pre></td></tr></table></figure>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@dhcp-10-201-102-198 ~]# curl -s http://localhost:8500/v1/health/state/critical | python -m json.tool</span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;CheckID&quot;: &quot;service:Faceid&quot;,</span><br><span class="line">        &quot;CreateIndex&quot;: 493398,</span><br><span class="line">        &quot;ModifyIndex&quot;: 493846,</span><br><span class="line">        &quot;Name&quot;: &quot;Service &apos;Faceid&apos; check&quot;,</span><br><span class="line">        &quot;Node&quot;: &quot;s1&quot;,</span><br><span class="line">        &quot;Notes&quot;: &quot;&quot;,</span><br><span class="line">        &quot;Output&quot;: &quot;&quot;,</span><br><span class="line">        &quot;ServiceID&quot;: &quot;Faceid&quot;,</span><br><span class="line">        &quot;ServiceName&quot;: &quot;Faceid&quot;,</span><br><span class="line">        &quot;Status&quot;: &quot;critical&quot;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h1 id="Consul接口设计"><a href="#Consul接口设计" class="headerlink" title="Consul接口设计"></a>Consul接口设计</h1><p>consul的主要接口是RESTful HTTP API，该API可以用来增删查改nodes、services、checks、configguration。所有的endpoints主要分为以下类别：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kv - Key/Value存储</span><br><span class="line">agent - Agent控制</span><br><span class="line">catalog - 管理nodes和services</span><br><span class="line">health - 管理健康监测</span><br><span class="line">session - Session操作</span><br><span class="line">acl - ACL创建和管理</span><br><span class="line">event - 用户Events</span><br><span class="line">status - Consul系统状态</span><br></pre></td></tr></table></figure>
+<p>下面我们就单独看看每个模块的具体内容。</p>
+<h3 id="agent"><a href="#agent" class="headerlink" title="agent"></a>agent</h3><p>agent endpoints用来和本地agent进行交互，一般用来服务注册和检查注册，支持以下接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/v1/agent/checks : 返回本地agent注册的所有检查(包括配置文件和HTTP接口)</span><br><span class="line">/v1/agent/services : 返回本地agent注册的所有 服务</span><br><span class="line">/v1/agent/members : 返回agent在集群的gossip pool中看到的成员</span><br><span class="line">/v1/agent/self : 返回本地agent的配置和成员信息</span><br><span class="line">/v1/agent/join/&lt;address&gt; : 触发本地agent加入node</span><br><span class="line">/v1/agent/force-leave/&lt;node&gt;&gt;: 强制删除node</span><br><span class="line">/v1/agent/check/register : 在本地agent增加一个检查项，使用PUT方法传输一个json格式的数据</span><br><span class="line">/v1/agent/check/deregister/&lt;checkID&gt; : 注销一个本地agent的检查项</span><br><span class="line">/v1/agent/check/pass/&lt;checkID&gt; : 设置一个本地检查项的状态为passing</span><br><span class="line">/v1/agent/check/warn/&lt;checkID&gt; : 设置一个本地检查项的状态为warning</span><br><span class="line">/v1/agent/check/fail/&lt;checkID&gt; : 设置一个本地检查项的状态为critical</span><br><span class="line">/v1/agent/service/register : 在本地agent增加一个新的服务项，使用PUT方法传输一个json格式的数据</span><br><span class="line">/v1/agent/service/deregister/&lt;serviceID&gt; : 注销一个本地agent的服务项</span><br></pre></td></tr></table></figure>
+<h3 id="catalog"><a href="#catalog" class="headerlink" title="catalog"></a>catalog</h3><p>catalog endpoints用来注册/注销nodes、services、checks</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/v1/catalog/register : Registers a new node, service, or check</span><br><span class="line">/v1/catalog/deregister : Deregisters a node, service, or check</span><br><span class="line">/v1/catalog/datacenters : Lists known datacenters</span><br><span class="line">/v1/catalog/nodes : Lists nodes in a given DC</span><br><span class="line">/v1/catalog/services : Lists services in a given DC</span><br><span class="line">/v1/catalog/service/&lt;service&gt; : Lists the nodes in a given service</span><br><span class="line">/v1/catalog/node/&lt;node&gt; : Lists the services provided by a node</span><br></pre></td></tr></table></figure>
+<h3 id="health"><a href="#health" class="headerlink" title="health"></a>health</h3><p>health endpoints用来查询健康状况相关信息，该功能从catalog中单独分离出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/v1/healt/node/&lt;node&gt;: 返回node所定义的检查</span><br><span class="line">/v1/health/checks/&lt;service&gt;: 返回和服务相关联的检查</span><br><span class="line">/v1/health/service/&lt;service&gt;: 返回给定datacenter中给定node中service</span><br><span class="line">/v1/health/state/&lt;state&gt;: 返回给定datacenter中指定状态的服务，state可以是&quot;any&quot;, &quot;unknown&quot;, &quot;passing&quot;, &quot;warning&quot;, or &quot;critical&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="status"><a href="#status" class="headerlink" title="status"></a>status</h3><p>status endpoints用来或者consul 集群的信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/v1/status/leader : 返回当前集群的Raft leader</span><br><span class="line">/v1/status/peers : 返回当前集群中同事</span><br></pre></td></tr></table></figure>
+<h1 id="一致性保证"><a href="#一致性保证" class="headerlink" title="一致性保证"></a>一致性保证</h1><p>Consul 提供强大的一致性保证，因为服务器使用 Raft 协议复制状态 。</p>
+<p>因为 Consul 的 raft 协议要求必须过半数的节点都写入成功才认为注册成功， Leader 挂掉时，重新选举期间整个 Consul 不可用。保证了强一致性但牺牲了可用性。</p>
+<p><a href="http://thesecretlivesofdata.com/raft" target="_blank" rel="noopener">http://thesecretlivesofdata.com/raft</a></p>
+<h1 id="Consul使用"><a href="#Consul使用" class="headerlink" title="Consul使用"></a>Consul使用</h1><p>相比于zookeeper的服务发现使用，Consul并不需要专门的sdk集成到服务中，因此它不限制任何语言的使用。Consul一般是怎么使用的：</p>
+<ol>
+<li>每台服务器上都要安装一个<strong>Consul agent</strong>。</li>
+<li>Consul agent支持通过配置文件<strong>注册服务</strong>，或者在服务中通过http接口来注册服务。</li>
+<li>注册服务后，Consul agent通过指定的<strong>健康检查</strong>方式，<strong>定期检查服务是否存活</strong>。</li>
+<li>如果服务想查询其他服务的存活状态，只需要与本机的Consul agent发起一次http请求或者dns请求即可。</li>
+</ol>
+<p>简单点说，Consul的使用不依赖任何sdk，依靠简单的http请求就能满足服务发现的所有逻辑。<br>不过，服务每次都从Consul agent获取其他服务的存活状态，相比于zookeeper的watcher机制，实时性稍差一点，需考虑如何尽可能提高实时性，问题不会很大。</p>
+<h1 id="Consul和其他技术的对比"><a href="#Consul和其他技术的对比" class="headerlink" title="Consul和其他技术的对比"></a>Consul和其他技术的对比</h1><table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">优点</th>
+<th style="text-align:left">缺点</th>
+<th style="text-align:left">接口</th>
+<th style="text-align:left">一致性算法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">zookeeper</td>
+<td style="text-align:left">1.功能强大，不仅仅只是服务发现 2.提供watcher机制能<strong>实时获取服务提供者的状态</strong> 3.dubbo等框架支持</td>
+<td style="text-align:left">1.没有健康检查 2.需在服务中集成sdk，复杂度高 3.不支持多数据中心</td>
+<td style="text-align:left">sdk</td>
+<td style="text-align:left">Paxos</td>
+</tr>
+<tr>
+<td style="text-align:left">consul</td>
+<td style="text-align:left">1.简单易用，<strong>不需要集成sdk</strong> 2.<strong>自带健康检查</strong> 3.支持<strong>多数据中心</strong> 4.提供web管理界面</td>
+<td style="text-align:left">1.不能实时获取服务信息的变化通知</td>
+<td style="text-align:left">http/dns</td>
+<td style="text-align:left">Raft</td>
+</tr>
+<tr>
+<td style="text-align:left">etcd</td>
+<td style="text-align:left">1.简单易用，不需要集成sdk 2.可配置性强</td>
+<td style="text-align:left">1.没有健康检查 2.需配合第三方工具一起完成服务发现 3.不支持多数据中心</td>
+<td style="text-align:left">http</td>
+<td style="text-align:left">Raft</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为了以后支持多数据中心</strong>，同时为了快速支持不同的语言比如nodejs、python服务，我会选择Consul作为我们的服务发现框架，但是实时获取服务信息变化通知的问题需尽可能减小。</p>
+<h2 id="Consul-的优势"><a href="#Consul-的优势" class="headerlink" title="Consul 的优势"></a><strong>Consul 的优势</strong></h2><ul>
+<li>使用 Raft 算法来保证一致性, 比复杂的 Paxos 算法更直接. 相比较而言, zookeeper 采用的是 Paxos, 而 etcd 使用的则是 Raft.</li>
+<li>支持多数据中心，内外网的服务采用不同的端口进行监听。 <strong>多数据中心集群可以避免单数据中心的单点故障,</strong>而其部署则需要考虑网络延迟, 分片等情况等. zookeeper 和 etcd 均不提供多数据中心功能的支持.</li>
+<li>支持<strong>健康检查</strong>. etcd 不提供此功能.</li>
+<li>支持 http 和 dns 协议接口. zookeeper 的集成较为复杂, etcd 只支持 http 协议.</li>
+<li>官方提供web管理界面, etcd 无此功能.</li>
+</ul>
+<p>综合比较, Consul 作为服务注册和配置管理的新星, 比较值得关注和研究.</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>官方文档：</p>
+<p><a href="https://www.Consul.io/intro/" target="_blank" rel="noopener">https://www.Consul.io/intro/</a></p>
+<p><a href="https://book-Consul-guide.vnzmi.com/" target="_blank" rel="noopener">https://book-Consul-guide.vnzmi.com/</a> (中文)</p>
+<p>博客：</p>
+<p><a href="http://blog.didispace.com/Consul-service-discovery-exp/" target="_blank" rel="noopener">http://blog.didispace.com/Consul-service-discovery-exp/</a></p>
+<p><a href="http://www.liangxiansen.cn/2017/04/06/Consul/" target="_blank" rel="noopener">http://www.liangxiansen.cn/2017/04/06/Consul/</a></p>
+<p><a href="http://jm.taobao.org/2018/06/13/做服务发现？/" target="_blank" rel="noopener">http://jm.taobao.org/2018/06/13/%E5%81%9A%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%EF%BC%9F/</a></p>
+<p><a href="https://www.servercoder.com/2018/03/30/Consul-vs-zookeeper-etcd/" target="_blank" rel="noopener">https://www.servercoder.com/2018/03/30/Consul-vs-zookeeper-etcd/</a></p>
+<p><a href="http://blog.didispace.com/consul-service-discovery-exp/" target="_blank" rel="noopener">http://blog.didispace.com/consul-service-discovery-exp/</a></p>
+<p>raft：</p>
+<p><a href="http://thesecretlivesofdata.com/raft" target="_blank" rel="noopener">http://thesecretlivesofdata.com/raft</a></p>
+<p><a href="http://cyc2018.gitee.io/cs-notes/#/notes/%E5%88%86%E5%B8%83%E5%BC%8F?id=%e5%85%ad%e3%80%81raft" target="_blank" rel="noopener">http://cyc2018.gitee.io/cs-notes/#/notes/%E5%88%86%E5%B8%83%E5%BC%8F?id=%e5%85%ad%e3%80%81raft</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2019/08/17/Consul-服务注册与发现/" target="_blank" rel="external">http://yoursite.com/2019/08/17/Consul-服务注册与发现/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/myblog.jpeg" alt="YGQ">
+            YGQ
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/服务发现/">服务发现</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/08/17/Consul-服务注册与发现/&title=《Consul:服务注册与发现》 — YGQ's Notes&pic=http://yoursite.com/img/myblog.jpeg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/08/17/Consul-服务注册与发现/&title=《Consul:服务注册与发现》 — YGQ's Notes&source=常见的服务发现的开源组件有zookeeper, etcd等，实习时公司用的是Consul，总结整理一下。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/08/17/Consul-服务注册与发现/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Consul:服务注册与发现》 — YGQ's Notes&url=http://yoursite.com/2019/08/17/Consul-服务注册与发现/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/08/17/Consul-服务注册与发现/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/08/17/LeetCode-双指针之滑动窗口/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">[LeetCode] 双指针之滑动窗口</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/08/12/动态规划：一种更聪明的穷举/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">动态规划：一种更聪明的穷举</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>YGQ &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/08/17/Consul-服务注册与发现/&title=《Consul:服务注册与发现》 — YGQ's Notes&pic=http://yoursite.com/img/myblog.jpeg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/08/17/Consul-服务注册与发现/&title=《Consul:服务注册与发现》 — YGQ's Notes&source=常见的服务发现的开源组件有zookeeper, etcd等，实习时公司用的是Consul，总结整理一下。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/08/17/Consul-服务注册与发现/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Consul:服务注册与发现》 — YGQ's Notes&url=http://yoursite.com/2019/08/17/Consul-服务注册与发现/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/08/17/Consul-服务注册与发现/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2019/08/17/Consul-服务注册与发现/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '诶去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
