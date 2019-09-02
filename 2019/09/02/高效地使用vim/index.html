@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>高效地使用vim | YGQ&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Linux,vim">
+    <meta name="description" content="高效率移动应该尽可能少的呆在插入模式里面,Vim 的强大之处在于他的命令行模式高效率移动 使用 h、j、k、l使用 Vim 高效率编辑的第一步，就是放弃使用箭头键。使用 Vim，你就不用频繁的在箭头键和字母键之间移来移去了，这会节省你很多时间。当你在命令模式时，你可以用 h、j、k、l 来分别实现左、下、上、右箭头的功能。 在当前行里面有效的移动光标当光标从一点移动到另外一点，在这两点之间的文本（">
+<meta name="keywords" content="Linux,vim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高效地使用vim">
+<meta property="og:url" content="http://yoursite.com/2019/09/02/高效地使用vim/index.html">
+<meta property="og:site_name" content="YGQ&#39;s Notes">
+<meta property="og:description" content="高效率移动应该尽可能少的呆在插入模式里面,Vim 的强大之处在于他的命令行模式高效率移动 使用 h、j、k、l使用 Vim 高效率编辑的第一步，就是放弃使用箭头键。使用 Vim，你就不用频繁的在箭头键和字母键之间移来移去了，这会节省你很多时间。当你在命令模式时，你可以用 h、j、k、l 来分别实现左、下、上、右箭头的功能。 在当前行里面有效的移动光标当光标从一点移动到另外一点，在这两点之间的文本（">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-02T16:01:43.828Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高效地使用vim">
+<meta name="twitter:description" content="高效率移动应该尽可能少的呆在插入模式里面,Vim 的强大之处在于他的命令行模式高效率移动 使用 h、j、k、l使用 Vim 高效率编辑的第一步，就是放弃使用箭头键。使用 Vim，你就不用频繁的在箭头键和字母键之间移来移去了，这会节省你很多时间。当你在命令模式时，你可以用 h、j、k、l 来分别实现左、下、上、右箭头的功能。 在当前行里面有效的移动光标当光标从一点移动到另外一点，在这两点之间的文本（">
+    
+    <link rel="shortcut icon" href="/img/myblog.jpeg">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/myblog.jpeg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">YGQ</h5>
+          <a href="mailto:594yangguanqun@163.com" title="594yangguanqun@163.com" class="mail">594yangguanqun@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">高效地使用vim</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">高效地使用vim</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-09-02T15:44:28.000Z" itemprop="datePublished" class="page-time">
+  2019-09-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/后端技术/">后端技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#高效率移动"><span class="post-toc-number">1.</span> <span class="post-toc-text">高效率移动</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用-h、j、k、l"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">使用 h、j、k、l</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在当前行里面有效的移动光标"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">在当前行里面有效的移动光标</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在整个文件里面有效移动光标"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">在整个文件里面有效移动光标</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#高效的输入"><span class="post-toc-number">2.</span> <span class="post-toc-text">高效的输入</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用关键词自动完成"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">使用关键词自动完成</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#聪明的进入插入模式"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">聪明的进入插入模式</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#有效的移动大段的文本-常用"><span class="post-toc-number">3.</span> <span class="post-toc-text">有效的移动大段的文本(常用)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用可视选择（visual-selections）和合适的选择模式"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">使用可视选择（visual selections）和合适的选择模式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在可视选择模式下剪切和拷贝"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">在可视选择模式下剪切和拷贝</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在非可视选择模式下剪切和拷贝"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">在非可视选择模式下剪切和拷贝</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#粘贴"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">粘贴</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#避免重复"><span class="post-toc-number">4.</span> <span class="post-toc-text">避免重复</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#令人惊奇的-命令"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">令人惊奇的 . 命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用数字"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">使用数字</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#参考："><span class="post-toc-number">5.</span> <span class="post-toc-text">参考：</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-高效地使用vim" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">高效地使用vim</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-09-02 23:44:28" datetime="2019-09-02T15:44:28.000Z" itemprop="datePublished">2019-09-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/后端技术/">后端技术</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="高效率移动"><a href="#高效率移动" class="headerlink" title="高效率移动"></a>高效率移动</h1><p>应该尽可能少的呆在插入模式里面,Vim 的强大之处在于他的命令行模式高效率移动</p>
+<h2 id="使用-h、j、k、l"><a href="#使用-h、j、k、l" class="headerlink" title="使用 h、j、k、l"></a><strong>使用 h、j、k、l</strong></h2><p>使用 Vim 高效率编辑的第一步，就是放弃使用箭头键。使用 Vim，你就不用频繁的在箭头键和字母键之间移来移去了，这会节省你很多时间。当你在命令模式时，你可以用 h、j、k、l 来分别实现左、下、上、右箭头的功能。</p>
+<h2 id="在当前行里面有效的移动光标"><a href="#在当前行里面有效的移动光标" class="headerlink" title="在当前行里面有效的移动光标"></a><strong>在当前行里面有效的移动光标</strong></h2><p>当光标从一点移动到另外一点，在这两点之间的文本（包括这两个点）称作被“跨过”，这里的命令也被称作是 motion。（简单说明一下，后面会用到这个重要的概念）</p>
+<p>这里是常用到的一些命令（motion）：</p>
+<ul>
+<li>fx：移动光标到当前行的下一个 x 处。很明显，x 可以是任意一个字母，而且你可以使用 ; 来重复你的上一个 f 命令。</li>
+<li>tx：和上面的命令类似，但是是移动到 x 的<strong>左边</strong>一个位置。（这真的很有用）</li>
+<li>Fx：和 fx 类似，不过是往回找。</li>
+<li>w：光标往前移动一个词。</li>
+<li>b：光标往后移动一个词。</li>
+<li>0：移动光标到当前行首。</li>
+<li>^：移动光标到当前行的第一个字母位置。(常用)</li>
+<li>$：移动光标到<strong>行尾</strong>。</li>
+</ul>
+<h2 id="在整个文件里面有效移动光标"><a href="#在整个文件里面有效移动光标" class="headerlink" title="在整个文件里面有效移动光标"></a><strong>在整个文件里面有效移动光标</strong></h2><p>Vim 有很多命令，可以用来到达文件里面你想到达的地方。下面是一些在文件里面移动的命令：</p>
+<ul>
+<li><c-f>：向下移动一屏。</c-f></li>
+<li><c-b>：向上移动一屏。</c-b></li>
+<li>G：到文件尾</li>
+<li>gg：到文件首</li>
+<li>H：移动光标到屏幕上面</li>
+<li>M：移动光标到屏幕中间</li>
+<li>L：移动光标到屏幕下面</li>
+<li>/text：从当前光标处开始<strong>搜索</strong>字符串 text，并且到达 text 出现的地方。回车开始搜索。如果想重复上次的搜索的话，<strong>按 n</strong>。</li>
+<li>？text：和上面类似，但是是反方向。</li>
+<li>`.：到你上次编辑文件的地方。(常用)</li>
+</ul>
+<h1 id="高效的输入"><a href="#高效的输入" class="headerlink" title="高效的输入"></a><strong>高效的输入</strong></h1><h2 id="使用关键词自动完成"><a href="#使用关键词自动完成" class="headerlink" title="使用关键词自动完成"></a><strong>使用关键词自动完成</strong></h2><p>对于较长的变量名，使用关键词自动完成功能，你只需要输入开始几个字母，然后按 ctrl+n (或者p)。</p>
+<h2 id="聪明的进入插入模式"><a href="#聪明的进入插入模式" class="headerlink" title="聪明的进入插入模式"></a><strong>聪明的进入插入模式</strong></h2><p>很多新手进入插入模式都只是用 i。这样当然可以进入插入模式，但通常不是那么合适，因为 Vim 提供了很多进入插入模式的命令。下面是最常用的一些：</p>
+<ul>
+<li><strong>i：在当前字符的左边插入</strong></li>
+<li>I：在当前行首插入</li>
+<li><strong>a：在当前字符的右边插入</strong></li>
+<li>A：在当前行尾插入</li>
+<li><strong>o：在当前行下面插入一个新行</strong></li>
+<li>O：在当前行上面插入一个新行</li>
+<li>c{motion}：删除 motion 命令跨过的字符，并且进入插入模式。比如：c$，这将会删除从光标位置到行尾的字符并且进入插入模式。ct！，这会删除从光标位置到下一个叹号（但不包括），然后进入插入模式。被删除的字符被存在了剪贴板里面，并且可以再粘贴出来。</li>
+<li>d{motion}：和上面差不多，但是不进入插入模式。</li>
+</ul>
+<h1 id="有效的移动大段的文本-常用"><a href="#有效的移动大段的文本-常用" class="headerlink" title="有效的移动大段的文本(常用)"></a><strong>有效的移动大段的文本(常用)</strong></h1><h2 id="使用可视选择（visual-selections）和合适的选择模式"><a href="#使用可视选择（visual-selections）和合适的选择模式" class="headerlink" title="使用可视选择（visual selections）和合适的选择模式"></a><strong>使用可视选择（visual selections）和合适的选择模式</strong></h2><p>不像最初的 VI，Vim 允许你高亮（选择）一些文本，并且进行操作。这里有三种可视选择模式：</p>
+<ul>
+<li>v：按字符选择。经常使用的模式，所以亲自尝试一下它。</li>
+<li>V：按行选择。这在你想拷贝或者移动很多行的文本的时候特别有用。</li>
+<li><c-v>：按块选择。非常强大，只在很少的编辑器中才有这样的功能。你可以选择一个矩形块，并且在这个矩形里面的文本会被高亮。</c-v></li>
+</ul>
+<p>在选择模式的时候使用上面所述的方向键和命令（motion）。</p>
+<p>比如，vwww，会高亮光标前面的三个词。Vjj 将会高亮当前行以及下面两行。</p>
+<h2 id="在可视选择模式下剪切和拷贝"><a href="#在可视选择模式下剪切和拷贝" class="headerlink" title="在可视选择模式下剪切和拷贝"></a><strong>在可视选择模式下剪切和拷贝</strong></h2><p>一旦你高亮了选区，你或许想进行一些操作：</p>
+<ul>
+<li>d：剪贴选择的内容到剪贴板。</li>
+<li>y：拷贝选择的内容到剪贴板。</li>
+<li>c：剪贴选择的内容到剪贴板并且进入插入模式。</li>
+</ul>
+<h2 id="在非可视选择模式下剪切和拷贝"><a href="#在非可视选择模式下剪切和拷贝" class="headerlink" title="在非可视选择模式下剪切和拷贝"></a><strong>在非可视选择模式下剪切和拷贝</strong></h2><p>如果你很清楚的知道你想拷贝或者剪切什么，那你根本就不需要进入可视选择模式。这样也会节省时间：</p>
+<ul>
+<li>d{motion}：剪切 motion 命令跨过的字符到剪贴板。比如，dw 会剪切一个词而 dfS 会将从当前光标到下一个 S 之间的字符剪切至剪贴板。</li>
+<li>y{motion}：和上面类似，不过是拷贝。比如，y$会拷贝当前到行尾的内容。</li>
+<li>c{motion}：和 d{motion} 类似，不过最后进入插入模式。</li>
+<li>dd：剪切当前行。</li>
+<li>yy：拷贝当前行。</li>
+<li>cc：剪切当前行并且进入插入模式。</li>
+<li>D：剪切从光标位置到行尾到剪贴板。</li>
+<li>Y：拷贝当前行。</li>
+<li>C：和 D 类似，最后进入插入模式。</li>
+<li>x：剪切当前字符到剪贴板。</li>
+<li>s：和x类似，不过最后进入插入模式。</li>
+</ul>
+<h2 id="粘贴"><a href="#粘贴" class="headerlink" title="粘贴"></a><strong>粘贴</strong></h2><p>粘贴很简单，按 p。</p>
+<h1 id="避免重复"><a href="#避免重复" class="headerlink" title="避免重复"></a><strong>避免重复</strong></h1><h2 id="令人惊奇的-命令"><a href="#令人惊奇的-命令" class="headerlink" title="令人惊奇的 . 命令"></a><strong>令人惊奇的 . 命令</strong></h2><p>在 Vi 里面，输入 . (小数点符号），将会重复你输入的上一个命令。比如，你上个命令为“dw”（删除一个词），Vi 将会接着再删除一个词。</p>
+<h2 id="使用数字"><a href="#使用数字" class="headerlink" title="使用数字"></a><strong>使用数字</strong></h2><p>使用数字也是 Vim 强大的而且很节省时间的重要特性之一。在很多 Vim 的命令之前都可以使用一个数字，这个数字将会告诉 Vim 这个命令需要执行几次。比如：</p>
+<ul>
+<li>3j 将会把光标向下移动三行。</li>
+<li><p>10dd 将会删除十行。</p>
+</li>
+<li><ol>
+<li>重复三次上个命令</li>
+</ol>
+</li>
+<li><p>y3” 将会拷贝从当前光标到第三个出现的引号之间的内容到剪贴板。</p>
+</li>
+</ul>
+<p>数字是扩展 motion 命令作用域非常有效的方法。</p>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p><a href="https://gitbook.tw/chapters/command-line/vim-introduction.html" target="_blank" rel="noopener">https://gitbook.tw/chapters/command-line/vim-introduction.html</a></p>
+<p><a href="https://linuxtoy.org/archives/efficient-editing-with-vim.html" target="_blank" rel="noopener">https://linuxtoy.org/archives/efficient-editing-with-vim.html</a></p>
+<p><a href="https://coolshell.cn/articles/5426.html" target="_blank" rel="noopener">https://coolshell.cn/articles/5426.html</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2019/09/02/高效地使用vim/" target="_blank" rel="external">http://yoursite.com/2019/09/02/高效地使用vim/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/myblog.jpeg" alt="YGQ">
+            YGQ
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/09/02/高效地使用vim/&title=《高效地使用vim》 — YGQ's Notes&pic=http://yoursite.com/img/myblog.jpeg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/09/02/高效地使用vim/&title=《高效地使用vim》 — YGQ's Notes&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/09/02/高效地使用vim/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《高效地使用vim》 — YGQ's Notes&url=http://yoursite.com/2019/09/02/高效地使用vim/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/09/02/高效地使用vim/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/08/17/LeetCode-双指针之滑动窗口/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">[LeetCode] 双指针之滑动窗口</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>YGQ &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/09/02/高效地使用vim/&title=《高效地使用vim》 — YGQ's Notes&pic=http://yoursite.com/img/myblog.jpeg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/09/02/高效地使用vim/&title=《高效地使用vim》 — YGQ's Notes&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/09/02/高效地使用vim/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《高效地使用vim》 — YGQ's Notes&url=http://yoursite.com/2019/09/02/高效地使用vim/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/09/02/高效地使用vim/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2019/09/02/高效地使用vim/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '诶去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

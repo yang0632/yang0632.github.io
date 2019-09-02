@@ -32,9 +32,9 @@
 <meta property="og:image" content="https://i.loli.net/2019/05/18/5cdfec3311c1a49184.png">
 <meta property="og:image" content="https://i.loli.net/2019/05/18/5cdffc2e352fc57790.png">
 <meta property="og:image" content="https://i.loli.net/2019/05/18/5cdffc2e3ad7754969.png">
-<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/qdzZBE73hWsbhfAng9ibqfcbjrqgyRWqAKiaJ2U75SGYwQhs2tuNbXtu8KIpaUsBOaHRKXf7esuuFoMjELFxibIVg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://i.loli.net/2019/09/02/3Z4LABj7GfUPzy5.png">
 <meta property="og:image" content="https://i.loli.net/2019/05/19/5ce0c3967ea8441147.png">
-<meta property="og:updated_time" content="2019-09-02T15:03:26.921Z">
+<meta property="og:updated_time" content="2019-09-02T15:17:34.182Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="No title">
 <meta name="twitter:description" content="《深入理解java虚拟机》读书笔记，梳理了书本知识，增加了一些内容，便于理解和记忆。">
@@ -116,7 +116,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -379,8 +379,13 @@
 <li>新生代使用：复制算法</li>
 <li>老年代使用：标记 - 清除 或者 标记 - 整理 算法</li>
 </ul>
-<h2 id="内存模型与回收策略"><a href="#内存模型与回收策略" class="headerlink" title="内存模型与回收策略"></a><strong>内存模型与回收策略</strong></h2><hr>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_png/qdzZBE73hWsbhfAng9ibqfcbjrqgyRWqAKiaJ2U75SGYwQhs2tuNbXtu8KIpaUsBOaHRKXf7esuuFoMjELFxibIVg/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="image.png"></p>
+<h2 id="内存模型与回收策略"><a href="#内存模型与回收策略" class="headerlink" title="内存模型与回收策略"></a><strong>内存模型与回收策略</strong></h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2019/09/02/3Z4LABj7GfUPzy5.png" alt="gc.png" title="">
+                </div>
+                <div class="image-caption">gc.png</div>
+            </figure>
 <p>Java 堆（Java Heap）是JVM所管理的内存中最大的一块，堆又是垃圾收集器管理的主要区域，这里我们主要分析一下 Java 堆的结构。</p>
 <p>Java 堆分为2个区域-年轻代与老年代，其中年轻代又分 Eden 区和 Survivor 区，其中 Survivor 区又分 From 和 To 2个区。可能这时候大家会有疑问，为什么需要 Survivor 区，为什么Survivor 还要分2个区。不着急，我们从头到尾，看看对象到底是怎么来的，而它又是怎么没的。</p>
 <p><strong>Eden 区</strong></p>
@@ -677,7 +682,7 @@
 
         <p>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
         </p>
     </div>
     <div class="bottom">
