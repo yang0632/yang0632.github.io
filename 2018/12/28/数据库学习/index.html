@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c934bd109b34.png">
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c934bcce83ed.png">
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c934bcfb134d.png">
-<meta property="og:updated_time" content="2019-06-18T14:40:45.938Z">
+<meta property="og:updated_time" content="2019-08-31T15:59:18.088Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库学习">
 <meta name="twitter:description" content="本文整理数据库相关的知识点（更新中）">
@@ -372,13 +372,11 @@
 </tbody>
 </table>
 <h1 id="MYSQL"><a href="#MYSQL" class="headerlink" title="MYSQL"></a>MYSQL</h1><h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><h3 id="InnoDB"><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h3><p>是 MySQL 默认的事务型存储引擎，只有在需要它不支持的特性时，才考虑使用其它存储引擎。</p>
+<p>支持事务，支持外键。主索引是聚集索引，主索引是聚集索引，在索引中保存了数据，从而避免直接读取磁盘，因此对查询性能有很大的提升。但是辅助索引需要两次查询，先查询到主键，然后再通过主键查询到数据，不支持全文索引。</p>
 <p>实现了四个标准的隔离级别，默认级别是<strong>可重复读</strong>（REPEATABLE READ）。在可重复读隔离级别下，通过多版本并发控制（MVCC）+ 间隙锁（Next-Key Locking）防止幻影读。</p>
-<p>主索引是聚集索引，在索引中保存了数据，从而避免直接读取磁盘，因此对查询性能有很大的提升。</p>
 <p>内部做了很多优化，包括从磁盘读取数据时采用的可预测性读、能够加快读操作并且自动创建的自适应哈希索引、能够加速插入操作的插入缓冲区等。</p>
 <p>支持真正的在线热备份。其它存储引擎不支持在线热备份，要获取一致性视图需要停止对所有表的写入，而在读写混合场景中，停止写入可能也意味着停止读取。</p>
-<h3 id="MyISAM"><a href="#MyISAM" class="headerlink" title="MyISAM"></a>MyISAM</h3><p>设计简单，数据以紧密格式存储。对于只读数据，或者表比较小、可以容忍修复操作，则依然可以使用它。</p>
-<p>提供了大量的特性，包括压缩表、空间数据索引等。</p>
-<p>不支持事务。</p>
+<h3 id="MyISAM"><a href="#MyISAM" class="headerlink" title="MyISAM"></a>MyISAM</h3><p><strong>不支持事务，不支持外键</strong>，MyISAM 是非聚集索引，数据文件是分离的，索引保存的是数据文件的指针。主键索引和辅助索引是独立的，查询效率上 MyISAM 要高于 InnnDB ，因此做读写分离的时候一般选择用 InnoDB 做主机，MyISAM 做从机。</p>
 <p>不支持行级锁，只能对整张表加锁</p>
 <h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是在<strong>存储引擎层</strong>实现的，而不是在服务器层实现的，所以不同存储引擎具有不同的索引类型和实现。</p>
 <p>InnoDB存储引擎支持以下常见索引：</p>
@@ -553,7 +551,7 @@
     <div class="waves-block waves-effect next">
       <a href="/2018/12/20/《深入理解Java虚拟机》读书笔记/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">《深入理解Java虚拟机》读书笔记</h4>
+        <h4 class="title">No title</h4>
       </a>
     </div>
   
