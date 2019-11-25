@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c930a853fd38.png">
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c930e9963f0d.png">
 <meta property="og:image" content="https://i.loli.net/2019/03/21/5c930ecf3673d.png">
-<meta property="og:updated_time" content="2019-05-03T09:16:53.024Z">
+<meta property="og:updated_time" content="2019-11-25T09:26:19.625Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HashMap源码分析">
 <meta name="twitter:description" content="结合源码理解hashmap">
@@ -178,7 +178,7 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             <p>结合源码理解hashmap</p>
 <a id="more"></a>
-<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p><strong>HashMap 通过 key 的 hashCode 经 过扰动函数处理过后得到 hash 值，然后通过判断当前元素存放的位置(这里的 n 指的是数组的 长度)，如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</strong></p>
+<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p><strong>HashMap 通过 key 的 hashCode 经 过扰动函数处理过后得到 hash 值，然后通过<code>(n-1)&amp;hash</code>判断当前元素存放的位置(这里的 n 指的是数组的长度)，如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</strong></p>
 <p><strong>所谓扰动函数指的就是 HashMap 的 hash 方法。使用扰动函数之后可以减少碰撞。</strong></p>
 <p>HashMap 底层是基于数组和链表实现的。其中有两个重要的参数：</p>
 <ul>
